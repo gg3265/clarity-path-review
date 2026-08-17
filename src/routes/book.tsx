@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useCart } from "@/context/CartContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -34,6 +35,26 @@ interface PatientDetails {
 function BookPage() {
   const { selectedTests, removeTest, totalEstimatedPrice, hasConflict, clearCart } = useCart();
   const navigate = useNavigate();
+
+  const handleRemoveTest = (id: string) => {
+    removeTest(id);
+    if (selectedTests.length === 1 && selectedTests[0].id === id) {
+      toast("No tests selected yet. Choose a test to begin your booking.");
+      setStep("TESTS");
+      if (window.history.length > 2) {
+        window.history.back();
+      } else {
+        navigate({ to: "/tests", replace: true });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (selectedTests.length === 0 && step !== "SUCCESS") {
+      toast("No tests selected yet. Choose a test to begin your booking.");
+      navigate({ to: "/tests", replace: true });
+    }
+  }, []);
 
   const [step, setStep] = useState<Step>("TESTS");
   const [patient, setPatient] = useState<PatientDetails>({
@@ -141,11 +162,12 @@ function BookPage() {
           <div className="flex items-center justify-between">
             <BackButton 
               className="mb-0"
+              fallbackUrl="/tests"
               onClick={() => {
                 if (step === "REVIEW") handleNext("COLLECTION");
                 else if (step === "COLLECTION") handleNext("DETAILS");
                 else if (step === "DETAILS") handleNext("TESTS");
-                else navigate({ to: "/tests" });
+                else return false;
               }}
             />
             
@@ -217,7 +239,7 @@ function BookPage() {
                               <AlertCircle className="size-3.5" /> Confirm
                             </div>
                           )}
-                          <button onClick={() => removeTest(test.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors">
+                          <button onClick={() => handleRemoveTest(test.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors">
                             Remove
                           </button>
                         </div>

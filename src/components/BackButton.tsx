@@ -6,7 +6,7 @@ interface BackButtonProps {
   fallbackUrl?: string;
   className?: string;
   label?: string;
-  onClick?: () => void;
+  onClick?: () => boolean | void;
 }
 
 export function BackButton({ fallbackUrl = "/", className, label = "Back", onClick }: BackButtonProps) {
@@ -14,14 +14,15 @@ export function BackButton({ fallbackUrl = "/", className, label = "Back", onCli
 
   const handleBack = () => {
     if (onClick) {
-      onClick();
-      return;
+      const result = onClick();
+      // If onClick explicitly returns false, continue with default back behavior
+      if (result !== false) return;
     }
 
     if (window.history.length > 2) {
       window.history.back();
     } else {
-      router.navigate({ to: fallbackUrl });
+      router.navigate({ to: fallbackUrl, replace: true });
     }
   };
 

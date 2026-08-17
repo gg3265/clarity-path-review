@@ -129,7 +129,7 @@ function UploadPrescriptionPage() {
               onClick={() => {
                 if (step === "REVIEW") handleNext("COLLECTION");
                 else if (step === "COLLECTION") handleNext("UPLOAD");
-                else window.history.back();
+                else return false;
               }}
             />
             
