@@ -33,6 +33,7 @@ function About() {
         title="A clinical reference laboratory focused on complex pathology."
         intro="SECOND OPINION CRL is a Clinical Reference Laboratory in Pune providing pathology services and specialist review for diagnostically challenging cases."
         watermark="CLARITY"
+        showBack={true}
       />
       <AboutSection />
       <TrustStrip />

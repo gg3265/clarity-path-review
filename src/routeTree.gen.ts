@@ -11,10 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as TestsRouteImport } from './routes/tests'
+import { Route as UploadPrescriptionRouteImport } from './routes/upload-prescription'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -46,66 +54,97 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestsRoute = TestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UploadPrescriptionRoute = UploadPrescriptionRouteImport.update({
+  id: '/upload-prescription',
+  path: '/upload-prescription',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
+  '/tests': typeof TestsRoute
+  '/upload-prescription': typeof UploadPrescriptionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
+  '/tests': typeof TestsRoute
+  '/upload-prescription': typeof UploadPrescriptionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book': typeof BookRoute
   '/contact': typeof ContactRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
+  '/tests': typeof TestsRoute
+  '/upload-prescription': typeof UploadPrescriptionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
+    | '/tests'
+    | '/upload-prescription'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
+    | '/tests'
+    | '/upload-prescription'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/book'
     | '/contact'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
+    | '/tests'
+    | '/upload-prescription'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   SecondOpinionRoute: typeof SecondOpinionRoute
   ServicesRoute: typeof ServicesRoute
+  TestsRoute: typeof TestsRoute
+  UploadPrescriptionRoute: typeof UploadPrescriptionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -152,16 +198,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tests': {
+      id: '/tests'
+      path: '/tests'
+      fullPath: '/tests'
+      preLoaderRoute: typeof TestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upload-prescription': {
+      id: '/upload-prescription'
+      path: '/upload-prescription'
+      fullPath: '/upload-prescription'
+      preLoaderRoute: typeof UploadPrescriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BookRoute: BookRoute,
   ContactRoute: ContactRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   SecondOpinionRoute: SecondOpinionRoute,
   ServicesRoute: ServicesRoute,
+  TestsRoute: TestsRoute,
+  UploadPrescriptionRoute: UploadPrescriptionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

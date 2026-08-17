@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { CartProvider } from "@/context/CartContext";
+import { ContactAction } from "@/components/ContactAction";
 
 function NotFoundComponent() {
   return (
@@ -79,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
       { title: "Second Opinion CRL | Clinical Reference Laboratory in Pune" },
       {
         name: "description",
@@ -127,24 +129,38 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function MobileContactBar() {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-t border-border p-2 md:hidden">
+      <div className="flex gap-2">
+        <ContactAction context="general" type="call" variant="outline" className="flex-1 rounded-xl h-12" />
+        <ContactAction context="general" type="whatsapp" variant="solid" className="flex-1 rounded-xl h-12" />
+      </div>
+    </div>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"
-      >
-        Skip to content
-      </a>
-      <Navbar />
-      <main id="main">
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </main>
-      <Footer />
-      <Toaster position="top-center" />
+      <CartProvider>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"
+        >
+          Skip to content
+        </a>
+        <Navbar />
+        <main id="main" className="pb-16 md:pb-0">
+          <Outlet />
+        </main>
+        <Footer />
+        <MobileContactBar />
+        <Toaster position="top-center" />
+      </CartProvider>
     </QueryClientProvider>
   );
 }
+

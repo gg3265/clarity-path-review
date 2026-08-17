@@ -1,6 +1,7 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/Reveal";
+import { ContactAction } from "@/components/ContactAction";
 import { mapsDirectionsUrl, mapsEmbedUrl, site } from "@/lib/site";
 
 export function ContactSection() {
@@ -22,15 +23,6 @@ export function ContactSection() {
           <Reveal delay={80}>
             <ul className="mt-10 space-y-6">
               <li className="flex gap-4">
-                <Phone className="mt-0.5 size-5 shrink-0 text-crimson" aria-hidden="true" />
-                <a
-                  href={site.phoneHref}
-                  className="text-base font-semibold text-foreground hover:text-crimson"
-                >
-                  {site.phone}
-                </a>
-              </li>
-              <li className="flex gap-4">
                 <Mail className="mt-0.5 size-5 shrink-0 text-crimson" aria-hidden="true" />
                 <a
                   href={`mailto:${site.email}`}
@@ -48,18 +40,8 @@ export function ContactSection() {
             </ul>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={site.phoneHref}
-                className="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft"
-              >
-                Call {site.phone}
-              </a>
-              <a
-                href={`mailto:${site.email}`}
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-input bg-background px-7 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
-              >
-                Email Us
-              </a>
+              <ContactAction context="second-opinion" type="whatsapp" variant="solid" className="w-full sm:w-auto" />
+              <ContactAction context="second-opinion" type="call" variant="outline" className="w-full sm:w-auto" />
             </div>
           </Reveal>
         </div>

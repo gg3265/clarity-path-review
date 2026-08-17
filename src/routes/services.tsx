@@ -33,6 +33,7 @@ function Services() {
         title="Specialized pathology and laboratory services."
         intro="Specialized pathology and laboratory services for routine, complex and diagnostically challenging cases."
         watermark="PATHOLOGY"
+        showBack={true}
       />
       <ServiceGrid showHeading={false} />
       <CaseMaterials />

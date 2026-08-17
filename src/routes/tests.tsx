@@ -1,0 +1,244 @@
+import { useState, useMemo } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Search, AlertCircle, X, CheckCircle2 } from "lucide-react";
+import { tests, TestCategory, DiagnosticTest } from "@/data/tests";
+import { PageHeader } from "@/components/PageHeader";
+import { BookingBar } from "@/components/BookingBar";
+import { useCart } from "@/context/CartContext";
+import { cn } from "@/lib/utils";
+
+// Validate search params for TanStack Router
+export const Route = createFileRoute("/tests")({
+  validateSearch: (search: Record<string, unknown>): { q?: string } => {
+    return {
+      q: typeof search.q === "string" ? search.q : undefined,
+    };
+  },
+  head: () => ({
+    meta: [
+      { title: "Test Directory | Second Opinion CRL" },
+      { name: "description", content: "Search and browse our comprehensive diagnostic test menu." },
+    ],
+  }),
+  component: TestsPage,
+});
+
+const ALL_CATEGORIES = [
+  "All",
+  "Histopathology",
+  "Oncopathology",
+  "Second Opinion & Slide Review",
+  "Cytopathology",
+  "Immunohistochemistry",
+  "Clinical Pathology & Biochemistry",
+  "Haematology",
+  "Molecular & Ancillary Testing"
+];
+
+// Service descriptions for categories without raw tests
+const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  "Histopathology": "Routine and specialized histopathology services for biopsy and surgical resections.",
+  "Cytopathology": "Expert cytopathology services for gynecological and non-gynecological specimens.",
+  "Immunohistochemistry": "Advanced immunohistochemistry markers for precise tumor typing and prognostic assessment.",
+  "Second Opinion & Slide Review": "Expert review of challenging, complex and cancer-related pathology cases, including outside slides, blocks, IHC and diagnostic reports."
+};
+
+function TestsPage() {
+  const searchParams = Route.useSearch();
+  const navigate = useNavigate({ from: "/tests" });
+  
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [localQuery, setLocalQuery] = useState(searchParams.q || "");
+
+  const { selectedTests, addTest, removeTest } = useCart();
+
+  // Sync url param to local state
+  const handleSearch = (val: string) => {
+    setLocalQuery(val);
+    navigate({ search: { q: val || undefined } });
+  };
+
+  const filteredTests = useMemo(() => {
+    let result = tests;
+    
+    // Filter by Category
+    if (activeCategory !== "All") {
+      result = result.filter(t => t.category === activeCategory);
+    }
+
+    // Filter by Query
+    const q = (searchParams.q || "").toLowerCase().trim();
+    if (q) {
+      result = result.filter(test => {
+        const matchName = test.name.toLowerCase().includes(q);
+        const matchAlias = test.aliases.some(a => a.toLowerCase().includes(q));
+        return matchName || matchAlias;
+      });
+    }
+
+    // Sort alphabetically
+    return result.sort((a, b) => a.name.localeCompare(b.name));
+  }, [activeCategory, searchParams.q]);
+
+  const showServiceDescription = activeCategory !== "All" && CATEGORY_DESCRIPTIONS[activeCategory] && filteredTests.length === 0;
+
+  const isTestSelected = (testId: string) => selectedTests.some(t => t.id === testId);
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Test Directory"
+        title="Diagnostic Test Menu"
+        intro="Browse our comprehensive menu of pathology and clinical investigations."
+        watermark="DIRECTORY"
+        showBack={true}
+        backFallback="/"
+      />
+      
+      <section className="bg-surface py-12 md:py-20 min-h-[60vh] pb-32">
+        <div className="container-page max-w-6xl">
+          
+          {/* Search & Filters */}
+          <div className="mb-10 space-y-6">
+            <div className="relative max-w-2xl">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground">
+                <Search className="size-5" />
+              </div>
+              <input
+                type="text"
+                value={localQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Search tests, profiles or aliases..."
+                className="w-full pl-12 pr-10 py-4 bg-background border border-border rounded-xl shadow-sm focus:outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/5 text-foreground text-lg transition-all"
+              />
+              {localQuery && (
+                <button
+                  onClick={() => handleSearch("")}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-5" />
+                </button>
+              )}
+            </div>
+
+            <div className="flex overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap gap-2">
+              {ALL_CATEGORIES.map(category => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setActiveCategory(category);
+                    if (searchParams.q) handleSearch(""); // clear search on category switch for better UX
+                  }}
+                  className={cn(
+                    "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors border",
+                    activeCategory === category
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background border-border text-foreground hover:border-primary/30 hover:bg-primary/5"
+                  )}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Results Area */}
+          <div className="space-y-4">
+            {showServiceDescription ? (
+              <div className="p-10 text-center bg-background border border-border rounded-2xl shadow-soft">
+                <h3 className="text-xl font-bold text-foreground mb-3">{activeCategory}</h3>
+                <p className="text-muted-foreground max-w-2xl mx-auto">{CATEGORY_DESCRIPTIONS[activeCategory]}</p>
+                <div className="mt-6">
+                  <a href="/contact" className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-navy-soft">
+                    Enquire about this service
+                  </a>
+                </div>
+              </div>
+            ) : filteredTests.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredTests.map(test => {
+                  const selected = isTestSelected(test.id);
+                  return (
+                    <div key={test.id} className={cn("group relative flex flex-col justify-between p-5 bg-background border rounded-2xl transition-all duration-300", selected ? "border-primary shadow-md" : "border-border shadow-sm hover:shadow-md hover:border-primary/20")}>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70 mb-2">
+                          {test.category}
+                        </div>
+                        <h4 className="font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">
+                          {test.name}
+                        </h4>
+                      </div>
+                      
+                      <div className="mt-5 pt-4 border-t border-border/50 flex flex-col gap-4">
+                        <div className="flex items-end justify-between">
+                          {test.priceStatus === "Confirmed" && (test.sheet1Price || test.sheet2MRP) ? (
+                            <div className="font-display font-bold text-lg text-foreground">
+                              ₹{test.sheet1Price || test.sheet2MRP}
+                            </div>
+                          ) : test.priceStatus === "Sheet 2 Only" ? (
+                            <div>
+                              <div className="font-display font-bold text-lg text-foreground">
+                                ₹{test.sheet2MRP}
+                              </div>
+                              <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                                MRP Source
+                              </div>
+                            </div>
+                          ) : test.priceStatus === "Price confirmation required" ? (
+                            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1.5 rounded-md border border-amber-200">
+                              <AlertCircle className="size-4" />
+                              <span>Confirmation Required</span>
+                            </div>
+                          ) : (
+                            <div className="text-sm font-medium text-muted-foreground">Call for pricing</div>
+                          )}
+                        </div>
+                        
+                        {selected ? (
+                          <div className="flex items-center justify-between">
+                            <span className="flex items-center gap-1.5 text-sm font-bold text-primary">
+                              <CheckCircle2 className="size-4" /> Added
+                            </span>
+                            <button onClick={() => removeTest(test.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors px-2 py-1">
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <button 
+                            onClick={() => addTest(test)} 
+                            className="w-full h-10 rounded-lg bg-secondary text-sm font-bold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                          >
+                            Book This Test
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="py-20 text-center">
+                <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4 text-muted-foreground">
+                  <Search className="size-8" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">No tests found</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  We couldn't find any tests matching "{searchParams.q}". Try checking the spelling or use a different search term.
+                </p>
+                <button
+                  onClick={() => handleSearch("")}
+                  className="mt-6 inline-flex font-medium text-primary hover:text-navy-soft transition-colors"
+                >
+                  Clear search and view all tests
+                </button>
+              </div>
+            )}
+          </div>
+
+        </div>
+      </section>
+      
+      <BookingBar />
+    </>
+  );
+}

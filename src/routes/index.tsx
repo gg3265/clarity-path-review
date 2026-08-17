@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AboutSection } from "@/components/AboutSection";
 import { CaseMaterials } from "@/components/CaseMaterials";
 import { ContactSection } from "@/components/ContactSection";
 import { Hero } from "@/components/Hero";
 import { ReferringSection } from "@/components/ReferringSection";
 import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
-import { TrustStrip } from "@/components/TrustStrip";
 import { WhyUs } from "@/components/WhyUs";
+import { TestSearch } from "@/components/TestSearch";
 
 const title = "Second Opinion CRL | Clinical Reference Laboratory in Pune";
 const description =
@@ -57,13 +56,10 @@ function Home() {
   return (
     <>
       <Hero />
-      <TrustStrip />
-      <AboutSection />
+      <TestSearch />
       <ServiceGrid />
       <SecondOpinionSection />
-      <CaseMaterials />
       <WhyUs />
-      <ReferringSection />
       <ContactSection />
     </>
   );

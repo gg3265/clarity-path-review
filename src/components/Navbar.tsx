@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, Phone, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LogoLockup } from "@/components/Logo";
-import { nav, site } from "@/lib/site";
+import { nav } from "@/lib/site";
+import { ContactAction } from "@/components/ContactAction";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -45,20 +46,22 @@ export function Navbar() {
             ))}
           </nav>
 
-          <a
-            href={site.phoneHref}
-            className="ml-1 inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary sm:px-4 lg:hidden"
-            aria-label={`Call ${site.phone}`}
-          >
-            <Phone className="size-4 text-crimson" aria-hidden="true" />
-            <span className="hidden sm:inline">Call</span>
-          </a>
+          <div className="ml-1 hidden md:flex items-center gap-2 mr-2">
+            <ContactAction type="whatsapp" variant="icon" className="size-10 md:size-11" />
+            <ContactAction type="call" variant="icon" className="size-10 md:size-11" />
+          </div>
 
           <Link
-            to="/contact"
+            to="/tests"
             className="hidden rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft lg:inline-flex"
           >
-            Request a Second Opinion
+            Book a Test
+          </Link>
+          <Link
+            to="/upload-prescription"
+            className="hidden rounded-full border border-input bg-background px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary xl:inline-flex"
+          >
+            Upload Prescription
           </Link>
 
           <button
@@ -67,7 +70,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary lg:hidden"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-secondary lg:hidden ml-2"
           >
             {open ? (
               <X className="size-5" aria-hidden="true" />
@@ -105,12 +108,24 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <Link
-            to="/contact"
-            className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground"
-          >
-            Request a Second Opinion
-          </Link>
+          <div className="mt-5 flex flex-col gap-3">
+            <Link
+              to="/tests"
+              className="flex min-h-12 items-center justify-center rounded-full bg-primary px-5 text-base font-semibold text-primary-foreground"
+            >
+              Book a Test
+            </Link>
+            <Link
+              to="/upload-prescription"
+              className="flex min-h-12 items-center justify-center rounded-full border border-input bg-background px-5 text-base font-semibold text-foreground"
+            >
+              Upload Prescription
+            </Link>
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              <ContactAction type="whatsapp" variant="solid" className="w-full" showText />
+              <ContactAction type="call" variant="outline" className="w-full" showText />
+            </div>
+          </div>
         </nav>
       </div>
     </header>

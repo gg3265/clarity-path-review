@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { LogoMark } from "@/components/Logo";
 import { nav, site } from "@/lib/site";
+import { ContactAction } from "@/components/ContactAction";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-navy text-primary-foreground">
+    <footer className="relative overflow-hidden bg-navy text-primary-foreground mb-16 md:mb-0">
       <div aria-hidden="true" className="lab-grid-dark absolute inset-0 opacity-60" />
       <div className="relative container-page py-16 md:py-20">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1.2fr]">
@@ -24,6 +25,10 @@ export function Footer() {
               Clinical pathology, histopathology, oncopathology, cytopathology
               and expert second-opinion pathology review in Pune.
             </p>
+            <div className="mt-8 flex gap-3">
+              <ContactAction type="whatsapp" variant="solid" />
+              <ContactAction type="call" variant="outline" className="text-white border-white/20 hover:bg-white/10" />
+            </div>
           </div>
 
           <nav aria-label="Footer">
@@ -49,14 +54,6 @@ export function Footer() {
               Contact
             </h2>
             <ul className="mt-5 space-y-3 text-sm text-primary-foreground/80">
-              <li>
-                <a
-                  href={site.phoneHref}
-                  className="transition-colors hover:text-primary-foreground"
-                >
-                  {site.phone}
-                </a>
-              </li>
               <li>
                 <a
                   href={`mailto:${site.email}`}

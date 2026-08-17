@@ -34,6 +34,7 @@ function SecondOpinion() {
         title="A second look can bring greater clarity."
         intro="An additional expert review can help bring clarity to the interpretation of slides, blocks, immunohistochemistry findings and diagnostic reports."
         watermark="EXPERT REVIEW"
+        showBack={true}
       />
       <SecondOpinionSection />
       <CaseMaterials />

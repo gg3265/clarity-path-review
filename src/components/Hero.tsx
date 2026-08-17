@@ -37,17 +37,17 @@ export function Hero() {
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
-              to="/contact"
+              to="/tests"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft"
             >
-              Request a Second Opinion
+              Book a Test
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link
-              to="/services"
+              to="/upload-prescription"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-input bg-background px-7 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
             >
-              Explore Our Services
+              Upload Prescription
             </Link>
           </div>
         </div>

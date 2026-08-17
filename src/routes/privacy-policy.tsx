@@ -56,6 +56,7 @@ function Privacy() {
         eyebrow="Legal"
         title="Privacy Policy"
         intro="This policy explains how information shared with SECOND OPINION CRL through this website is handled."
+        showBack={true}
       />
       <section className="bg-background">
         <div className="container-page max-w-3xl py-16 md:py-24">
