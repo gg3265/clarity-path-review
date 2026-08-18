@@ -13,11 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestsRouteImport } from './routes/tests'
 import { Route as UploadPrescriptionRouteImport } from './routes/upload-prescription'
+import { Route as PackagesPackageIdRouteImport } from './routes/packages_.$packageId'
 import { Route as ServicesServiceIdRouteImport } from './routes/services_.$serviceId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -38,6 +40,11 @@ const BookRoute = BookRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesRoute = PackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
@@ -65,6 +72,11 @@ const UploadPrescriptionRoute = UploadPrescriptionRouteImport.update({
   path: '/upload-prescription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PackagesPackageIdRoute = PackagesPackageIdRouteImport.update({
+  id: '/packages_/$packageId',
+  path: '/packages/$packageId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
   id: '/services_/$serviceId',
   path: '/services/$serviceId',
@@ -76,11 +88,13 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/packages': typeof PackagesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRoutesByTo {
@@ -88,11 +102,13 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/packages': typeof PackagesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRoutesById {
@@ -101,11 +117,13 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
   '/contact': typeof ContactRoute
+  '/packages': typeof PackagesRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/packages_/$packageId': typeof PackagesPackageIdRoute
   '/services_/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRouteTypes {
@@ -115,11 +133,13 @@ export interface FileRouteTypes {
     | '/about'
     | '/book'
     | '/contact'
+    | '/packages'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/packages/$packageId'
     | '/services/$serviceId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,11 +147,13 @@ export interface FileRouteTypes {
     | '/about'
     | '/book'
     | '/contact'
+    | '/packages'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/packages/$packageId'
     | '/services/$serviceId'
   id:
     | '__root__'
@@ -139,11 +161,13 @@ export interface FileRouteTypes {
     | '/about'
     | '/book'
     | '/contact'
+    | '/packages'
     | '/privacy-policy'
     | '/second-opinion'
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/packages_/$packageId'
     | '/services_/$serviceId'
   fileRoutesById: FileRoutesById
 }
@@ -152,11 +176,13 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BookRoute: typeof BookRoute
   ContactRoute: typeof ContactRoute
+  PackagesRoute: typeof PackagesRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   SecondOpinionRoute: typeof SecondOpinionRoute
   ServicesRoute: typeof ServicesRoute
   TestsRoute: typeof TestsRoute
   UploadPrescriptionRoute: typeof UploadPrescriptionRoute
+  PackagesPackageIdRoute: typeof PackagesPackageIdRoute
   ServicesServiceIdRoute: typeof ServicesServiceIdRoute
 }
 
@@ -188,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages': {
+      id: '/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy': {
@@ -225,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UploadPrescriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/packages_/$packageId': {
+      id: '/packages_/$packageId'
+      path: '/packages/$packageId'
+      fullPath: '/packages/$packageId'
+      preLoaderRoute: typeof PackagesPackageIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services_/$serviceId': {
       id: '/services_/$serviceId'
       path: '/services/$serviceId'
@@ -240,11 +280,13 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BookRoute: BookRoute,
   ContactRoute: ContactRoute,
+  PackagesRoute: PackagesRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   SecondOpinionRoute: SecondOpinionRoute,
   ServicesRoute: ServicesRoute,
   TestsRoute: TestsRoute,
   UploadPrescriptionRoute: UploadPrescriptionRoute,
+  PackagesPackageIdRoute: PackagesPackageIdRoute,
   ServicesServiceIdRoute: ServicesServiceIdRoute,
 }
 export const routeTree = rootRouteImport

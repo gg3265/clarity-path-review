@@ -33,13 +33,27 @@ interface PatientDetails {
 }
 
 function BookPage() {
-  const { selectedTests, removeTest, totalEstimatedPrice, hasConflict, clearCart } = useCart();
+  const { selectedTests, selectedPackages, removeTest, removePackage, totalEstimatedPrice, hasConflict, clearCart } = useCart();
   const navigate = useNavigate();
+  const totalItems = selectedTests.length + selectedPackages.length;
 
   const handleRemoveTest = (id: string) => {
     removeTest(id);
-    if (selectedTests.length === 1 && selectedTests[0].id === id) {
-      toast("No tests selected yet. Choose a test to begin your booking.");
+    if (totalItems === 1 && selectedTests.length === 1 && selectedTests[0].id === id) {
+      toast("No items selected yet. Choose a test or package to begin your booking.");
+      setStep("TESTS");
+      if (window.history.length > 2) {
+        window.history.back();
+      } else {
+        navigate({ to: "/tests", replace: true });
+      }
+    }
+  };
+
+  const handleRemovePackage = (id: string) => {
+    removePackage(id);
+    if (totalItems === 1 && selectedPackages.length === 1 && selectedPackages[0].id === id) {
+      toast("No items selected yet. Choose a test or package to begin your booking.");
       setStep("TESTS");
       if (window.history.length > 2) {
         window.history.back();
@@ -50,11 +64,11 @@ function BookPage() {
   };
 
   useEffect(() => {
-    if (selectedTests.length === 0 && step !== "SUCCESS") {
-      toast("No tests selected yet. Choose a test to begin your booking.");
+    if (totalItems === 0 && step !== "SUCCESS") {
+      toast("No items selected yet. Choose a test or package to begin your booking.");
       navigate({ to: "/tests", replace: true });
     }
-  }, []);
+  }, [totalItems, step]);
 
   const [step, setStep] = useState<Step>("TESTS");
   const [patient, setPatient] = useState<PatientDetails>({
@@ -203,20 +217,43 @@ function BookPage() {
                 Your Tests
               </h2>
 
-              {selectedTests.length === 0 ? (
+              {totalItems === 0 ? (
                 <div className="text-center py-16 bg-surface rounded-3xl border border-border">
                   <div className="mx-auto w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4 text-muted-foreground shadow-sm">
                     <Search className="size-8" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">No tests selected</h3>
-                  <p className="text-muted-foreground mb-6">Please select at least one test to continue with your booking.</p>
-                  <Link to="/tests" className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-navy-soft transition-colors">
-                    Find a Test
-                  </Link>
+                  <h3 className="text-xl font-bold text-foreground mb-2">No items selected</h3>
+                  <p className="text-muted-foreground mb-6">Please select at least one test or package to continue with your booking.</p>
+                  <div className="flex justify-center gap-3">
+                    <Link to="/packages" className="inline-flex h-11 items-center justify-center rounded-full bg-secondary px-6 text-sm font-semibold text-secondary-foreground hover:bg-secondary/80 transition-colors">
+                      View Packages
+                    </Link>
+                    <Link to="/tests" className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-navy-soft transition-colors">
+                      Find a Test
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <>
                   <div className="space-y-4 mb-8">
+                    {selectedPackages.map(pkg => (
+                      <div key={pkg.id} className="flex items-center justify-between p-5 bg-primary/5 rounded-2xl border border-primary/20 shadow-sm">
+                        <div className="pr-4">
+                          <h4 className="font-semibold text-foreground">{pkg.name}</h4>
+                          <div className="text-xs text-primary mt-1 uppercase tracking-wider font-bold">
+                            Package
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 flex flex-col items-end gap-2">
+                          <div className="font-display font-bold text-lg text-foreground">
+                            ₹{pkg.price}
+                          </div>
+                          <button onClick={() => handleRemovePackage(pkg.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors">
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                     {selectedTests.map(test => (
                       <div key={test.id} className="flex items-center justify-between p-5 bg-surface rounded-2xl border border-border shadow-sm">
                         <div className="pr-4">
@@ -249,8 +286,8 @@ function BookPage() {
                   
                   <div className="bg-surface rounded-3xl p-6 md:p-8 border border-border shadow-soft mb-8">
                     <div className="flex justify-between items-center mb-6">
-                      <div className="text-muted-foreground font-medium">Number of Tests</div>
-                      <div className="font-bold text-foreground">{selectedTests.length}</div>
+                      <div className="text-muted-foreground font-medium">Total Items</div>
+                      <div className="font-bold text-foreground">{totalItems}</div>
                     </div>
                     <div className="border-t border-border pt-6 flex justify-between items-end">
                       <div className="text-lg font-bold text-foreground">Estimated Total</div>
@@ -420,13 +457,19 @@ function BookPage() {
 
               <div className="space-y-6">
                 
-                {/* Tests Review */}
+                {/* Items Review */}
                 <div className="bg-surface rounded-3xl p-6 md:p-8 border border-border shadow-soft">
                   <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
-                    <h3 className="text-xl font-bold text-foreground">Tests</h3>
+                    <h3 className="text-xl font-bold text-foreground">Booking Items</h3>
                     <button onClick={() => handleNext("TESTS")} className="text-sm font-semibold text-primary hover:underline">Edit</button>
                   </div>
                   <div className="space-y-3 mb-6">
+                    {selectedPackages.map(pkg => (
+                      <div key={pkg.id} className="flex justify-between items-start text-sm">
+                        <span className="font-medium text-foreground pr-4">{pkg.name}</span>
+                        <span className="font-bold shrink-0">₹{pkg.price}</span>
+                      </div>
+                    ))}
                     {selectedTests.map(test => (
                       <div key={test.id} className="flex justify-between items-start text-sm">
                         <span className="font-medium text-foreground pr-4">{test.name}</span>

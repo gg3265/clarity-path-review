@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { DiagnosticTest } from "@/data/tests";
+import { HealthPackage } from "@/data/packages";
 
 interface CartContextType {
   selectedTests: DiagnosticTest[];
+  selectedPackages: HealthPackage[];
   addTest: (test: DiagnosticTest) => void;
   removeTest: (testId: string) => void;
+  addPackage: (pkg: HealthPackage) => void;
+  removePackage: (pkgId: string) => void;
   clearCart: () => void;
   hasConflict: boolean;
   totalEstimatedPrice: number;
@@ -14,6 +18,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [selectedTests, setSelectedTests] = useState<DiagnosticTest[]>([]);
+  const [selectedPackages, setSelectedPackages] = useState<HealthPackage[]>([]);
 
   const addTest = (test: DiagnosticTest) => {
     setSelectedTests((prev) => {
@@ -26,15 +31,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setSelectedTests((prev) => prev.filter((t) => t.id !== testId));
   };
 
+  const addPackage = (pkg: HealthPackage) => {
+    setSelectedPackages((prev) => {
+      if (prev.some((p) => p.id === pkg.id)) return prev;
+      return [...prev, pkg];
+    });
+  };
+
+  const removePackage = (pkgId: string) => {
+    setSelectedPackages((prev) => prev.filter((p) => p.id !== pkgId));
+  };
+
   const clearCart = () => {
     setSelectedTests([]);
+    setSelectedPackages([]);
   };
 
   const hasConflict = selectedTests.some(
     (t) => t.priceStatus === "Price confirmation required"
   );
 
-  const totalEstimatedPrice = selectedTests.reduce((acc, test) => {
+  const testsPrice = selectedTests.reduce((acc, test) => {
     if (test.priceStatus === "Confirmed" && test.sheet1Price) {
       return acc + test.sheet1Price;
     }
@@ -47,12 +64,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return acc;
   }, 0);
 
+  const packagesPrice = selectedPackages.reduce((acc, pkg) => acc + pkg.price, 0);
+  
+  const totalEstimatedPrice = testsPrice + packagesPrice;
+
   return (
     <CartContext.Provider
       value={{
         selectedTests,
+        selectedPackages,
         addTest,
         removeTest,
+        addPackage,
+        removePackage,
         clearCart,
         hasConflict,
         totalEstimatedPrice,

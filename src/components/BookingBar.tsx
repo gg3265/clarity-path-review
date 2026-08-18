@@ -3,9 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight, AlertCircle } from "lucide-react";
 
 export function BookingBar() {
-  const { selectedTests, totalEstimatedPrice, hasConflict } = useCart();
+  const { selectedTests, selectedPackages, totalEstimatedPrice, hasConflict } = useCart();
 
-  if (selectedTests.length === 0) return null;
+  const totalItems = selectedTests.length + selectedPackages.length;
+
+  if (totalItems === 0) return null;
 
   return (
     <>
@@ -14,7 +16,7 @@ export function BookingBar() {
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-foreground">
-              {selectedTests.length} {selectedTests.length === 1 ? "Test" : "Tests"} Selected
+              {totalItems} {totalItems === 1 ? "Item" : "Items"} Selected
             </div>
             <div className="text-xs text-muted-foreground mt-0.5">
               {hasConflict ? (
@@ -40,10 +42,16 @@ export function BookingBar() {
       <div className="hidden md:block fixed bottom-8 right-8 z-50 animate-scale-in">
         <div className="w-[340px] rounded-2xl border border-border bg-background/95 p-5 shadow-2xl backdrop-blur-xl">
           <div className="mb-4 font-display text-lg font-bold text-foreground">
-            Your Tests
+            Your Booking
           </div>
           
           <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3 mb-4">
+            {selectedPackages.map((pkg) => (
+              <div key={pkg.id} className="flex justify-between items-start text-sm">
+                <span className="font-medium text-foreground pr-2 truncate">{pkg.name}</span>
+                <span className="font-semibold shrink-0">₹{pkg.price}</span>
+              </div>
+            ))}
             {selectedTests.map((test) => (
               <div key={test.id} className="flex justify-between items-start text-sm">
                 <span className="font-medium text-foreground pr-2 truncate">{test.name}</span>
@@ -58,8 +66,8 @@ export function BookingBar() {
 
           <div className="border-t border-border pt-4 mb-5 flex justify-between items-end">
             <div>
-              <div className="text-sm font-bold text-muted-foreground">Total Tests</div>
-              <div className="text-lg font-bold text-foreground">{selectedTests.length}</div>
+              <div className="text-sm font-bold text-muted-foreground">Total Items</div>
+              <div className="text-lg font-bold text-foreground">{totalItems}</div>
             </div>
             <div className="text-right">
               {hasConflict ? (
