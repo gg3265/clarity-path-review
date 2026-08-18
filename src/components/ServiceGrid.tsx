@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/Reveal";
 import { ServiceCard } from "@/components/ServiceCard";
 import { services } from "@/lib/site";
+import { Link } from "@tanstack/react-router";
 
 export function ServiceGrid({ showHeading = true }: { showHeading?: boolean }) {
   return (
@@ -20,21 +21,26 @@ export function ServiceGrid({ showHeading = true }: { showHeading?: boolean }) {
         ) : null}
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, i) => (
-            <Reveal
-              key={service.number}
-              delay={(i % 3) * 70}
-              className={
-                service.number === "08" ? "sm:col-span-2 lg:col-span-2" : ""
-              }
-            >
-              <ServiceCard
-                {...service}
-                featured={service.number === "03"}
-                className="h-full border-0"
-              />
-            </Reveal>
-          ))}
+          {services.map((service, i) => {
+            const slug = service.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            return (
+              <Reveal
+                key={service.number}
+                delay={(i % 3) * 70}
+                className={
+                  service.number === "08" ? "sm:col-span-2 lg:col-span-2" : ""
+                }
+              >
+                <Link to={`/services/${slug}`} className="block h-full">
+                  <ServiceCard
+                    {...service}
+                    featured={false}
+                    className="h-full border-0"
+                  />
+                </Link>
+              </Reveal>
+            );
+          })}
         </div>
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
           Service descriptions are indicative. Detailed test availability can be

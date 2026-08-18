@@ -9,15 +9,16 @@ import { cn } from "@/lib/utils";
 
 // Validate search params for TanStack Router
 export const Route = createFileRoute("/tests")({
-  validateSearch: (search: Record<string, unknown>): { q?: string } => {
+  validateSearch: (search: Record<string, unknown>): { q?: string; category?: string } => {
     return {
       q: typeof search.q === "string" ? search.q : undefined,
+      category: typeof search.category === "string" ? search.category : undefined,
     };
   },
   head: () => ({
     meta: [
-      { title: "Test Directory | Second Opinion CRL" },
-      { name: "description", content: "Search and browse our comprehensive diagnostic test menu." },
+      { title: "Test Directory & Booking | Second Opinion CRL" },
+      { name: "description", content: "Search and book diagnostic tests online." },
     ],
   }),
   component: TestsPage,
@@ -47,7 +48,7 @@ function TestsPage() {
   const searchParams = Route.useSearch();
   const navigate = useNavigate({ from: "/tests" });
   
-  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [activeCategory, setActiveCategory] = useState<string>(searchParams.category || "All");
   const [localQuery, setLocalQuery] = useState(searchParams.q || "");
 
   const { selectedTests, addTest, removeTest } = useCart();

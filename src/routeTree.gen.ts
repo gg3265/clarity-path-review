@@ -18,6 +18,7 @@ import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestsRouteImport } from './routes/tests'
 import { Route as UploadPrescriptionRouteImport } from './routes/upload-prescription'
+import { Route as ServicesServiceIdRouteImport } from './routes/services_.$serviceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const UploadPrescriptionRoute = UploadPrescriptionRouteImport.update({
   path: '/upload-prescription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
+  id: '/services_/$serviceId',
+  path: '/services/$serviceId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/services/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/services/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/services_/$serviceId': typeof ServicesServiceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/services/$serviceId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/services/$serviceId'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/services_/$serviceId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   TestsRoute: typeof TestsRoute
   UploadPrescriptionRoute: typeof UploadPrescriptionRoute
+  ServicesServiceIdRoute: typeof ServicesServiceIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UploadPrescriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services_/$serviceId': {
+      id: '/services_/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof ServicesServiceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   TestsRoute: TestsRoute,
   UploadPrescriptionRoute: UploadPrescriptionRoute,
+  ServicesServiceIdRoute: ServicesServiceIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
