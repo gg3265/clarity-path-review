@@ -21,7 +21,7 @@ export const Route = createFileRoute("/book")({
   component: BookPage,
 });
 
-type Step = "TESTS" | "DETAILS" | "COLLECTION" | "REVIEW" | "SUCCESS";
+type Step = "TESTS" | "DETAILS" | "COLLECTION" | "REVIEW";
 
 interface PatientDetails {
   name: string;
@@ -64,11 +64,11 @@ function BookPage() {
   };
 
   useEffect(() => {
-    if (totalItems === 0 && step !== "SUCCESS") {
+    if (totalItems === 0 && !isConfirming) {
       toast("No items selected yet. Choose a test or package to begin your booking.");
       navigate({ to: "/tests", replace: true });
     }
-  }, [totalItems, step]);
+  }, [totalItems, isConfirming]);
 
   const [step, setStep] = useState<Step>("TESTS");
   const [patient, setPatient] = useState<PatientDetails>({
@@ -99,12 +99,35 @@ function BookPage() {
     setStep(nextStep);
   };
 
+  const [isConfirming, setIsConfirming] = useState(false);
+
   const handleConfirm = () => {
-    // Generate mock reference
-    const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    setBookingRef(ref);
-    handleNext("SUCCESS");
-    clearCart();
+    if (isConfirming) return;
+    setIsConfirming(true);
+
+    setTimeout(() => {
+      // Generate mock reference
+      const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      
+      const bookingData = {
+        ref,
+        patient,
+        selectedTests,
+        selectedPackages,
+        totalEstimatedPrice,
+        collectionMethod,
+        address
+      };
+
+      try {
+        sessionStorage.setItem("lastBookingConfirmation", JSON.stringify(bookingData));
+        clearCart();
+        navigate({ to: "/confirmation", replace: true });
+      } catch (err) {
+        setIsConfirming(false);
+        toast.error("We couldn't complete your booking request. Please try again or contact us on WhatsApp.");
+      }
+    }, 600);
   };
 
   // Validation before allowing Review step
@@ -120,54 +143,7 @@ function BookPage() {
     return false;
   };
 
-  if (step === "SUCCESS") {
-    return (
-      <div className="min-h-screen bg-surface flex flex-col items-center justify-center py-20 px-4">
-        <div className="max-w-md w-full bg-background rounded-3xl p-8 shadow-xl text-center border border-border">
-          <div className="mx-auto w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle2 className="size-10 text-green-600" />
-          </div>
-          <h1 className="text-3xl font-display font-extrabold text-foreground mb-3">
-            Booking Request Received
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            Thank you. Your test booking request has been received successfully.
-          </p>
-          
-          <div className="bg-surface rounded-xl p-6 mb-8 text-left border border-border/50">
-            <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
-              Booking Reference
-            </div>
-            <div className="text-xl font-mono font-bold text-foreground mb-6">
-              {bookingRef}
-            </div>
 
-            <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
-              Collection Method
-            </div>
-            <div className="text-base font-semibold text-foreground mb-6">
-              {collectionMethod === "HOME" ? "Home Collection (Pune)" : "Walk-in Centre (Pune)"}
-            </div>
-
-            <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">
-              Contact
-            </div>
-            <div className="text-base font-semibold text-foreground">
-              9359777222<br/>
-              <a href="mailto:secondopinioncrl@gmail.com" className="text-primary hover:underline">secondopinioncrl@gmail.com</a>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Link to="/" className="flex w-full h-12 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold transition-colors hover:bg-navy-soft">
-              Back to Home
-            </Link>
-            <ContactAction type="call" variant="outline" className="w-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -574,9 +550,10 @@ function BookPage() {
               <div className="mt-8">
                 <button 
                   onClick={handleConfirm}
-                  className="w-full flex h-14 items-center justify-center rounded-full bg-primary px-8 text-base font-bold text-primary-foreground hover:bg-navy-soft transition-transform hover:scale-[1.01] shadow-md"
+                  disabled={isConfirming}
+                  className="w-full flex h-14 items-center justify-center rounded-full bg-primary px-8 text-base font-bold text-primary-foreground hover:bg-navy-soft transition-transform hover:scale-[1.01] shadow-md disabled:opacity-70 disabled:hover:scale-100"
                 >
-                  Confirm Booking Request
+                  {isConfirming ? "Confirming..." : "Confirm Booking Request"}
                 </button>
                 <p className="text-center text-xs text-muted-foreground mt-4 max-w-md mx-auto">
                   Your booking request will be reviewed by SECOND OPINION CRL. Our team may contact you to confirm the appointment and applicable charges.
