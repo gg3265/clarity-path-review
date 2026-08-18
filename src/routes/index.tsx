@@ -7,6 +7,7 @@ import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
 import { WhyUs } from "@/components/WhyUs";
 import { TestSearch } from "@/components/TestSearch";
+import { PackagesHomeSection } from "@/components/PackagesHomeSection";
 
 const title = "Second Opinion CRL | Clinical Reference Laboratory in Pune";
 const description =
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "MedicalBusiness",
           name: "SECOND OPINION CRL",
-          alternateName: "Second Opinion CRL — Clinical Reference Laboratory",
+          alternateName: "Second Opinion CRL – Clinical Reference Laboratory",
           description,
           telephone: "+919359777222",
           email: "secondopinioncrl@gmail.com",
@@ -57,6 +58,7 @@ function Home() {
     <>
       <Hero />
       <TestSearch />
+      <PackagesHomeSection />
       <ServiceGrid />
       <SecondOpinionSection />
       <WhyUs />
