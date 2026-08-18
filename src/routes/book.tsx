@@ -64,13 +64,17 @@ function BookPage() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (totalItems === 0 && !isConfirming) {
       toast("No items selected yet. Choose a test or package to begin your booking.");
       navigate({ to: "/tests", replace: true });
     }
   }, [totalItems, isConfirming]);
 
-  const [step, setStep] = useState<Step>("TESTS");
+  const [step, setStep] = useState<Step>("DETAILS");
   const [patient, setPatient] = useState<PatientDetails>({
     name: "",
     age: "",
