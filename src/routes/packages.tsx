@@ -1,16 +1,17 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { packages, PackageCategory } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
 import { BookingBar } from "@/components/BookingBar";
 import { useCart } from "@/context/CartContext";
-import { CheckCircle2, ChevronRight, Activity, Beaker, ShieldCheck } from "lucide-react";
+import { CheckCircle2, ChevronRight, Activity, Microscope, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/packages")({
   head: () => ({
     meta: [
       { title: "Health & Pathology Packages | Second Opinion CRL" },
-      { name: "description", content: "Explore our premium health screening and specialist pathology packages." },
+      { name: "description", content: "Explore our thoughtfully designed health screening and pathology second opinion packages." },
     ],
   }),
   component: PackagesPage,
@@ -19,6 +20,23 @@ export const Route = createFileRoute("/packages")({
 function PackagesPage() {
   const { selectedPackages, addPackage, removePackage } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const yOffset = -80; // account for navbar if any
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.hash]);
 
   const isSelected = (pkgId: string) => selectedPackages.some(p => p.id === pkgId);
 
