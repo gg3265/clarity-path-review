@@ -33,46 +33,27 @@ interface PatientDetails {
 }
 
 function BookPage() {
-  const { selectedTests, selectedPackages, removeTest, removePackage, totalEstimatedPrice, hasConflict, clearCart } = useCart();
+  const { selectedTests, selectedPackages, isLoaded, removeTest, removePackage, totalEstimatedPrice, hasConflict, clearCart } = useCart();
   const navigate = useNavigate();
   const totalItems = (selectedTests?.length || 0) + (selectedPackages?.length || 0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleRemoveTest = (id: string) => {
     removeTest(id);
     if (totalItems === 1 && selectedTests.length === 1 && selectedTests[0].id === id) {
-      toast("No items selected yet. Choose a test or package to begin your booking.");
       setStep("TESTS");
-      if (window.history.length > 2) {
-        window.history.back();
-      } else {
-        navigate({ to: "/tests", replace: true });
-      }
     }
   };
 
   const handleRemovePackage = (id: string) => {
     removePackage(id);
     if (totalItems === 1 && selectedPackages.length === 1 && selectedPackages[0].id === id) {
-      toast("No items selected yet. Choose a test or package to begin your booking.");
       setStep("TESTS");
-      if (window.history.length > 2) {
-        window.history.back();
-      } else {
-        navigate({ to: "/tests", replace: true });
-      }
     }
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    if (totalItems === 0 && !isConfirming) {
-      toast("No items selected yet. Choose a test or package to begin your booking.");
-      navigate({ to: "/tests", replace: true });
-    }
-  }, [totalItems, isConfirming]);
 
   const [step, setStep] = useState<Step>("DETAILS");
   const [patient, setPatient] = useState<PatientDetails>({
@@ -84,7 +65,6 @@ function BookPage() {
     notes: "",
   });
   
-  const [collectionMethod, setCollectionMethod] = useState<CollectionMethod>(null);
   const [address, setAddress] = useState<AddressData>({
     addressLine1: "",
     addressLine2: "",
@@ -93,6 +73,7 @@ function BookPage() {
     state: "Maharashtra",
     pincode: "",
   });
+  const [collectionMethod, setCollectionMethod] = useState<CollectionMethod | null>(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
@@ -120,18 +101,20 @@ function BookPage() {
         selectedPackages,
         totalEstimatedPrice,
         collectionMethod,
-        address
+        address: collectionMethod === "HOME" ? address : undefined,
+        appointment: (date || time) ? { date, time } : undefined,
+        notes: "",
       };
 
       try {
         sessionStorage.setItem("lastBookingConfirmation", JSON.stringify(bookingData));
-        clearCart();
-        navigate({ to: "/confirmation", replace: true });
-      } catch (err) {
-        setIsConfirming(false);
-        toast.error("We couldn't complete your booking request. Please try again or contact us on WhatsApp.");
+      } catch (e) {
+        // Safe to ignore
       }
-    }, 600);
+
+      clearCart();
+      navigate({ to: "/confirmation" });
+    }, 1500);
   };
 
   // Validation before allowing Review step
@@ -147,7 +130,41 @@ function BookPage() {
     return false;
   };
 
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-muted-foreground font-medium">Loading booking securely...</p>
+      </div>
+    );
+  }
 
+  if (totalItems === 0 && !isConfirming) {
+    return (
+      <>
+        <PageHeader title="Booking" subtitle="Secure checkout" />
+        <section className="py-12 md:py-20 min-h-[60vh] bg-background">
+          <div className="container-page max-w-3xl">
+            <div className="text-center py-16 bg-surface rounded-3xl border border-border shadow-soft">
+              <div className="mx-auto w-16 h-16 bg-background rounded-full flex items-center justify-center mb-6 text-muted-foreground shadow-sm">
+                <Search className="size-8" />
+              </div>
+              <h1 className="text-3xl font-display font-extrabold text-foreground mb-4">Start a Booking</h1>
+              <p className="text-muted-foreground mb-8 text-lg">Select a test or package to continue.</p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Link to="/tests" className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-8 text-base font-bold text-primary-foreground hover:bg-navy-soft transition-colors shadow-sm">
+                  Find a Test
+                </Link>
+                <Link to="/packages" className="inline-flex h-12 items-center justify-center rounded-xl bg-secondary px-8 text-base font-bold text-secondary-foreground hover:bg-secondary/80 transition-colors shadow-sm">
+                  View Packages
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>

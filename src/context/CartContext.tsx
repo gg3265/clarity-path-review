@@ -5,6 +5,7 @@ import { HealthPackage } from "@/data/packages";
 interface CartContextType {
   selectedTests: DiagnosticTest[];
   selectedPackages: HealthPackage[];
+  isLoaded: boolean;
   addTest: (test: DiagnosticTest) => void;
   removeTest: (testId: string) => void;
   addPackage: (pkg: HealthPackage) => void;
@@ -19,6 +20,32 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [selectedTests, setSelectedTests] = useState<DiagnosticTest[]>([]);
   const [selectedPackages, setSelectedPackages] = useState<HealthPackage[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load from localStorage on mount
+  React.useEffect(() => {
+    try {
+      const storedTests = localStorage.getItem("crl_cart_tests");
+      const storedPackages = localStorage.getItem("crl_cart_packages");
+      if (storedTests) setSelectedTests(JSON.parse(storedTests));
+      if (storedPackages) setSelectedPackages(JSON.parse(storedPackages));
+    } catch (e) {
+      console.error("Failed to load cart from localStorage", e);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  // Save to localStorage when cart changes
+  React.useEffect(() => {
+    if (!isLoaded) return;
+    try {
+      localStorage.setItem("crl_cart_tests", JSON.stringify(selectedTests));
+      localStorage.setItem("crl_cart_packages", JSON.stringify(selectedPackages));
+    } catch (e) {
+      console.error("Failed to save cart to localStorage", e);
+    }
+  }, [selectedTests, selectedPackages, isLoaded]);
 
   const addTest = (test: DiagnosticTest) => {
     setSelectedTests((prev) => {
@@ -45,6 +72,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => {
     setSelectedTests([]);
     setSelectedPackages([]);
+    try {
+      localStorage.removeItem("crl_cart_tests");
+      localStorage.removeItem("crl_cart_packages");
+    } catch (e) {
+      // ignore
+    }
   };
 
   const hasConflict = selectedTests.some(
@@ -73,6 +106,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         selectedTests,
         selectedPackages,
+        isLoaded,
         addTest,
         removeTest,
         addPackage,
