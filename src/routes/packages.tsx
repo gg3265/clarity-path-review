@@ -95,7 +95,7 @@ function PackagesPage() {
         backFallback="/"
       />
 
-      <section className="bg-surface pt-12 pb-24 border-b border-border">
+      <section id="clinical" className="bg-surface pt-12 pb-24 border-b border-border">
         <div className="container-page max-w-6xl">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -174,15 +174,18 @@ function PackagesPage() {
         </div>
       </section>
 
-      <section className="bg-background pt-16 pb-24 border-b border-border">
+      <section id="cancer" className="bg-background pt-16 pb-24 border-b border-border">
         <div className="container-page max-w-6xl">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
               <ShieldCheck className="size-6" />
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">Cancer Screening Series</h2>
-              <p className="text-muted-foreground mt-1 text-sm sm:text-base">Focused screening packages designed around age-, sex- and risk-appropriate preventive assessment.</p>
+              <h2 className="text-3xl font-bold text-foreground">CRL Cancer Screening Series</h2>
+              <p className="text-muted-foreground mt-1 text-sm max-w-2xl">
+                Focused screening packages designed around age-, sex- and risk-appropriate preventive assessment. 
+                Screening should be selected according to age, personal history, family history and applicable clinical recommendations.
+              </p>
             </div>
           </div>
           
@@ -192,15 +195,17 @@ function PackagesPage() {
         </div>
       </section>
 
-      <section className="bg-surface pt-16 pb-32">
+      <section id="pathology" className="bg-surface pt-16 pb-32">
         <div className="container-page max-w-6xl">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
-              <Beaker className="size-6" />
+              <Microscope className="size-6" />
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">Pathology Second Opinion</h2>
-              <p className="text-muted-foreground mt-1 text-sm sm:text-base">Expert review of challenging, complex and cancer-related pathology cases, including outside slides, blocks, IHC and diagnostic reports.</p>
+              <h2 className="text-3xl font-bold text-foreground">Pathology Second Opinion</h2>
+              <p className="text-muted-foreground mt-1 text-sm max-w-2xl">
+                Expert review of challenging, complex and cancer-related pathology cases, including outside slides, blocks, IHC and diagnostic reports.
+              </p>
             </div>
           </div>
           

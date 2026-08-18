@@ -18,6 +18,7 @@ export function PackagesHomeSection() {
           {/* Clinical Health Packages */}
           <Link 
             to="/packages"
+            hash="clinical"
             className="group flex flex-col justify-between bg-background p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
           >
             <div>
@@ -39,6 +40,7 @@ export function PackagesHomeSection() {
           {/* Cancer Screening Series */}
           <Link 
             to="/packages"
+            hash="cancer"
             className="group flex flex-col justify-between bg-background p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
           >
             <div>
@@ -60,20 +62,21 @@ export function PackagesHomeSection() {
           {/* Pathology Second Opinion */}
           <Link 
             to="/packages"
-            className="group flex flex-col justify-between bg-navy-900 p-8 rounded-3xl border border-navy-800 shadow-md hover:shadow-xl transition-all duration-300"
+            hash="pathology"
+            className="group flex flex-col justify-between bg-background p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300"
           >
             <div>
-              <div className="w-12 h-12 bg-blue-900/50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Microscope className="size-6 text-blue-300" />
+              <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Microscope className="size-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">
+              <h3 className="text-xl font-bold text-foreground mb-3">
                 Pathology Second Opinion
               </h3>
-              <p className="text-blue-100/80 mb-8">
+              <p className="text-muted-foreground mb-8">
                 Expert review of pathology, cytology and IHC cases by specialized pathologists.
               </p>
             </div>
-            <div className="flex items-center text-sm font-semibold text-blue-300 group-hover:text-white transition-colors">
+            <div className="flex items-center text-sm font-semibold text-blue-600 group-hover:text-blue-700 transition-colors">
               Explore Second Opinion <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
