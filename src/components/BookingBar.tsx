@@ -5,7 +5,7 @@ import { ChevronRight, AlertCircle } from "lucide-react";
 export function BookingBar() {
   const { selectedTests, selectedPackages, totalEstimatedPrice, hasConflict } = useCart();
 
-  const totalItems = selectedTests.length + selectedPackages.length;
+  const totalItems = (selectedTests?.length || 0) + (selectedPackages?.length || 0);
 
   if (totalItems === 0) return null;
 
@@ -46,18 +46,18 @@ export function BookingBar() {
           </div>
           
           <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3 mb-4">
-            {selectedPackages.map((pkg) => (
+            {selectedPackages?.map((pkg) => (
               <div key={pkg.id} className="flex justify-between items-start text-sm">
-                <span className="font-medium text-foreground pr-2 truncate">{pkg.name}</span>
-                <span className="font-semibold shrink-0">₹{pkg.price}</span>
+                <span className="font-medium text-foreground pr-2 truncate">{pkg?.name}</span>
+                <span className="font-semibold shrink-0">₹{pkg?.price}</span>
               </div>
             ))}
-            {selectedTests.map((test) => (
+            {selectedTests?.map((test) => (
               <div key={test.id} className="flex justify-between items-start text-sm">
-                <span className="font-medium text-foreground pr-2 truncate">{test.name}</span>
+                <span className="font-medium text-foreground pr-2 truncate">{test?.name}</span>
                 <span className="font-semibold shrink-0">
-                  {test.priceStatus === "Confirmed" ? `₹${test.sheet1Price || test.sheet2MRP}` : 
-                   test.priceStatus === "Sheet 2 Only" ? `₹${test.sheet2MRP}` : 
+                  {test?.priceStatus === "Confirmed" ? `₹${test?.sheet1Price || test?.sheet2MRP}` : 
+                   test?.priceStatus === "Sheet 2 Only" ? `₹${test?.sheet2MRP}` : 
                    <AlertCircle className="size-4 text-amber-600 inline" />}
                 </span>
               </div>

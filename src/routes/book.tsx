@@ -35,7 +35,7 @@ interface PatientDetails {
 function BookPage() {
   const { selectedTests, selectedPackages, removeTest, removePackage, totalEstimatedPrice, hasConflict, clearCart } = useCart();
   const navigate = useNavigate();
-  const totalItems = selectedTests.length + selectedPackages.length;
+  const totalItems = (selectedTests?.length || 0) + (selectedPackages?.length || 0);
 
   const handleRemoveTest = (id: string) => {
     removeTest(id);
@@ -212,17 +212,17 @@ function BookPage() {
               ) : (
                 <>
                   <div className="space-y-4 mb-8">
-                    {selectedPackages.map(pkg => (
+                    {selectedPackages?.map(pkg => (
                       <div key={pkg.id} className="flex items-center justify-between p-5 bg-primary/5 rounded-2xl border border-primary/20 shadow-sm">
                         <div className="pr-4">
-                          <h4 className="font-semibold text-foreground">{pkg.name}</h4>
+                          <h4 className="font-semibold text-foreground">{pkg?.name}</h4>
                           <div className="text-xs text-primary mt-1 uppercase tracking-wider font-bold">
                             Package
                           </div>
                         </div>
                         <div className="text-right shrink-0 flex flex-col items-end gap-2">
                           <div className="font-display font-bold text-lg text-foreground">
-                            ₹{pkg.price}
+                            ₹{pkg?.price}
                           </div>
                           <button onClick={() => handleRemovePackage(pkg.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors">
                             Remove

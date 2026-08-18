@@ -7,7 +7,6 @@ import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
 import { WhyUs } from "@/components/WhyUs";
 import { TestSearch } from "@/components/TestSearch";
-import { PackagesSection } from "@/components/PackagesSection";
 
 const title = "Second Opinion CRL | Clinical Reference Laboratory in Pune";
 const description =
@@ -58,7 +57,6 @@ function Home() {
     <>
       <Hero />
       <TestSearch />
-      <PackagesSection />
       <ServiceGrid />
       <SecondOpinionSection />
       <WhyUs />

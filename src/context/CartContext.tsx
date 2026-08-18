@@ -51,20 +51,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     (t) => t.priceStatus === "Price confirmation required"
   );
 
-  const testsPrice = selectedTests.reduce((acc, test) => {
-    if (test.priceStatus === "Confirmed" && test.sheet1Price) {
+  const testsPrice = (selectedTests || []).reduce((acc, test) => {
+    if (test?.priceStatus === "Confirmed" && test?.sheet1Price) {
       return acc + test.sheet1Price;
     }
-    if (test.priceStatus === "Confirmed" && test.sheet2MRP) {
+    if (test?.priceStatus === "Confirmed" && !test?.sheet1Price && test?.sheet2MRP) {
       return acc + test.sheet2MRP;
     }
-    if (test.priceStatus === "Sheet 2 Only" && test.sheet2MRP) {
+    if (test?.priceStatus === "Sheet 2 Only" && test?.sheet2MRP) {
       return acc + test.sheet2MRP;
     }
     return acc;
   }, 0);
 
-  const packagesPrice = selectedPackages.reduce((acc, pkg) => acc + pkg.price, 0);
+  const packagesPrice = (selectedPackages || []).reduce((acc, pkg) => acc + (pkg?.price || 0), 0);
   
   const totalEstimatedPrice = testsPrice + packagesPrice;
 
