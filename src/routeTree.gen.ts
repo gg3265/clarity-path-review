@@ -20,6 +20,7 @@ import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestsRouteImport } from './routes/tests'
 import { Route as UploadPrescriptionRouteImport } from './routes/upload-prescription'
+import { Route as CancerPathologySpecialtyIdRouteImport } from './routes/cancer-pathology_.$specialtyId'
 import { Route as PackagesPackageIdRouteImport } from './routes/packages_.$packageId'
 import { Route as ServicesServiceIdRouteImport } from './routes/services_.$serviceId'
 
@@ -78,6 +79,12 @@ const UploadPrescriptionRoute = UploadPrescriptionRouteImport.update({
   path: '/upload-prescription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CancerPathologySpecialtyIdRoute =
+  CancerPathologySpecialtyIdRouteImport.update({
+    id: '/cancer-pathology_/$specialtyId',
+    path: '/cancer-pathology/$specialtyId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PackagesPackageIdRoute = PackagesPackageIdRouteImport.update({
   id: '/packages_/$packageId',
   path: '/packages/$packageId',
@@ -101,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/cancer-pathology/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
 }
@@ -116,6 +124,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/cancer-pathology/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
 }
@@ -132,6 +141,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
   '/upload-prescription': typeof UploadPrescriptionRoute
+  '/cancer-pathology_/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages_/$packageId': typeof PackagesPackageIdRoute
   '/services_/$serviceId': typeof ServicesServiceIdRoute
 }
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/cancer-pathology/$specialtyId'
     | '/packages/$packageId'
     | '/services/$serviceId'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/cancer-pathology/$specialtyId'
     | '/packages/$packageId'
     | '/services/$serviceId'
   id:
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/tests'
     | '/upload-prescription'
+    | '/cancer-pathology_/$specialtyId'
     | '/packages_/$packageId'
     | '/services_/$serviceId'
   fileRoutesById: FileRoutesById
@@ -195,6 +208,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   TestsRoute: typeof TestsRoute
   UploadPrescriptionRoute: typeof UploadPrescriptionRoute
+  CancerPathologySpecialtyIdRoute: typeof CancerPathologySpecialtyIdRoute
   PackagesPackageIdRoute: typeof PackagesPackageIdRoute
   ServicesServiceIdRoute: typeof ServicesServiceIdRoute
 }
@@ -278,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UploadPrescriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cancer-pathology_/$specialtyId': {
+      id: '/cancer-pathology_/$specialtyId'
+      path: '/cancer-pathology/$specialtyId'
+      fullPath: '/cancer-pathology/$specialtyId'
+      preLoaderRoute: typeof CancerPathologySpecialtyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages_/$packageId': {
       id: '/packages_/$packageId'
       path: '/packages/$packageId'
@@ -307,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   TestsRoute: TestsRoute,
   UploadPrescriptionRoute: UploadPrescriptionRoute,
+  CancerPathologySpecialtyIdRoute: CancerPathologySpecialtyIdRoute,
   PackagesPackageIdRoute: PackagesPackageIdRoute,
   ServicesServiceIdRoute: ServicesServiceIdRoute,
 }

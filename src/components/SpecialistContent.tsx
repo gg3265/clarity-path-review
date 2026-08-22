@@ -1,21 +1,21 @@
-﻿import { Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Hexagon, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
 const cancerSpecialties = [
-  "Breast pathology",
-  "GI pathology",
-  "Head & neck pathology",
-  "Gynaecological pathology",
-  "Genitourinary pathology",
-  "Lung pathology",
-  "Haematolymphoid pathology",
-  "Bone & soft tissue tumours",
-  "Skin pathology",
-  "Endocrine pathology",
-  "CNS pathology",
-  "Metastatic malignancies",
+  { name: "Breast Pathology", slug: "breast-pathology", desc: "Specialist review of breast lesions, carcinomas, and receptor status." },
+  { name: "GI Pathology", slug: "gi-pathology", desc: "Diagnostic evaluation of gastrointestinal and hepatobiliary biopsies and resections." },
+  { name: "Head & Neck Pathology", slug: "head-neck-pathology", desc: "Expert assessment of oral, pharyngeal, laryngeal and salivary gland lesions." },
+  { name: "Gynaecological Pathology", slug: "gynaecological-pathology", desc: "Review of cervical, endometrial, ovarian and other gynaecological tract specimens." },
+  { name: "Genitourinary Pathology", slug: "genitourinary-pathology", desc: "Specialized focus on kidney, bladder, prostate and testicular pathology." },
+  { name: "Lung Pathology", slug: "lung-pathology", desc: "Detailed review of primary and metastatic pulmonary lesions." },
+  { name: "Haematolymphoid Pathology", slug: "haematolymphoid-pathology", desc: "Expert assessment of lymph nodes, bone marrow, and haematolymphoid disorders." },
+  { name: "Bone & Soft Tissue Tumours", slug: "bone-soft-tissue-tumours", desc: "Diagnostic review of complex mesenchymal, bone, and soft tissue lesions." },
+  { name: "Skin Pathology", slug: "skin-pathology", desc: "Evaluation of melanocytic, lymphoid, and other cutaneous lesions." },
+  { name: "Endocrine Pathology", slug: "endocrine-pathology", desc: "Review of thyroid, parathyroid, adrenal and neuroendocrine tumours." },
+  { name: "CNS Pathology", slug: "cns-pathology", desc: "Specialist assessment of central nervous system and neuropathology cases." },
+  { name: "Metastatic Malignancies", slug: "metastatic-malignancies", desc: "Investigation and review of metastatic tumours, including unknown primaries." },
 ];
 
 export function CancerSection() {
@@ -23,23 +23,39 @@ export function CancerSection() {
     <section className="bg-surface py-20 lg:py-28 overflow-hidden">
       <div className="container-page">
         <Reveal className="max-w-3xl text-center mx-auto mb-16">
-          <p className="eyebrow">Cancer & Oncopathology</p>
+          <p className="eyebrow">Cancer Pathology Services</p>
           <h2 className="mt-5 font-display text-3xl leading-tight font-extrabold text-foreground sm:text-4xl lg:text-5xl">
-            Specialist pathology review for complex and cancer-related cases
+            Specialist pathology review across major cancer and tumour types.
           </h2>
+          <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
+            Select the pathology area relevant to your case and provide the available clinical and diagnostic information. Our team can review the submitted pathology material and relevant reports where appropriate.
+          </p>
         </Reveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {cancerSpecialties.map((specialty, i) => (
             <Reveal
-              key={specialty}
+              key={specialty.slug}
               delay={i * 30}
-              className="group relative flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-border bg-background shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300"
             >
-              <Hexagon className="size-6 text-primary/30 mb-4 group-hover:text-primary transition-colors" strokeWidth={1.5} />
-              <h3 className="font-semibold text-foreground text-sm sm:text-base leading-tight">
-                {specialty}
-              </h3>
+              <Link
+                to={`/cancer-pathology/${specialty.slug}`}
+                className="group flex flex-col h-full items-start justify-between p-6 rounded-2xl border border-border bg-background shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300 text-left"
+              >
+                <div>
+                  <Hexagon className="size-6 text-primary/30 mb-4 group-hover:text-primary transition-colors" strokeWidth={1.5} />
+                  <h3 className="font-semibold text-foreground text-base sm:text-lg leading-tight mb-2">
+                    {specialty.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    {specialty.desc}
+                  </p>
+                </div>
+                
+                <div className="mt-6 flex items-center text-xs font-bold text-primary group-hover:text-navy-soft transition-colors">
+                  Request Review <ArrowRight className="ml-2 size-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             </Reveal>
           ))}
         </div>
