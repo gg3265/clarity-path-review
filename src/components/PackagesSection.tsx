@@ -41,7 +41,7 @@ export function PackagesSection() {
                 className={cn(
                   "group relative flex flex-col justify-between p-6 sm:p-8 rounded-3xl border shadow-sm hover:shadow-xl transition-all duration-300",
                   isFlagship 
-                    ? "bg-navy-900 text-white border-navy-800 lg:col-span-2 md:col-span-2" 
+                    ? "bg-navy text-white border-navy-soft lg:col-span-2 md:col-span-2" 
                     : "bg-background border-border hover:border-primary/20",
                   idx === 3 && "lg:col-span-1" // HistoSure next to Flagship
                 )}
@@ -132,7 +132,7 @@ export function PackagesSection() {
                     </Link>
                     <Link to={`/packages/${pkg.id}`} className={cn(
                       "flex-1 sm:flex-none flex h-10 items-center justify-center rounded-xl px-6 text-xs font-bold transition-all shadow-sm",
-                      isFlagship ? "bg-white text-navy-900 hover:bg-blue-50" : "bg-primary text-primary-foreground hover:bg-navy-soft"
+                      isFlagship ? "bg-white text-navy hover:bg-blue-50" : "bg-primary text-primary-foreground hover:bg-navy-soft"
                     )}>
                       {pkg.ctaText || "Book Package"}
                     </Link>
