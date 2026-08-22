@@ -20,7 +20,7 @@ const cancerSpecialties = [
 
 export function CancerSection() {
   return (
-    <section className="bg-surface py-20 lg:py-28 overflow-hidden">
+    <section id="cancer-services" className="bg-surface py-20 lg:py-28 overflow-hidden">
       <div className="container-page">
         <Reveal className="max-w-3xl text-center mx-auto mb-16">
           <p className="eyebrow">Cancer Pathology Services</p>

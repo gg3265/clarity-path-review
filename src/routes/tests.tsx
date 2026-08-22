@@ -5,6 +5,7 @@ import { tests, TestCategory, DiagnosticTest } from "@/data/tests";
 import { packages, HealthPackage } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
 import { BookingBar } from "@/components/BookingBar";
+import { BackButton } from "@/components/BackButton";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
 
@@ -111,7 +112,7 @@ function TestsPage() {
         intro="Browse our comprehensive menu of pathology and clinical investigations."
         watermark="DIRECTORY"
         showBack={true}
-        backFallback="/"
+        backFallback="/#test-directory"
       />
       
       <section className="bg-surface py-12 md:py-20 min-h-[60vh] pb-32">

@@ -41,7 +41,7 @@ function ServiceDetail() {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="container-page pt-6 pb-2">
-        <BackButton fallbackUrl="/services" className="mb-0" />
+        <BackButton fallbackUrl="/#specialist-services" className="mb-0" />
       </div>
 
       {step === "SUCCESS" ? (

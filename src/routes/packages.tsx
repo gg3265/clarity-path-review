@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react
 import { packages, PackageCategory } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
 import { BookingBar } from "@/components/BookingBar";
+import { BackButton } from "@/components/BackButton";
 import { useCart } from "@/context/CartContext";
 import { CheckCircle2, ChevronRight, Activity, Microscope, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -110,7 +111,7 @@ function PackagesPage() {
         intro="Thoughtfully designed screening and expert pathology packages for preventive health, early risk assessment and specialist second opinions."
         watermark="PACKAGES"
         showBack={true}
-        backFallback="/"
+        backFallback="/#packages"
       />
 
       <section id="clinical" className="bg-surface pt-12 pb-24 border-b border-border">

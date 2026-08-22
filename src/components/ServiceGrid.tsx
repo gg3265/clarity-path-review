@@ -5,7 +5,7 @@ import { Link } from "@tanstack/react-router";
 
 export function ServiceGrid({ showHeading = true }: { showHeading?: boolean }) {
   return (
-    <section className="bg-background">
+    <section id="specialist-services" className="bg-background">
       <div className="container-page py-20 md:py-28">
         {showHeading ? (
           <Reveal className="max-w-2xl">

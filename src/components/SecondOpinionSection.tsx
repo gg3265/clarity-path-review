@@ -6,7 +6,7 @@ import { secondOpinionStatement } from "@/lib/site";
 
 export function SecondOpinionSection() {
   return (
-    <section className="relative overflow-hidden bg-navy text-primary-foreground">
+    <section id="second-opinion" className="relative overflow-hidden bg-navy text-primary-foreground">
       <div aria-hidden="true" className="lab-grid-dark absolute inset-0 opacity-70" />
       <div
         aria-hidden="true"

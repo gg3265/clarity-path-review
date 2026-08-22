@@ -30,6 +30,7 @@ function Contact() {
         title="Need a second opinion?"
         intro="Connect with SECOND OPINION CRL to discuss your pathology review requirements. Enquiries only — this is not an emergency medical service."
         showBack={true}
+        backFallback="/"
       />
       <ContactSection />
     </>

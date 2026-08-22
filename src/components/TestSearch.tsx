@@ -58,7 +58,7 @@ export function TestSearch() {
   };
 
   return (
-    <section className="relative bg-surface py-16 md:py-24">
+    <section id="test-directory" className="relative bg-surface py-16 md:py-24">
       <div className="container-page max-w-4xl">
         <div className="text-center mb-10">
           <h2 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl md:text-5xl">

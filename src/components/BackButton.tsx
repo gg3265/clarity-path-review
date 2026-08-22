@@ -19,8 +19,10 @@ export function BackButton({ fallbackUrl = "/", className, label = "Back", onCli
       if (result !== false) return;
     }
 
-    if (window.history.length > 2) {
-      window.history.back();
+    const isInternal = typeof document !== "undefined" && document.referrer.includes(window.location.host);
+
+    if (isInternal && window.history.length > 1) {
+      router.history.back();
     } else {
       router.navigate({ to: fallbackUrl, replace: true });
     }

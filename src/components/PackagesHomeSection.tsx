@@ -82,7 +82,7 @@ export function PathologyPackagesHome() {
   const pathologyPkgs = highlightIds.map(id => packages.find(p => p.id === id)).filter(Boolean) as typeof packages;
 
   return (
-    <section className="bg-surface py-20 lg:py-28 overflow-hidden border-b border-border">
+    <section id="packages" className="bg-surface py-20 lg:py-28 overflow-hidden border-b border-border">
       <div className="container-page max-w-6xl">
         <div className="mb-14">
           <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase mb-4">

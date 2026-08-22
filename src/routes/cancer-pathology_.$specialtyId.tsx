@@ -568,6 +568,16 @@ function CancerPathologyForm() {
         title={specialty?.name} 
         intro="Complete the information below to request a specialist review."
         watermark="REQUEST"
+        showBack={true}
+        backFallback="/#cancer-services"
+        onBackClick={() => {
+          if (step > 1 && step < 7) {
+            setStep(s => s - 1);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return true; // Stop default history.back()
+          }
+          return false; // Continue default history.back()
+        }}
       />
       <div className="bg-background py-16 md:py-24">
         <div className="container-page max-w-3xl">

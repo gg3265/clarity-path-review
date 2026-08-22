@@ -7,6 +7,7 @@ export function PageHeader({
   watermark,
   showBack = false,
   backFallback = "/",
+  onBackClick,
 }: {
   eyebrow: string;
   title: string;
@@ -14,6 +15,7 @@ export function PageHeader({
   watermark?: string;
   showBack?: boolean;
   backFallback?: string;
+  onBackClick?: () => boolean | void;
 }) {
   return (
     <section className="relative overflow-hidden bg-surface">
@@ -28,7 +30,7 @@ export function PageHeader({
       ) : null}
       <div className="relative container-page py-16 md:py-24">
         {showBack && (
-          <BackButton fallbackUrl={backFallback} className="mb-6" />
+          <BackButton fallbackUrl={backFallback} onClick={onBackClick} className="mb-6" />
         )}
         <p className="eyebrow animate-fade-in">{eyebrow}</p>
         <h1 className="mt-5 max-w-3xl font-display text-[2.25rem] leading-[1.06] font-extrabold text-foreground sm:text-5xl lg:text-[3.5rem]">
