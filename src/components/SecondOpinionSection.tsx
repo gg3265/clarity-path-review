@@ -25,7 +25,7 @@ export function SecondOpinionSection() {
             Second Opinion & Slide Review
           </p>
           <h2 className="mt-5 font-display text-3xl leading-[1.1] font-extrabold sm:text-4xl lg:text-5xl">
-            A second look can bring greater clarity.
+            How Second Opinion Works
           </h2>
         </Reveal>
 
@@ -39,9 +39,9 @@ export function SecondOpinionSection() {
           <ProcessTimeline />
         </div>
 
-        <Reveal delay={120} className="mt-14">
+        <Reveal delay={120} className="mt-14 flex gap-4">
           <Link
-            to="/contact"
+            to="/services/second-opinion-slide-review"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-background px-7 text-sm font-semibold text-foreground transition-transform duration-200 hover:scale-[1.03]"
           >
             Request a Second Opinion

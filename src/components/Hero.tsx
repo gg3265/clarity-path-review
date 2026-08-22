@@ -5,9 +5,10 @@ import { LogoMark } from "@/components/Logo";
 
 const specialistFocus = [
   "Histopathology",
-  "Oncopathology",
   "Cytopathology",
-  "Second Opinion",
+  "Oncopathology",
+  "IHC",
+  "Molecular & Ancillary Testing",
 ];
 
 export function Hero() {
@@ -24,30 +25,28 @@ export function Hero() {
 
       <div className="relative container-page grid items-center gap-14 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-28">
         <div className="animate-fade-in">
-          <p className="eyebrow">Clinical Reference Laboratory • Pune</p>
+          <p className="eyebrow">Clinical Reference Laboratory</p>
           <h1 className="mt-5 font-display text-[2.5rem] leading-[1.05] font-extrabold text-foreground sm:text-6xl lg:text-[4.25rem]">
-            Expert pathology.
-            <span className="block text-navy-soft">Clearer answers.</span>
+            SECOND OPINION CRL
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Advanced clinical pathology, histopathology, oncopathology and
-            expert second-opinion services designed to bring greater clarity to
-            complex diagnostic cases.
+          <p className="mt-6 max-w-xl text-xl font-medium leading-relaxed text-foreground sm:text-2xl">
+            Specialist Pathology Second Opinions.<br />
+            <span className="text-muted-foreground">Clearer Diagnostic Decisions.</span>
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
-              to="/tests"
+              to="/services/second-opinion-slide-review"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft"
             >
-              Book a Test
+              Request a Second Opinion
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link
-              to="/upload-prescription"
+              to="/services/second-opinion-slide-review"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-input bg-background px-7 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
             >
-              Upload Prescription
+              Refer a Case
             </Link>
           </div>
         </div>

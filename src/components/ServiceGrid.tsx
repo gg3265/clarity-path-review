@@ -11,7 +11,7 @@ export function ServiceGrid({ showHeading = true }: { showHeading?: boolean }) {
           <Reveal className="max-w-2xl">
             <p className="eyebrow">Capabilities</p>
             <h2 className="mt-5 font-display text-3xl leading-tight font-extrabold text-foreground sm:text-4xl lg:text-5xl">
-              Our Services
+              Specialist Pathology Services
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
               Specialized pathology and laboratory services for routine, complex

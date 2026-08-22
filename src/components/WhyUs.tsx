@@ -6,7 +6,7 @@ export function WhyUs() {
     <section className="bg-background">
       <div className="container-page grid gap-14 py-20 md:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
-          <p className="eyebrow">Why Second Opinion CRL</p>
+          <p className="eyebrow">Why Choose Second Opinion CRL</p>
           <h2 className="mt-5 font-display text-3xl leading-[1.1] font-extrabold text-foreground sm:text-4xl lg:text-[2.75rem]">
             Built around diagnostic clarity.
           </h2>

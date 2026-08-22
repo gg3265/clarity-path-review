@@ -94,6 +94,57 @@ function UploadPrescriptionPage() {
     return false;
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (isSubmitting || !file) return;
+    setIsSubmitting(true);
+
+    try {
+      const { supabase } = await import("@/lib/supabase");
+      
+      const requestId = crypto.randomUUID();
+      const { error: requestError } = await supabase
+        .from('prescription_requests')
+        .insert([{
+          id: requestId,
+          patient_name: patient.name,
+          mobile: patient.mobile,
+          status: 'PENDING'
+        }]);
+
+      if (requestError) throw requestError;
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${requestId}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `uploads/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('prescriptions')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { error: fileRecordError } = await supabase
+        .from('prescription_files')
+        .insert([{
+          request_id: requestId,
+          file_path: filePath,
+          file_name: file.name,
+          file_type: file.type
+        }]);
+
+      if (fileRecordError) throw fileRecordError;
+
+      handleNext("SUCCESS");
+    } catch (error) {
+      console.error("Prescription upload error:", error);
+      toast.error("Failed to submit request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (step === "SUCCESS") {
     return (
       <div className="min-h-[80vh] bg-surface flex flex-col items-center justify-center py-20 px-4">
@@ -363,7 +414,7 @@ function UploadPrescriptionPage() {
                   onClick={() => handleNext("SUCCESS")}
                   className="w-full flex h-14 items-center justify-center rounded-full bg-primary px-8 text-base font-bold text-primary-foreground hover:bg-navy-soft transition-transform hover:scale-[1.01] shadow-md"
                 >
-                  Submit Prescription Request
+                  {isSubmitting ? 'Submitting...' : 'Submit Prescription Request'}
                 </button>
               </div>
             </div>

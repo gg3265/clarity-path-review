@@ -86,7 +86,7 @@ function ServiceDetail() {
               {service.description}
             </p>
           </div>
-          <ServiceForm serviceTitle={service.title} onSuccess={() => {
+          <ServiceForm serviceId={serviceId} serviceTitle={service.title} onSuccess={() => {
             setStep("SUCCESS");
             window.scrollTo({ top: 0, behavior: "smooth" });
           }} />
@@ -100,7 +100,7 @@ function ServiceDetail() {
 // FORM COMPONENTS
 // ----------------------------------------------------------------------
 
-function ServiceForm({ serviceTitle, onSuccess }: { serviceTitle: string; onSuccess: () => void }) {
+function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string; serviceTitle: string; onSuccess: () => void }) {
   const [patient, setPatient] = useState({
     name: "",
     age: "",
@@ -123,15 +123,59 @@ function ServiceForm({ serviceTitle, onSuccess }: { serviceTitle: string; onSucc
   const isIHC = serviceTitle === "Immunohistochemistry";
   const isMolecular = serviceTitle === "Molecular & Ancillary Testing";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     if (!patient.name || (!isSecondOpinion && !patient.age) || (!isSecondOpinion && !patient.gender) || !patient.mobile) {
       toast.error("Please enter required patient details.");
       return;
     }
     
-    // In a real app, send data to backend here.
-    onSuccess();
+    setIsSubmitting(true);
+    try {
+      const { supabase } = await import("@/lib/supabase");
+
+      let requestData;
+      
+      if (isSecondOpinion) {
+        const requestId = crypto.randomUUID();
+        const { error } = await supabase.from('second_opinion_requests').insert([{
+          id: requestId,
+          patient_name: patient.name,
+          mobile: patient.mobile,
+          email: patient.email || null,
+          case_description: formData.caseDesc || '',
+          status: 'PENDING'
+        }]);
+        if (error) throw error;
+        requestData = { id: requestId };
+      } else {
+        const requestId = crypto.randomUUID();
+        const { error } = await supabase.from('service_requests').insert([{
+          id: requestId,
+          service_id: serviceId,
+          service_name: serviceTitle,
+          patient_name: patient.name,
+          mobile: patient.mobile,
+          email: patient.email || null,
+          message: `Age: ${patient.age}, Gender: ${patient.gender}\nDoctor: ${patient.doctor}\nHospital: ${patient.hospital}\n\nCase Details: ${JSON.stringify(formData)}`,
+          status: 'PENDING'
+        }]);
+        if (error) throw error;
+        requestData = { id: requestId };
+      }
+
+      toast.success("Request submitted successfully!");
+      onSuccess();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit request.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handlePatientChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -143,7 +187,7 @@ function ServiceForm({ serviceTitle, onSuccess }: { serviceTitle: string; onSucc
   };
 
   const toggleMaterial = (mat: string) => {
-    setFormData(prev => {
+    setFormData((prev: any) => {
       const current = prev.materialTypes || [];
       if (current.includes(mat)) {
         return { ...prev, materialTypes: current.filter((m: string) => m !== mat) };
@@ -154,7 +198,7 @@ function ServiceForm({ serviceTitle, onSuccess }: { serviceTitle: string; onSucc
   };
 
   const toggleTest = (testId: string) => {
-    setFormData(prev => {
+    setFormData((prev: any) => {
       const current = prev.selectedTests || [];
       if (current.includes(testId)) {
         return { ...prev, selectedTests: current.filter((id: string) => id !== testId) };
@@ -382,8 +426,8 @@ function ServiceForm({ serviceTitle, onSuccess }: { serviceTitle: string; onSucc
         </div>
       </section>
 
-      <button type="submit" className="w-full rounded-xl bg-primary px-8 py-4 text-base font-bold text-primary-foreground transition-transform hover:scale-[1.01] shadow-md hover:bg-navy-soft mt-8">
-        {isSecondOpinion ? "Submit Second Opinion Request" : "Continue →"}
+      <button type="submit" disabled={isSubmitting} className="w-full rounded-xl bg-primary px-8 py-4 text-base font-bold text-primary-foreground transition-transform hover:scale-[1.01] shadow-md hover:bg-navy-soft mt-8 disabled:opacity-70 disabled:hover:scale-100">
+        {isSubmitting ? "Submitting..." : (isSecondOpinion ? "Submit Second Opinion Request" : "Continue →")}
       </button>
     </form>
   );

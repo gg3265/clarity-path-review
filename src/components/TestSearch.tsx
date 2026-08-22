@@ -62,10 +62,10 @@ export function TestSearch() {
       <div className="container-page max-w-4xl">
         <div className="text-center mb-10">
           <h2 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl md:text-5xl">
-            Find a Test
+            Looking for a specific laboratory test?
           </h2>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg max-w-2xl mx-auto">
-            Search our diagnostic test menu to quickly find the investigation you need.
+            Search our complete laboratory test menu for routine, clinical and specialized investigations.
           </p>
         </div>
 

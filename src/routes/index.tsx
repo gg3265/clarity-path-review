@@ -7,11 +7,11 @@ import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
 import { WhyUs } from "@/components/WhyUs";
 import { TestSearch } from "@/components/TestSearch";
-import { PackagesHomeSection } from "@/components/PackagesHomeSection";
+import { PathologyPackagesHome, ClinicalPackagesHome } from "@/components/PackagesHomeSection";
 
-const title = "Second Opinion CRL | Clinical Reference Laboratory in Pune";
+const title = "Second Opinion CRL | Pathology Second Opinion in Pune";
 const description =
-  "SECOND OPINION CRL is a Clinical Reference Laboratory in Pune offering clinical pathology, histopathology, oncopathology, cytopathology, immunohistochemistry, molecular testing and expert second-opinion pathology review.";
+  "Second Opinion CRL is a Clinical Reference Laboratory in Pune providing specialist pathology second opinions, histopathology, cytopathology, oncopathology, IHC, molecular and ancillary testing.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,9 +30,9 @@ export const Route = createFileRoute("/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "MedicalBusiness",
+          "@type": "MedicalClinic",
           name: "SECOND OPINION CRL",
-          alternateName: "Second Opinion CRL – Clinical Reference Laboratory",
+          alternateName: "Second Opinion CRL — Clinical Reference Laboratory",
           description,
           telephone: "+919359777222",
           email: "secondopinioncrl@gmail.com",
@@ -57,11 +57,12 @@ function Home() {
   return (
     <>
       <Hero />
-      <TestSearch />
-      <PackagesHomeSection />
+      <WhyUs />
       <ServiceGrid />
       <SecondOpinionSection />
-      <WhyUs />
+      <PathologyPackagesHome />
+      <ClinicalPackagesHome />
+      <TestSearch />
       <ContactSection />
     </>
   );
