@@ -8,6 +8,12 @@ import { ServiceGrid } from "@/components/ServiceGrid";
 import { WhyUs } from "@/components/WhyUs";
 import { TestSearch } from "@/components/TestSearch";
 import { PathologyPackagesHome, ClinicalPackagesHome } from "@/components/PackagesHomeSection";
+import { 
+  CancerSection, 
+  WhenToSeekSection, 
+  DiagnosticApproachSection, 
+  SpecialistCTA 
+} from "@/components/SpecialistContent";
 
 const title = "Second Opinion CRL | Pathology Second Opinion in Pune";
 const description =
@@ -59,6 +65,10 @@ function Home() {
       <Hero />
       <WhyUs />
       <ServiceGrid />
+      <CancerSection />
+      <WhenToSeekSection />
+      <DiagnosticApproachSection />
+      <SpecialistCTA />
       <SecondOpinionSection />
       <PathologyPackagesHome />
       <ClinicalPackagesHome />
