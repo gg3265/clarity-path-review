@@ -192,9 +192,7 @@ export function ContactForm() {
           className="mt-2 block w-full rounded-lg border border-dashed border-input bg-surface px-4 py-3 text-sm text-muted-foreground file:mr-4 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary-foreground"
         />
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          Selected files are attached by you in your own email application — they
-          are not uploaded from this page. Please share only the information
-          necessary for your enquiry.
+          For patient confidentiality and secure handling of diagnostic material, case documents should be submitted only through the designated CRL referral process. Please contact us before sending patient-identifiable documents.
         </p>
       </div>
 

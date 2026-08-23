@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CaseMaterials } from "@/components/CaseMaterials";
+import { WhatWeReview } from "@/components/WhatWeReview";
 import { PageHeader } from "@/components/PageHeader";
-import { ReferringSection } from "@/components/ReferringSection";
+import { ForDoctors } from "@/components/ForDoctors";
 import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { WhyUs } from "@/components/WhyUs";
 
@@ -38,9 +38,9 @@ function SecondOpinion() {
         backFallback="/#second-opinion"
       />
       <SecondOpinionSection />
-      <CaseMaterials />
+      <WhatWeReview />
       <WhyUs />
-      <ReferringSection />
+      <ForDoctors />
     </>
   );
 }

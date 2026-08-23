@@ -27,8 +27,8 @@ function Contact() {
     <>
       <PageHeader
         eyebrow="Contact"
-        title="Need a second opinion?"
-        intro="Connect with SECOND OPINION CRL to discuss your pathology review requirements. Enquiries only — this is not an emergency medical service."
+        title="Contact Second Opinion CRL"
+        intro="For pathology second opinions, referrals and diagnostic consultation."
         showBack={true}
         backFallback="/"
       />

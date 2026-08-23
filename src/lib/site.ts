@@ -23,10 +23,20 @@ export const mapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
 
 export const nav = [
   { label: "Home", to: "/" as const },
-  { label: "About", to: "/about" as const },
   { label: "Services", to: "/services" as const },
   { label: "Second Opinion", to: "/second-opinion" as const },
+  { label: "Cancer Pathology", to: "/#cancer-services" as const },
+  { label: "Test Directory", to: "/tests" as const },
+  { label: "Health Packages", to: "/packages" as const },
+  { label: "For Doctors", to: "/second-opinion" as const },
   { label: "Contact", to: "/contact" as const },
+];
+
+export const footerNav = [
+  { label: "Privacy & Confidentiality", to: "/privacy-confidentiality" as const },
+  { label: "Quality & Standards", to: "/quality-standards" as const },
+  { label: "Contact", to: "/contact" as const },
+  { label: "Services", to: "/services" as const },
 ];
 
 export const focusAreas = [
@@ -114,25 +124,27 @@ export const process = [
   {
     step: "01",
     title: "Submit Your Case",
-    description: "Share pathology reports, slides, blocks, IHC or relevant diagnostic material.",
+    description: "Provide the pathology report, slides/blocks and relevant clinical information.",
   },
   {
     step: "02",
-    title: "Specialist Review",
-    description:
-      "The available pathology material and clinical information are reviewed.",
+    title: "Case Assessment",
+    description: "The available material is assessed to determine the scope of review and whether additional material/testing may be required.",
   },
   {
     step: "03",
-    title: "Integrated Assessment",
-    description:
-      "Histopathology, cytopathology, IHC and ancillary findings are considered where appropriate.",
+    title: "Specialist Pathology Review",
+    description: "The case is independently reviewed with correlation of morphology, IHC and relevant clinical information.",
   },
   {
     step: "04",
-    title: "Structured Opinion",
-    description:
-      "Receive a clear, clinically relevant second-opinion report.",
+    title: "Additional Testing, If Required",
+    description: "Additional IHC, special stains or ancillary/molecular testing may be recommended when appropriate.",
+  },
+  {
+    step: "05",
+    title: "Final Opinion",
+    description: "A structured pathology opinion is issued and communicated through the agreed process.",
   },
 ];
 

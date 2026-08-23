@@ -1,67 +1,113 @@
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Search, ArrowRight, UserCircle2, Stethoscope, Beaker } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/Reveal";
 import { ContactAction } from "@/components/ContactAction";
 import { mapsDirectionsUrl, mapsEmbedUrl, site } from "@/lib/site";
+import { Link } from "@tanstack/react-router";
 
 export function ContactSection() {
   return (
     <section id="contact" className="bg-background">
-      <div className="container-page grid gap-14 py-20 md:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-        <div>
-          <Reveal>
-            <p className="eyebrow">Contact</p>
-            <h2 className="mt-5 font-display text-3xl leading-[1.1] font-extrabold text-foreground sm:text-4xl lg:text-[2.75rem]">
-              Need a second opinion?
-            </h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-              Connect with SECOND OPINION CRL to discuss your pathology review
-              requirements.
-            </p>
+      <div className="container-page py-20 md:py-28">
+        
+        {/* Contact Info Header */}
+        <Reveal className="max-w-4xl text-center mx-auto mb-20">
+          <ul className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-12 gap-y-6">
+            <li className="flex items-center gap-3">
+              <MapPin className="size-5 text-crimson" />
+              <span className="font-medium text-foreground">Pune</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Mail className="size-5 text-crimson" />
+              <a href={`mailto:${site.email}`} className="font-medium text-foreground hover:text-crimson">
+                {site.email}
+              </a>
+            </li>
+            <li className="flex items-center gap-3">
+              <ContactAction context="general" type="call" variant="outline" className="h-10 px-4 text-xs bg-transparent" />
+            </li>
+            <li className="flex items-center gap-3">
+              <ContactAction context="general" type="whatsapp" variant="solid" className="h-10 px-4 text-xs" />
+            </li>
+          </ul>
+        </Reveal>
+
+        {/* Action Pathways */}
+        <div className="grid gap-6 md:grid-cols-3 mb-24">
+          <Reveal delay={0}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
+              <div>
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
+                  <UserCircle2 className="size-6 text-crimson" />
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Patients</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Pathology Second Opinion</h3>
+              </div>
+              <Link
+                to="/services/pathology-second-opinion-slide-review"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
+              >
+                Request a Second Opinion
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
           </Reveal>
 
-          <Reveal delay={80}>
-            <ul className="mt-10 space-y-6">
-              <li className="flex gap-4">
-                <Mail className="mt-0.5 size-5 shrink-0 text-crimson" aria-hidden="true" />
-                <a
-                  href={`mailto:${site.email}`}
-                  className="break-all text-base font-medium text-foreground hover:text-crimson"
-                >
-                  {site.email}
-                </a>
-              </li>
-              <li className="flex gap-4">
-                <MapPin className="mt-0.5 size-5 shrink-0 text-crimson" aria-hidden="true" />
-                <address className="text-base leading-relaxed text-muted-foreground not-italic">
-                  {site.address}
-                </address>
-              </li>
-            </ul>
+          <Reveal delay={50}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
+              <div>
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
+                  <Stethoscope className="size-6 text-crimson" />
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Doctors / Laboratories</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Specialist Consultation</h3>
+              </div>
+              <Link
+                to="/services/pathology-second-opinion-slide-review"
+                search={{ role: "doctor" }}
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-navy bg-transparent px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-105 hover:bg-navy hover:text-white"
+              >
+                Refer a Case
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </Reveal>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <ContactAction context="second-opinion" type="whatsapp" variant="solid" className="w-full sm:w-auto" />
-              <ContactAction context="second-opinion" type="call" variant="outline" className="w-full sm:w-auto" />
+          <Reveal delay={100}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
+              <div>
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
+                  <Beaker className="size-6 text-crimson" />
+                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Routine Investigations</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Clinical & Pathology Tests</h3>
+              </div>
+              <Link
+                to="/tests"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition-transform hover:scale-105 hover:border-foreground/20"
+              >
+                Book a Test
+                <ArrowRight className="size-4" />
+              </Link>
             </div>
           </Reveal>
         </div>
 
-        <Reveal delay={120}>
-          <div className="rounded-[1.5rem] border border-border bg-surface p-6 shadow-soft sm:p-9">
-            <h3 className="font-display text-xl font-bold text-foreground">
-              Request a Second Opinion
+        {/* Existing Form */}
+        <Reveal className="max-w-2xl mx-auto">
+          <div className="rounded-[1.5rem] border border-border bg-surface p-6 shadow-soft sm:p-10">
+            <h3 className="font-display text-2xl font-bold text-center text-foreground mb-2">
+              Send an Enquiry
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Share your details and we will get in touch about the review
-              process. This form is for enquiries only.
+            <p className="text-center text-sm leading-relaxed text-muted-foreground mb-8">
+              For general questions or additional information, please fill out the form below.
             </p>
-            <div className="mt-7">
-              <ContactForm />
-            </div>
+            <ContactForm />
           </div>
         </Reveal>
       </div>
 
+      {/* Map Section */}
       <div className="border-t border-border bg-surface">
         <div className="container-page grid gap-10 py-16 md:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <Reveal>

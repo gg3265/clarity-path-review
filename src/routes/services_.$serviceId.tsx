@@ -140,7 +140,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
     selectedTests: [],
   });
 
-  const isSecondOpinion = serviceTitle === "Second Opinion & Slide Review";
+  const isSecondOpinion = serviceTitle === "Pathology Second Opinion & Slide Review";
   const isHisto = serviceTitle === "Histopathology";
   const isOnco = serviceTitle === "Oncopathology";
   const isCyto = serviceTitle === "Cytopathology";
@@ -171,7 +171,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
           patient_name: patient.name,
           mobile: patient.mobile,
           email: patient.email || null,
-          case_description: formData.caseDesc || '',
+          case_description: `Role: ${role}\nDoctor: ${patient.doctor}\nHospital: ${patient.hospital}\n\nCase Details: ${formData.caseDesc || ''}`,
           status: 'PENDING'
         }]);
         if (error) throw error;
@@ -233,13 +233,38 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
   };
 
   const molecularTests = useMemo(() => allTests.filter(t => t.category === "Molecular & Ancillary Testing"), []);
+  
+  const [role, setRole] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("role") === "doctor" ? "Doctor" : "Patient / Family";
+    }
+    return "Patient / Family";
+  });
 
   return (
     <form onSubmit={handleSubmit} className="space-y-12 pb-12">
+      
+      {isSecondOpinion && (
+        <section className="space-y-6">
+          <div className="border-b border-border pb-4">
+            <h3 className="text-2xl font-bold text-foreground">I am a:</h3>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {["Patient / Family", "Doctor", "Diagnostic Laboratory"].map((r) => (
+              <label key={r} className={`flex cursor-pointer items-center justify-center rounded-xl border ${role === r ? "border-primary bg-primary/5 text-primary" : "border-border bg-background text-foreground"} px-4 py-4 font-medium transition-colors hover:bg-secondary/50`}>
+                <input type="radio" name="role" value={r} checked={role === r} onChange={(e) => setRole(e.target.value)} className="sr-only" />
+                <span className="text-sm">{r}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Patient Details Section */}
       <section className="space-y-6">
         <div className="border-b border-border pb-4">
-          <h3 className="text-2xl font-bold text-foreground">Patient Details</h3>
+          <h3 className="text-2xl font-bold text-foreground">{role === "Patient / Family" || !isSecondOpinion ? "Patient Details" : "Patient Information"}</h3>
         </div>
         
         <div className="grid gap-5 sm:grid-cols-2">

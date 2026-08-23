@@ -15,7 +15,8 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as ConfirmationRouteImport } from './routes/confirmation'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PackagesRouteImport } from './routes/packages'
-import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as PrivacyConfidentialityRouteImport } from './routes/privacy-confidentiality'
+import { Route as QualityStandardsRouteImport } from './routes/quality-standards'
 import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestsRouteImport } from './routes/tests'
@@ -54,9 +55,14 @@ const PackagesRoute = PackagesRouteImport.update({
   path: '/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
+const PrivacyConfidentialityRoute = PrivacyConfidentialityRouteImport.update({
+  id: '/privacy-confidentiality',
+  path: '/privacy-confidentiality',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QualityStandardsRoute = QualityStandardsRouteImport.update({
+  id: '/quality-standards',
+  path: '/quality-standards',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SecondOpinionRoute = SecondOpinionRouteImport.update({
@@ -103,7 +109,8 @@ export interface FileRoutesByFullPath {
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
   '/packages': typeof PackagesRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
+  '/quality-standards': typeof QualityStandardsRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
@@ -119,7 +126,8 @@ export interface FileRoutesByTo {
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
   '/packages': typeof PackagesRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
+  '/quality-standards': typeof QualityStandardsRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
@@ -136,7 +144,8 @@ export interface FileRoutesById {
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
   '/packages': typeof PackagesRoute
-  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
+  '/quality-standards': typeof QualityStandardsRoute
   '/second-opinion': typeof SecondOpinionRoute
   '/services': typeof ServicesRoute
   '/tests': typeof TestsRoute
@@ -154,7 +163,8 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/contact'
     | '/packages'
-    | '/privacy-policy'
+    | '/privacy-confidentiality'
+    | '/quality-standards'
     | '/second-opinion'
     | '/services'
     | '/tests'
@@ -170,7 +180,8 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/contact'
     | '/packages'
-    | '/privacy-policy'
+    | '/privacy-confidentiality'
+    | '/quality-standards'
     | '/second-opinion'
     | '/services'
     | '/tests'
@@ -186,7 +197,8 @@ export interface FileRouteTypes {
     | '/confirmation'
     | '/contact'
     | '/packages'
-    | '/privacy-policy'
+    | '/privacy-confidentiality'
+    | '/quality-standards'
     | '/second-opinion'
     | '/services'
     | '/tests'
@@ -203,7 +215,8 @@ export interface RootRouteChildren {
   ConfirmationRoute: typeof ConfirmationRoute
   ContactRoute: typeof ContactRoute
   PackagesRoute: typeof PackagesRoute
-  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  PrivacyConfidentialityRoute: typeof PrivacyConfidentialityRoute
+  QualityStandardsRoute: typeof QualityStandardsRoute
   SecondOpinionRoute: typeof SecondOpinionRoute
   ServicesRoute: typeof ServicesRoute
   TestsRoute: typeof TestsRoute
@@ -257,11 +270,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyRouteImport
+    '/privacy-confidentiality': {
+      id: '/privacy-confidentiality'
+      path: '/privacy-confidentiality'
+      fullPath: '/privacy-confidentiality'
+      preLoaderRoute: typeof PrivacyConfidentialityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quality-standards': {
+      id: '/quality-standards'
+      path: '/quality-standards'
+      fullPath: '/quality-standards'
+      preLoaderRoute: typeof QualityStandardsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/second-opinion': {
@@ -323,7 +343,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConfirmationRoute: ConfirmationRoute,
   ContactRoute: ContactRoute,
   PackagesRoute: PackagesRoute,
-  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  PrivacyConfidentialityRoute: PrivacyConfidentialityRoute,
+  QualityStandardsRoute: QualityStandardsRoute,
   SecondOpinionRoute: SecondOpinionRoute,
   ServicesRoute: ServicesRoute,
   TestsRoute: TestsRoute,

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogoMark } from "@/components/Logo";
-import { nav, site } from "@/lib/site";
+import { footerNav, site } from "@/lib/site";
 import { ContactAction } from "@/components/ContactAction";
 
 export function Footer() {
@@ -36,7 +36,7 @@ export function Footer() {
               Navigation
             </h2>
             <ul className="mt-5 space-y-3 text-sm">
-              {nav.map((item) => (
+              {footerNav.map((item) => (
                 <li key={item.to}>
                   <Link
                     to={item.to}
@@ -70,13 +70,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 SECOND OPINION CRL. All rights reserved.</p>
-          <Link
-            to="/privacy-policy"
-            className="transition-colors hover:text-primary-foreground"
-          >
-            Privacy Policy
-          </Link>
+          <p>&copy; 2026 SECOND OPINION CRL. All rights reserved.</p>
         </div>
       </div>
     </footer>

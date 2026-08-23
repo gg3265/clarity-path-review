@@ -3,7 +3,7 @@ import { process } from "@/lib/site";
 
 export function ProcessTimeline() {
   return (
-    <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
       {process.map((item, i) => (
         <Reveal as="li" key={item.step} delay={i * 90} className="relative">
           <div className="flex items-center gap-3">
