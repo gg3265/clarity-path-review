@@ -148,7 +148,7 @@ export function DiagnosticApproachSection() {
       <div aria-hidden="true" className="lab-grid-dark absolute inset-0 opacity-40" />
       <div className="relative container-page">
         <Reveal className="text-center max-w-3xl mx-auto mb-20">
-          <p className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-crimson-soft mb-4">
+          <p className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-teal-soft mb-4">
             Methodology
           </p>
           <h2 className="font-display text-3xl leading-tight font-extrabold sm:text-4xl lg:text-5xl">
@@ -162,13 +162,13 @@ export function DiagnosticApproachSection() {
           <div className="grid gap-12 lg:gap-6 lg:grid-cols-5 relative z-10">
             {diagnosticSteps.map((step, i) => (
               <Reveal key={step.num} delay={i * 100} className="relative flex flex-col lg:items-center lg:text-center group">
-                <div className="hidden lg:flex w-full absolute top-[2.25rem] left-1/2 right-0 h-px bg-crimson/0 group-hover:bg-crimson/50 transition-colors" />
+                <div className="hidden lg:flex w-full absolute top-[2.25rem] left-1/2 right-0 h-px bg-teal/0 group-hover:bg-teal/50 transition-colors" />
                 
                 {i !== diagnosticSteps.length - 1 && (
                   <div className="lg:hidden absolute left-[1.125rem] top-12 bottom-[-3rem] w-px bg-white/10" />
                 )}
 
-                <div className="relative flex items-center justify-center size-[4.5rem] rounded-full bg-navy border-2 border-white/20 text-white font-display font-bold text-xl mb-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 group-hover:border-crimson group-hover:text-crimson transition-colors">
+                <div className="relative flex items-center justify-center size-[4.5rem] rounded-full bg-navy border-2 border-white/20 text-white font-display font-bold text-xl mb-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 group-hover:border-teal group-hover:text-teal transition-colors">
                   {step.num}
                 </div>
                 <div className="ml-16 lg:ml-0">
@@ -219,3 +219,4 @@ export function SpecialistCTA() {
     </section>
   );
 }
+

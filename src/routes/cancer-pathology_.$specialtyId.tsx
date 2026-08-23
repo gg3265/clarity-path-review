@@ -611,7 +611,7 @@ function CancerPathologyForm() {
                     Next <ChevronRight className="size-4" />
                   </button>
                 ) : (
-                  <button onClick={submitForm} disabled={isSubmitting} className="flex h-12 items-center justify-center gap-2 rounded-full bg-navy px-8 text-sm font-semibold text-white hover:bg-crimson transition-colors disabled:opacity-70">
+                  <button onClick={submitForm} disabled={isSubmitting} className="flex h-12 items-center justify-center gap-2 rounded-full bg-navy px-8 text-sm font-semibold text-white hover:bg-teal transition-colors disabled:opacity-70">
                     {isSubmitting ? <><Loader2 className="size-4 animate-spin" /> Submitting...</> : "Submit Request"}
                   </button>
                 )}
@@ -645,3 +645,4 @@ function SelectField({ label, options, value, onChange }: { label: string, optio
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-﻿import { Reveal } from "@/components/Reveal";
+import { Reveal } from "@/components/Reveal";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Microscope, FlaskConical, CircleDot, Droplet, Dna } from "lucide-react";
 
@@ -6,7 +6,7 @@ const categories = [
   {
     id: "histopathology",
     title: "Histopathology",
-    icon: <Microscope className="size-5 text-crimson mb-3" />,
+    icon: <Microscope className="size-5 text-teal mb-3" />,
     items: [
       "H&E slides",
       "Special stains",
@@ -17,7 +17,7 @@ const categories = [
   {
     id: "ihc",
     title: "IHC",
-    icon: <FlaskConical className="size-5 text-crimson mb-3" />,
+    icon: <FlaskConical className="size-5 text-teal mb-3" />,
     items: [
       "IHC slides",
       "IHC reports",
@@ -28,7 +28,7 @@ const categories = [
   {
     id: "cytology",
     title: "Cytology",
-    icon: <CircleDot className="size-5 text-crimson mb-3" />,
+    icon: <CircleDot className="size-5 text-teal mb-3" />,
     items: [
       "FNAC smears",
       "Cytology slides",
@@ -39,7 +39,7 @@ const categories = [
   {
     id: "haematopathology",
     title: "Haematopathology",
-    icon: <Droplet className="size-5 text-crimson mb-3" />,
+    icon: <Droplet className="size-5 text-teal mb-3" />,
     items: [
       "Peripheral blood smears",
       "Bone marrow slides",
@@ -50,7 +50,7 @@ const categories = [
   {
     id: "ancillary",
     title: "Ancillary Investigations",
-    icon: <Dna className="size-5 text-crimson mb-3" />,
+    icon: <Dna className="size-5 text-teal mb-3" />,
     items: [
       "FISH",
       "PCR",
@@ -89,7 +89,7 @@ export function WhatWeReview() {
               <ul className="space-y-3 mt-auto">
                 {category.items.map((item, j) => (
                   <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson/40" />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal/40" />
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -110,7 +110,7 @@ export function WhatWeReview() {
                 className="w-full sm:w-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-background px-8 text-sm font-semibold text-foreground transition-transform hover:scale-[1.03]"
               >
                 Request a Second Opinion
-                <ArrowRight className="size-4 text-crimson" />
+                <ArrowRight className="size-4 text-teal" />
               </Link>
               <Link
                 to="/services/pathology-second-opinion-slide-review"
@@ -125,3 +125,4 @@ export function WhatWeReview() {
     </section>
   );
 }
+

@@ -29,7 +29,7 @@ export function CaseMaterials() {
                 <div className="group flex h-full flex-col gap-5 rounded-2xl border border-border bg-background p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-soft">
                   <span className="inline-flex size-11 items-center justify-center rounded-full bg-accent">
                     <Icon
-                      className="size-5 text-crimson"
+                      className="size-5 text-teal"
                       aria-hidden="true"
                     />
                   </span>
@@ -53,3 +53,4 @@ export function CaseMaterials() {
     </section>
   );
 }
+

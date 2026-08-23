@@ -22,8 +22,7 @@ export function Footer() {
               </div>
             </div>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-primary-foreground/70">
-              Clinical pathology, histopathology, oncopathology, cytopathology
-              and expert second-opinion pathology review in Pune.
+              Specialist Pathology Second Opinion & Diagnostic Consultation
             </p>
             <div className="mt-8 flex gap-3">
               <ContactAction type="whatsapp" variant="solid" />

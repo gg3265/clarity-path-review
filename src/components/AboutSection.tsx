@@ -30,8 +30,8 @@ export function AboutSection() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-9 inline-flex items-center gap-3 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase text-foreground">
-              Precision <span className="text-crimson">•</span> Expertise{" "}
-              <span className="text-crimson">•</span> Clarity
+              Precision <span className="text-teal">•</span> Expertise{" "}
+              <span className="text-teal">•</span> Clarity
             </p>
           </Reveal>
         </div>
@@ -58,3 +58,4 @@ export function AboutSection() {
     </section>
   );
 }
+

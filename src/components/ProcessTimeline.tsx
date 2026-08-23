@@ -7,7 +7,7 @@ export function ProcessTimeline() {
       {process.map((item, i) => (
         <Reveal as="li" key={item.step} delay={i * 90} className="relative">
           <div className="flex items-center gap-3">
-            <span className="font-display text-sm font-bold text-crimson-soft">
+            <span className="font-display text-sm font-bold text-teal-soft">
               {item.step}
             </span>
             <span
@@ -26,3 +26,4 @@ export function ProcessTimeline() {
     </ol>
   );
 }
+

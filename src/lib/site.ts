@@ -23,20 +23,23 @@ export const mapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
 
 export const nav = [
   { label: "Home", to: "/" as const },
+  { label: "About", to: "/about" as const },
   { label: "Services", to: "/services" as const },
   { label: "Second Opinion", to: "/second-opinion" as const },
-  { label: "Cancer Pathology", to: "/#cancer-services" as const },
+  { label: "For Doctors", to: "/doctors" as const },
   { label: "Test Directory", to: "/tests" as const },
-  { label: "Health Packages", to: "/packages" as const },
-  { label: "For Doctors", to: "/second-opinion" as const },
   { label: "Contact", to: "/contact" as const },
 ];
 
 export const footerNav = [
+  { label: "About", to: "/about" as const },
+  { label: "Services", to: "/services" as const },
+  { label: "Second Opinion", to: "/second-opinion" as const },
+  { label: "For Doctors", to: "/doctors" as const },
+  { label: "Test Directory", to: "/tests" as const },
+  { label: "Contact", to: "/contact" as const },
   { label: "Privacy & Confidentiality", to: "/privacy-confidentiality" as const },
   { label: "Quality & Standards", to: "/quality-standards" as const },
-  { label: "Contact", to: "/contact" as const },
-  { label: "Services", to: "/services" as const },
 ];
 
 export const focusAreas = [
@@ -54,7 +57,7 @@ export const focusAreas = [
   },
   {
     title: "Second Opinion",
-    description: "Expert review of challenging pathology cases",
+    description: "Specialist review of challenging pathology cases",
   },
 ];
 
@@ -118,7 +121,7 @@ export const services = [
 ] as const;
 
 export const secondOpinionStatement =
-  "Expert review of challenging, complex and cancer-related pathology cases, including outside slides, blocks, IHC and diagnostic reports.";
+  "Specialist review of challenging, complex and cancer-related pathology cases, including outside slides, blocks, IHC and diagnostic reports.";
 
 export const process = [
   {
@@ -189,3 +192,4 @@ export const reviewTypes = [
   "Diagnostic Report Review",
   "Other",
 ];
+

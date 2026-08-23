@@ -14,12 +14,12 @@ export function ContactSection() {
         <Reveal className="max-w-4xl text-center mx-auto mb-20">
           <ul className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-12 gap-y-6">
             <li className="flex items-center gap-3">
-              <MapPin className="size-5 text-crimson" />
+              <MapPin className="size-5 text-teal" />
               <span className="font-medium text-foreground">Pune</span>
             </li>
             <li className="flex items-center gap-3">
-              <Mail className="size-5 text-crimson" />
-              <a href={`mailto:${site.email}`} className="font-medium text-foreground hover:text-crimson">
+              <Mail className="size-5 text-teal" />
+              <a href={`mailto:${site.email}`} className="font-medium text-foreground hover:text-teal">
                 {site.email}
               </a>
             </li>
@@ -37,8 +37,8 @@ export function ContactSection() {
           <Reveal delay={0}>
             <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
-                  <UserCircle2 className="size-6 text-crimson" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <UserCircle2 className="size-6 text-teal" />
                 </div>
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Patients</p>
                 <h3 className="font-display text-xl font-bold text-foreground">Pathology Second Opinion</h3>
@@ -56,8 +56,8 @@ export function ContactSection() {
           <Reveal delay={50}>
             <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
-                  <Stethoscope className="size-6 text-crimson" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <Stethoscope className="size-6 text-teal" />
                 </div>
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Doctors / Laboratories</p>
                 <h3 className="font-display text-xl font-bold text-foreground">Specialist Consultation</h3>
@@ -76,8 +76,8 @@ export function ContactSection() {
           <Reveal delay={100}>
             <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 mb-6">
-                  <Beaker className="size-6 text-crimson" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <Beaker className="size-6 text-teal" />
                 </div>
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Routine Investigations</p>
                 <h3 className="font-display text-xl font-bold text-foreground">Clinical & Pathology Tests</h3>
@@ -143,3 +143,4 @@ export function ContactSection() {
     </section>
   );
 }
+

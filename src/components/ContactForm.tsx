@@ -20,7 +20,7 @@ const schema = z.object({
 });
 
 const fieldClass =
-  "mt-2 block min-h-12 w-full rounded-lg border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-crimson focus:outline-none";
+  "mt-2 block min-h-12 w-full rounded-lg border border-input bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-teal focus:outline-none";
 
 export function ContactForm() {
   type FieldName =
@@ -201,7 +201,7 @@ export function ContactForm() {
           <input
             type="checkbox"
             name="consent"
-            className="mt-1 size-4 rounded border-input accent-crimson"
+            className="mt-1 size-4 rounded border-input accent-teal"
           />
           <span>
             I consent to SECOND OPINION CRL contacting me regarding this
@@ -244,7 +244,7 @@ function Field({
         className="block text-sm font-medium text-foreground"
       >
         {label}
-        {required ? <span className="text-crimson"> *</span> : null}
+        {required ? <span className="text-teal"> *</span> : null}
       </label>
       {children}
       {error ? (
@@ -253,3 +253,4 @@ function Field({
     </div>
   );
 }
+

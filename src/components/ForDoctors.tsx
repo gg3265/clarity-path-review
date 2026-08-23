@@ -1,4 +1,4 @@
-﻿import { Reveal } from "@/components/Reveal";
+import { Reveal } from "@/components/Reveal";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
@@ -28,7 +28,7 @@ export function ForDoctors() {
             <h2 className="font-display text-3xl leading-tight font-extrabold text-primary-foreground sm:text-4xl">
               For Doctors & Referral Laboratories
             </h2>
-            <p className="mt-4 text-xl font-medium text-crimson-soft">
+            <p className="mt-4 text-xl font-medium text-teal-soft">
               Specialist pathology consultation for challenging cases
             </p>
             <p className="mt-6 text-lg text-primary-foreground/80 leading-relaxed">
@@ -40,7 +40,7 @@ export function ForDoctors() {
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-background px-8 text-sm font-semibold text-foreground transition-transform hover:scale-[1.03]"
               >
                 Refer a Case
-                <ArrowRight className="size-4 text-crimson" />
+                <ArrowRight className="size-4 text-teal" />
               </Link>
             </div>
           </Reveal>
@@ -50,7 +50,7 @@ export function ForDoctors() {
               <ul className="grid gap-5 sm:grid-cols-2">
                 {supportItems.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-primary-foreground/90">
-                    <CheckCircle2 className="size-5 text-crimson-soft shrink-0" />
+                    <CheckCircle2 className="size-5 text-teal-soft shrink-0" />
                     <span className="text-sm leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -62,3 +62,4 @@ export function ForDoctors() {
     </section>
   );
 }
+

@@ -16,7 +16,7 @@ export function TrustStrip() {
               <div className="group h-full bg-background p-6 transition-colors hover:bg-surface">
                 <span
                   aria-hidden="true"
-                  className="block h-0.5 w-8 bg-crimson transition-all duration-500 group-hover:w-14"
+                  className="block h-0.5 w-8 bg-teal transition-all duration-500 group-hover:w-14"
                 />
                 <h3 className="mt-4 font-display text-base font-bold text-foreground">
                   {area.title}
@@ -32,3 +32,4 @@ export function TrustStrip() {
     </section>
   );
 }
+

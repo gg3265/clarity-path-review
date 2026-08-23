@@ -52,16 +52,16 @@ export function Navbar() {
           </div>
 
           <Link
-            to="/tests"
-            className="hidden rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft lg:inline-flex"
+            to="/services/pathology-second-opinion-slide-review"
+            className="hidden rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft lg:inline-flex"
           >
-            Book a Test
+            Request Second Opinion
           </Link>
           <Link
-            to="/upload-prescription"
+            to="/tests"
             className="hidden rounded-full border border-input bg-background px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary xl:inline-flex"
           >
-            Upload Prescription
+            Book a Test
           </Link>
 
           <button
@@ -97,12 +97,12 @@ export function Navbar() {
                 <Link
                   to={item.to}
                   activeOptions={{ exact: item.to === "/" }}
-                  className="flex min-h-12 items-center justify-between text-base font-medium text-foreground data-[status=active]:text-crimson"
+                  className="flex min-h-12 items-center justify-between text-base font-medium text-foreground data-[status=active]:text-teal"
                 >
                   {item.label}
                   <span
                     aria-hidden="true"
-                    className="h-px w-6 bg-crimson/50"
+                    className="h-px w-6 bg-teal/50"
                   />
                 </Link>
               </li>
@@ -110,16 +110,16 @@ export function Navbar() {
           </ul>
           <div className="mt-5 flex flex-col gap-3">
             <Link
-              to="/tests"
-              className="flex min-h-12 items-center justify-center rounded-full bg-primary px-5 text-base font-semibold text-primary-foreground"
+              to="/services/pathology-second-opinion-slide-review"
+              className="flex min-h-12 items-center justify-center rounded-full bg-navy px-5 text-base font-semibold text-white"
             >
-              Book a Test
+              Request Second Opinion
             </Link>
             <Link
-              to="/upload-prescription"
+              to="/tests"
               className="flex min-h-12 items-center justify-center rounded-full border border-input bg-background px-5 text-base font-semibold text-foreground"
             >
-              Upload Prescription
+              Book a Test
             </Link>
             <div className="grid grid-cols-2 gap-3 mt-2">
               <ContactAction type="whatsapp" variant="solid" className="w-full" showText />
@@ -131,3 +131,5 @@ export function Navbar() {
     </header>
   );
 }
+
+

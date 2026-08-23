@@ -1,15 +1,7 @@
-import { Link } from "@tanstack/react-router";
+﻿import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import heroOptics from "@/assets/hero-optics.jpg";
 import { LogoMark } from "@/components/Logo";
-
-const specialistFocus = [
-  "Histopathology",
-  "Cytopathology",
-  "Oncopathology",
-  "IHC",
-  "Molecular & Ancillary Testing",
-];
 
 export function Hero() {
   return (
@@ -20,31 +12,43 @@ export function Hero() {
       />
       <div
         aria-hidden="true"
-        className="absolute -top-40 -right-24 size-[36rem] rounded-full bg-crimson/5 blur-3xl"
+        className="absolute -top-40 -right-24 size-[36rem] rounded-full bg-teal/5 blur-3xl"
       />
 
-      <div className="relative container-page grid items-center gap-14 py-16 md:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-28">
+      <div className="relative container-page grid items-center gap-14 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20 lg:py-28">
         <div className="animate-fade-in">
-          <p className="eyebrow">Clinical Reference Laboratory</p>
-          <h1 className="mt-5 font-display text-[2.5rem] leading-[1.05] font-extrabold text-foreground sm:text-6xl lg:text-[4.25rem]">
-            SECOND OPINION CRL
+          <div className="mb-8">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+              SECOND OPINION CRL
+            </h2>
+            <p className="mt-1 text-sm font-bold uppercase tracking-widest text-teal">
+              Clinical Reference Laboratory
+            </p>
+          </div>
+          
+          <h1 className="mt-5 font-display text-[2.75rem] leading-[1.05] font-extrabold text-navy sm:text-[3.5rem] lg:text-[4rem]">
+            Specialist Pathology Second Opinions
           </h1>
-          <p className="mt-6 max-w-xl text-xl font-medium leading-relaxed text-foreground sm:text-2xl">
-            Specialist Pathology Second Opinions.<br />
-            <span className="text-muted-foreground">Clearer Diagnostic Decisions.</span>
+          <p className="mt-5 text-xl font-medium leading-relaxed text-muted-foreground sm:text-2xl">
+            Clearer Diagnostic Decisions
+          </p>
+          
+          <p className="mt-6 text-sm font-semibold tracking-wide text-foreground">
+            Histopathology &bull; Cytopathology &bull; Oncopathology &bull; IHC
           </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
               to="/services/pathology-second-opinion-slide-review"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] hover:bg-navy-soft"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-navy px-8 text-sm font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-navy-soft"
             >
-              Request a Second Opinion
+              Request Second Opinion
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
             <Link
               to="/services/pathology-second-opinion-slide-review"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-input bg-background px-7 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+              search={{ role: "doctor" }}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-navy px-8 text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
             >
               Refer a Case
             </Link>
@@ -72,24 +76,6 @@ export function Hero() {
             <div className="absolute top-5 right-5 rounded-full bg-white/90 p-1.5 shadow-soft backdrop-blur">
               <LogoMark size={46} />
             </div>
-          </div>
-
-          <div className="mt-[-2.5rem] ml-2 w-[min(20rem,88%)] rounded-2xl border border-border bg-background/90 p-5 shadow-lift backdrop-blur-xl sm:ml-6">
-            <p className="eyebrow">Specialist Focus</p>
-            <ul className="mt-3 space-y-2">
-              {specialistFocus.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-2.5 text-sm font-medium text-foreground"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="size-1.5 rounded-full bg-crimson"
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>

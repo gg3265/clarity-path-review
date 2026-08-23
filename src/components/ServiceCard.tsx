@@ -50,7 +50,7 @@ export function ServiceCard({
     >
       <span
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-crimson transition-transform duration-500 group-hover:scale-x-100"
+        className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-teal transition-transform duration-500 group-hover:scale-x-100"
       />
       <div className="flex items-start justify-between gap-4">
         <span
@@ -64,7 +64,7 @@ export function ServiceCard({
         <Icon
           className={cn(
             "size-6 transition-transform duration-500 group-hover:scale-110",
-            featured ? "text-crimson-soft" : "text-crimson",
+            featured ? "text-teal-soft" : "text-teal",
           )}
           aria-hidden="true"
         />
@@ -100,3 +100,4 @@ export function ServiceCard({
     </article>
   );
 }
+

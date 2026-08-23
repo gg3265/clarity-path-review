@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as ConfirmationRouteImport } from './routes/confirmation'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PrivacyConfidentialityRouteImport } from './routes/privacy-confidentiality'
 import { Route as QualityStandardsRouteImport } from './routes/quality-standards'
@@ -48,6 +49,11 @@ const ConfirmationRoute = ConfirmationRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorsRoute = DoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PackagesRoute = PackagesRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/book': typeof BookRoute
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
+  '/doctors': typeof DoctorsRoute
   '/packages': typeof PackagesRoute
   '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
   '/quality-standards': typeof QualityStandardsRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/book': typeof BookRoute
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
+  '/doctors': typeof DoctorsRoute
   '/packages': typeof PackagesRoute
   '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
   '/quality-standards': typeof QualityStandardsRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/book': typeof BookRoute
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
+  '/doctors': typeof DoctorsRoute
   '/packages': typeof PackagesRoute
   '/privacy-confidentiality': typeof PrivacyConfidentialityRoute
   '/quality-standards': typeof QualityStandardsRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/confirmation'
     | '/contact'
+    | '/doctors'
     | '/packages'
     | '/privacy-confidentiality'
     | '/quality-standards'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/confirmation'
     | '/contact'
+    | '/doctors'
     | '/packages'
     | '/privacy-confidentiality'
     | '/quality-standards'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/confirmation'
     | '/contact'
+    | '/doctors'
     | '/packages'
     | '/privacy-confidentiality'
     | '/quality-standards'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   BookRoute: typeof BookRoute
   ConfirmationRoute: typeof ConfirmationRoute
   ContactRoute: typeof ContactRoute
+  DoctorsRoute: typeof DoctorsRoute
   PackagesRoute: typeof PackagesRoute
   PrivacyConfidentialityRoute: typeof PrivacyConfidentialityRoute
   QualityStandardsRoute: typeof QualityStandardsRoute
@@ -261,6 +274,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctors': {
+      id: '/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof DoctorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/packages': {
@@ -342,6 +362,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookRoute: BookRoute,
   ConfirmationRoute: ConfirmationRoute,
   ContactRoute: ContactRoute,
+  DoctorsRoute: DoctorsRoute,
   PackagesRoute: PackagesRoute,
   PrivacyConfidentialityRoute: PrivacyConfidentialityRoute,
   QualityStandardsRoute: QualityStandardsRoute,
