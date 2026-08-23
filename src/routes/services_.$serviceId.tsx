@@ -33,9 +33,22 @@ function ServiceDetail() {
     );
   }
 
-  // Direct routes to test selection
-  if (service.title === "Clinical Pathology & Biochemistry" || service.title === "Haematology") {
+  // Direct routes to test selection or specific flows
+  if (service.title === "Clinical Pathology & Biochemistry") {
     return <Navigate to="/tests" search={{ category: service.title }} replace />;
+  }
+  
+  if (service.title === "Oncopathology") {
+    return <Navigate to="/#cancer-services" replace />;
+  }
+
+  if (service.title === "Haematopathology") {
+    return <Navigate to="/cancer-pathology/haematolymphoid-pathology" replace />;
+  }
+
+  // Second opinion routing
+  if (service.title === "Pathology Second Opinion & Slide Review") {
+    // Allows it to render the existing generic form here (which is used as the slide review form)
   }
 
   return (
@@ -78,14 +91,25 @@ function ServiceDetail() {
         </div>
       ) : (
         <div className="container-page max-w-3xl mt-4 animate-in fade-in slide-in-from-right-4 duration-300">
-          <div className="mb-10">
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-              {service.title}
-            </h1>
-            <p className="mt-3 text-lg text-muted-foreground">
-              {service.description}
-            </p>
-          </div>
+            <div className="mb-10">
+              <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                {service.title}
+              </h1>
+              <div className="mt-3 text-lg text-muted-foreground">
+                {service.description.includes("•") ? (
+                  <>
+                    <p className="mb-2">{service.description.split("•")[0]}</p>
+                    <ul className="ml-5 list-disc space-y-1">
+                      {service.description.split("•").slice(1).map((part, index) => (
+                        <li key={index}>{part.trim()}</li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p>{service.description}</p>
+                )}
+              </div>
+            </div>
           <ServiceForm serviceId={serviceId} serviceTitle={service.title} onSuccess={() => {
             setStep("SUCCESS");
             window.scrollTo({ top: 0, behavior: "smooth" });

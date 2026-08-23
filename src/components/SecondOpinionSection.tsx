@@ -22,16 +22,19 @@ export function SecondOpinionSection() {
       <div className="relative container-page py-20 md:py-28">
         <Reveal className="max-w-3xl">
           <p className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-crimson-soft">
-            Second Opinion & Slide Review
+            Pathology Second Opinion
           </p>
           <h2 className="mt-5 font-display text-3xl leading-[1.1] font-extrabold sm:text-4xl lg:text-5xl">
-            How Second Opinion Works
+            Independent specialist review for diagnostically challenging cases
           </h2>
+          <p className="mt-6 text-lg font-medium text-crimson-soft">
+            Histopathology • Cytopathology • IHC • Oncopathology • Ancillary Testing
+          </p>
         </Reveal>
 
-        <Reveal delay={90} className="mt-10 max-w-3xl">
+        <Reveal delay={90} className="mt-8 max-w-3xl">
           <blockquote className="border-l-2 border-crimson-soft pl-6 font-display text-lg leading-relaxed text-primary-foreground/90 sm:text-xl">
-            “{secondOpinionStatement}”
+            A second opinion provides an additional specialist assessment of the available pathology material and clinical information, particularly when the diagnosis is complex, unusual, uncertain or clinically consequential.
           </blockquote>
         </Reveal>
 
@@ -41,7 +44,7 @@ export function SecondOpinionSection() {
 
         <Reveal delay={120} className="mt-14 flex gap-4">
           <Link
-            to="/services/second-opinion-slide-review"
+            to="/services/pathology-second-opinion-slide-review"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-background px-7 text-sm font-semibold text-foreground transition-transform duration-200 hover:scale-[1.03]"
           >
             Request a Second Opinion

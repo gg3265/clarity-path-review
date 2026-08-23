@@ -202,14 +202,14 @@ export function SpecialistCTA() {
         </Reveal>
         <Reveal delay={100} className="flex flex-col sm:flex-row w-full lg:w-auto gap-4 shrink-0">
           <Link
-            to="/services/second-opinion-slide-review"
+            to="/services/pathology-second-opinion-slide-review"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
           >
             Request a Second Opinion
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
           <Link
-            to="/services/second-opinion-slide-review"
+            to="/services/pathology-second-opinion-slide-review"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-input bg-background px-8 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
           >
             Refer a Case

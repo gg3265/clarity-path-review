@@ -30,8 +30,8 @@ function Services() {
     <>
       <PageHeader
         eyebrow="Our Services"
-        title="Specialized pathology and laboratory services."
-        intro="Specialized pathology and laboratory services for routine, complex and diagnostically challenging cases."
+        title="Our Services"
+        intro="Specialist pathology review, diagnostic services and ancillary testing."
         watermark="PATHOLOGY"
         showBack={true}
       />

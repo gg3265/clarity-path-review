@@ -51,59 +51,59 @@ export const focusAreas = [
 export const services = [
   {
     number: "01",
-    title: "Histopathology",
+    title: "Pathology Second Opinion & Slide Review",
     description:
-      "Tissue-based diagnostic evaluation of surgical and biopsy specimens.",
-    icon: "layers",
-  },
-  {
-    number: "02",
-    title: "Oncopathology",
-    description:
-      "Specialized pathology support for cancer-related diagnostic cases.",
-    icon: "target",
-  },
-  {
-    number: "03",
-    title: "Cytopathology",
-    description:
-      "Cell-based evaluation of cytology samples and aspiration material.",
-    icon: "circle",
-  },
-  {
-    number: "04",
-    title: "Immunohistochemistry",
-    description:
-      "Marker-based studies used to support histopathological interpretation.",
-    icon: "flask",
-  },
-  {
-    number: "05",
-    title: "Second Opinion & Slide Review",
-    description:
-      "Expert review of outside slides, blocks, IHC and diagnostic reports.",
+      "Independent specialist review of diagnostically challenging pathology cases. Areas include: • Histopathology • Cytopathology • IHC • Oncopathology • Ancillary Testing",
     icon: "search",
   },
   {
-    number: "06",
-    title: "Molecular & Ancillary Testing",
+    number: "02",
+    title: "Histopathology",
     description:
-      "Ancillary and molecular investigations available for select cases.",
-    icon: "dna",
+      "Comprehensive examination of biopsy and surgical specimens, including: • Biopsies • Resection specimens • Margin assessment • Lymph-node evaluation • Tumour grading • Treatment-response assessment • Special stains • Synoptic/structured cancer reporting where applicable",
+    icon: "layers",
+  },
+  {
+    number: "03",
+    title: "Oncopathology",
+    description:
+      "Specialized service for cancer-related and tumour pathology cases.",
+    icon: "target",
+  },
+  {
+    number: "04",
+    title: "Cytopathology",
+    description:
+      "Cytology services including: • FNAC • Body fluids • Effusion cytology • Cell blocks • Cervical cytology • Thyroid cytology • Lymph-node cytology • Other diagnostic cytology specimens",
+    icon: "circle",
+  },
+  {
+    number: "05",
+    title: "Immunohistochemistry",
+    description:
+      "IHC services for: • Diagnostic confirmation • Differential diagnosis • Tumour classification • Site-of-origin evaluation • Prognostic markers • Predictive biomarkers",
+    icon: "flask",
+  },
+  {
+    number: "06",
+    title: "Haematopathology",
+    description:
+      "Specialist pathology service supporting blood and bone marrow diagnostic evaluation.",
+    icon: "droplet",
   },
   {
     number: "07",
+    title: "Molecular & Ancillary Testing",
+    description:
+      "Molecular and ancillary investigations may be recommended for selected cases where clinically appropriate.",
+    icon: "dna",
+  },
+  {
+    number: "08",
     title: "Clinical Pathology & Biochemistry",
     description:
       "Routine laboratory investigations supporting clinical assessment.",
     icon: "beaker",
-  },
-  {
-    number: "08",
-    title: "Haematology",
-    description:
-      "Blood-based laboratory evaluation and peripheral smear examination.",
-    icon: "droplet",
   },
 ] as const;
 

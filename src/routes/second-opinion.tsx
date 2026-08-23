@@ -31,8 +31,8 @@ function SecondOpinion() {
     <>
       <PageHeader
         eyebrow="Second Opinion & Slide Review"
-        title="A second look can bring greater clarity."
-        intro="An additional expert review can help bring clarity to the interpretation of slides, blocks, immunohistochemistry findings and diagnostic reports."
+        title="Pathology Second Opinion"
+        intro="Independent specialist review for diagnostically challenging cases. Histopathology • Cytopathology • IHC • Oncopathology • Ancillary Testing"
         watermark="EXPERT REVIEW"
         showBack={true}
         backFallback="/#second-opinion"
