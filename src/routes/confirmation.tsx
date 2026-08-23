@@ -54,6 +54,7 @@ function ConfirmationPage() {
   }
 
   const { ref, patient, selectedTests, selectedPackages, totalEstimatedPrice, collectionMethod, address } = bookingData;
+  const hasConflict = selectedTests?.some((t: any) => t.priceStatus === "Price confirmation required");
 
   const itemNames = [
     ...(selectedPackages || []).map((p: any) => p.name),
@@ -66,7 +67,7 @@ Booking ID: ${ref}
 Patient: ${patient.name}
 Items: ${itemNames}
 Collection: ${collectionMethod === "HOME" ? "Home Collection" : "Walk-in Centre"}
-Amount: ₹${totalEstimatedPrice} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
+Amount: ${hasConflict ? "TBA (Price confirmation required)" : `₹${totalEstimatedPrice}`} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
 
 Please confirm my booking.`;
 
@@ -117,7 +118,11 @@ Please confirm my booking.`;
                 {selectedTests?.map((test: any) => (
                   <div key={test.id} className="flex items-center justify-between border-b border-border/50 pb-2 last:border-0 last:pb-0">
                     <span className="font-medium text-foreground">{test.name}</span>
-                    <span className="font-bold text-foreground">₹{test.price}</span>
+                    <span className="font-bold text-foreground">
+                      {test.priceStatus === "Confirmed" ? `₹${test.sheet1Price || test.sheet2MRP}` : 
+                       test.priceStatus === "Sheet 2 Only" ? `₹${test.sheet2MRP}` : 
+                       <span className="text-amber-600 text-sm">Confirmation Required</span>}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -127,7 +132,7 @@ Please confirm my booking.`;
                 Total Amount
               </div>
               <div className="text-xl font-bold text-foreground">
-                ₹{totalEstimatedPrice}
+                {hasConflict ? <span className="text-amber-600 text-lg">TBA (Confirmation Required)</span> : `₹${totalEstimatedPrice}`}
               </div>
               {collectionMethod === "HOME" && (
                 <div className="text-xs text-muted-foreground mt-1 font-medium">
