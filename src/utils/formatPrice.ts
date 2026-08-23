@@ -3,9 +3,12 @@
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
   if (isNaN(numericPrice)) return "";
   
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0
-  }).format(numericPrice);
+  let s = numericPrice.toString();
+  let lastThree = s.substring(s.length - 3);
+  let otherNumbers = s.substring(0, s.length - 3);
+  if (otherNumbers != '') {
+    lastThree = ',' + lastThree;
+  }
+  let res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+  return '₹' + res;
 }
