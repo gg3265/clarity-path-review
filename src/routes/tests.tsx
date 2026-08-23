@@ -206,7 +206,7 @@ function TestsPage() {
                         <div className="mt-5 pt-4 border-t border-border/50 flex flex-col gap-4">
                           <div className="flex items-end justify-between">
                             <div className="font-display font-bold text-lg text-foreground">
-                              â‚¹{pkg.price}
+                              {formatPrice(pkg.price)}
                             </div>
                             <div className="text-xs font-semibold text-primary hover:underline cursor-pointer" onClick={() => navigate({ to: `/packages/${pkg.id}` })}>
                               View Details
@@ -267,12 +267,12 @@ function TestsPage() {
                           <div className="flex items-end justify-between">
                             {test.priceStatus === "Confirmed" && (test.sheet1Price || test.sheet2MRP) ? (
                               <div className="font-display font-bold text-lg text-foreground">
-                                â‚¹{test.sheet1Price || test.sheet2MRP}
+                                {formatPrice(test.sheet1Price || test.sheet2MRP)}
                               </div>
                             ) : test.priceStatus === "Sheet 2 Only" ? (
                               <div>
                                 <div className="font-display font-bold text-lg text-foreground">
-                                  â‚¹{test.sheet2MRP}
+                                  {formatPrice(test.sheet2MRP)}
                                 </div>
                                 <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                                   MRP Source

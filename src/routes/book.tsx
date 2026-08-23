@@ -243,7 +243,7 @@ function BookPage() {
                         </div>
                         <div className="text-right shrink-0 flex flex-col items-end gap-2">
                           <div className="font-display font-bold text-lg text-foreground">
-                            ₹{pkg?.price}
+                            {formatPrice(pkg?.price)}
                           </div>
                           <button onClick={() => handleRemovePackage(pkg.id)} className="text-xs font-semibold text-muted-foreground hover:text-destructive transition-colors">
                             Remove
@@ -262,11 +262,11 @@ function BookPage() {
                         <div className="text-right shrink-0 flex flex-col items-end gap-2">
                           {test.priceStatus === "Confirmed" ? (
                             <div className="font-display font-bold text-lg text-foreground">
-                              ₹{test.sheet1Price || test.sheet2MRP}
+                              {formatPrice(test.sheet1Price || test.sheet2MRP)}
                             </div>
                           ) : test.priceStatus === "Sheet 2 Only" ? (
                             <div className="font-display font-bold text-lg text-foreground">
-                              ₹{test.sheet2MRP} <span className="text-[10px] text-muted-foreground uppercase block">MRP</span>
+                              {formatPrice(test.sheet2MRP)} <span className="text-[10px] text-muted-foreground uppercase block">MRP</span>
                             </div>
                           ) : (
                             <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-md border border-amber-200">
@@ -292,7 +292,7 @@ function BookPage() {
                         {hasConflict ? (
                           <div className="text-sm font-bold text-amber-600">Price confirmation required</div>
                         ) : (
-                          <div className="text-3xl font-display font-extrabold text-foreground">₹{totalEstimatedPrice}</div>
+                          <div className="text-3xl font-display font-extrabold text-foreground">{formatPrice(totalEstimatedPrice)}</div>
                         )}
                       </div>
                     </div>
@@ -464,15 +464,15 @@ function BookPage() {
                     {selectedPackages.map(pkg => (
                       <div key={pkg.id} className="flex justify-between items-start text-sm">
                         <span className="font-medium text-foreground pr-4">{pkg.name}</span>
-                        <span className="font-bold shrink-0">₹{pkg.price}</span>
+                        <span className="font-bold shrink-0">{formatPrice(pkg.price)}</span>
                       </div>
                     ))}
                     {selectedTests.map(test => (
                       <div key={test.id} className="flex justify-between items-start text-sm">
                         <span className="font-medium text-foreground pr-4">{test.name}</span>
                         <span className="font-bold shrink-0">
-                          {test.priceStatus === "Confirmed" ? `₹${test.sheet1Price || test.sheet2MRP}` : 
-                           test.priceStatus === "Sheet 2 Only" ? `₹${test.sheet2MRP}` : 
+                          {test.priceStatus === "Confirmed" ? formatPrice(test.sheet1Price || test.sheet2MRP) : 
+                           test.priceStatus === "Sheet 2 Only" ? formatPrice(test.sheet2MRP) : 
                            <span className="text-amber-600">Confirmation Required</span>}
                         </span>
                       </div>
@@ -481,7 +481,7 @@ function BookPage() {
                   <div className="border-t border-border pt-4 flex justify-between items-center font-bold">
                     <span>Estimated Total</span>
                     <span className="text-xl">
-                      {hasConflict ? <span className="text-amber-600 text-sm">Price TBA</span> : `₹${totalEstimatedPrice}`}
+                      {hasConflict ? <span className="text-amber-600 text-sm">Price TBA</span> : formatPrice(totalEstimatedPrice)}
                     </span>
                   </div>
                 </div>

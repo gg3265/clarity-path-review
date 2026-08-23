@@ -129,11 +129,11 @@ export function TestSearch() {
                           <div className="text-right pl-4">
                             {test.priceStatus === "Confirmed" && (test.sheet1Price || test.sheet2MRP) ? (
                               <div className="font-semibold text-foreground">
-                                ₹{test.sheet1Price || test.sheet2MRP}
+                                {formatPrice(test.sheet1Price || test.sheet2MRP)}
                               </div>
                             ) : test.priceStatus === "Sheet 2 Only" ? (
                               <div className="font-semibold text-foreground">
-                                ₹{test.sheet2MRP} <span className="text-[10px] text-muted-foreground block">MRP</span>
+                                {formatPrice(test.sheet2MRP)} <span className="text-[10px] text-muted-foreground block">MRP</span>
                               </div>
                             ) : test.priceStatus === "Price confirmation required" ? (
                               <div className="flex items-center gap-1.5 text-xs font-medium text-amber-600">

@@ -58,7 +58,7 @@ function PackagesPage() {
             )}
             {!pkg.badge && <div />}
             <div className="font-display font-extrabold text-2xl text-foreground">
-              ₹{pkg.price}
+              {formatPrice(pkg.price)}
             </div>
           </div>
           

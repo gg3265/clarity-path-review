@@ -67,7 +67,7 @@ Booking ID: ${ref}
 Patient: ${patient.name}
 Items: ${itemNames}
 Collection: ${collectionMethod === "HOME" ? "Home Collection" : "Walk-in Centre"}
-Amount: ${hasConflict ? "TBA (Price confirmation required)" : `₹${totalEstimatedPrice}`} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
+Amount: ${hasConflict ? "TBA (Price confirmation required)" : formatPrice(totalEstimatedPrice)} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
 
 Please confirm my booking.`;
 
@@ -112,15 +112,15 @@ Please confirm my booking.`;
                 {selectedPackages?.map((pkg: any) => (
                   <div key={pkg.id} className="flex items-center justify-between border-b border-border/50 pb-2 last:border-0 last:pb-0">
                     <span className="font-semibold text-primary">{pkg.name} (Package)</span>
-                    <span className="font-bold text-foreground">₹{pkg.price}</span>
+                    <span className="font-bold text-foreground">{formatPrice(pkg.price)}</span>
                   </div>
                 ))}
                 {selectedTests?.map((test: any) => (
                   <div key={test.id} className="flex items-center justify-between border-b border-border/50 pb-2 last:border-0 last:pb-0">
                     <span className="font-medium text-foreground">{test.name}</span>
                     <span className="font-bold text-foreground">
-                      {test.priceStatus === "Confirmed" ? `₹${test.sheet1Price || test.sheet2MRP}` : 
-                       test.priceStatus === "Sheet 2 Only" ? `₹${test.sheet2MRP}` : 
+                      {test.priceStatus === "Confirmed" ? formatPrice(test.sheet1Price || test.sheet2MRP) : 
+                       test.priceStatus === "Sheet 2 Only" ? formatPrice(test.sheet2MRP) : 
                        <span className="text-amber-600 text-sm">Confirmation Required</span>}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ Please confirm my booking.`;
                 Total Amount
               </div>
               <div className="text-xl font-bold text-foreground">
-                {hasConflict ? <span className="text-amber-600 text-lg">TBA (Confirmation Required)</span> : `₹${totalEstimatedPrice}`}
+                {hasConflict ? <span className="text-amber-600 text-lg">TBA (Confirmation Required)</span> : formatPrice(totalEstimatedPrice)}
               </div>
               {collectionMethod === "HOME" && (
                 <div className="text-xs text-muted-foreground mt-1 font-medium">

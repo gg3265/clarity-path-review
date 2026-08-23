@@ -25,7 +25,7 @@ export function BookingBar() {
                   <AlertCircle className="size-3" /> Confirmation Required
                 </span>
               ) : (
-                <span className="font-semibold text-foreground">₹{totalEstimatedPrice}</span>
+                <span className="font-semibold text-foreground">{formatPrice(totalEstimatedPrice)}</span>
               )}
             </div>
           </div>
@@ -54,15 +54,15 @@ export function BookingBar() {
             {selectedPackages?.map((pkg) => (
               <div key={pkg.id} className="flex justify-between items-start text-sm">
                 <span className="font-medium text-foreground pr-2 truncate">{pkg?.name}</span>
-                <span className="font-semibold shrink-0">₹{pkg?.price}</span>
+                <span className="font-semibold shrink-0">{formatPrice(pkg?.price)}</span>
               </div>
             ))}
             {selectedTests?.map((test) => (
               <div key={test.id} className="flex justify-between items-start text-sm">
                 <span className="font-medium text-foreground pr-2 truncate">{test?.name}</span>
                 <span className="font-semibold shrink-0">
-                  {test?.priceStatus === "Confirmed" ? `₹${test?.sheet1Price || test?.sheet2MRP}` : 
-                   test?.priceStatus === "Sheet 2 Only" ? `₹${test?.sheet2MRP}` : 
+                  {test?.priceStatus === "Confirmed" ? formatPrice(test?.sheet1Price || test?.sheet2MRP) : 
+                   test?.priceStatus === "Sheet 2 Only" ? formatPrice(test?.sheet2MRP) : 
                    <AlertCircle className="size-4 text-amber-600 inline" />}
                 </span>
               </div>
@@ -78,7 +78,7 @@ export function BookingBar() {
               {hasConflict ? (
                 <div className="text-xs font-semibold text-amber-600">Price TBA</div>
               ) : (
-                <div className="text-2xl font-display font-extrabold text-foreground">₹{totalEstimatedPrice}</div>
+                <div className="text-2xl font-display font-extrabold text-foreground">{formatPrice(totalEstimatedPrice)}</div>
               )}
             </div>
           </div>

@@ -50,7 +50,7 @@ function PackageCard({ pkg, isFlagship }: { pkg: any, isFlagship?: boolean }) {
             Package Price
           </div>
           <div className={cn("font-display font-bold text-3xl", isFlagship ? "text-white" : "text-foreground")}>
-            ₹{pkg.price}
+            {formatPrice(pkg.price)}
           </div>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">

@@ -96,7 +96,7 @@ function PackageDetailPage() {
               <div className="bg-background rounded-2xl p-6 border border-border md:min-w-[280px] shadow-sm flex flex-col justify-center">
                 <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">Package Price</div>
                 <div className="font-display font-extrabold text-4xl text-foreground mb-6">
-                  ₹{pkg.price}
+                  {formatPrice(pkg.price)}
                 </div>
                 
                 {isSelected ? (
