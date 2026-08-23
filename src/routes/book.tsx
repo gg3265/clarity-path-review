@@ -530,11 +530,20 @@ function BookPage() {
                   </div>
 
                   {collectionMethod === "HOME" ? (
-                    <div className="text-sm space-y-1 bg-background p-4 rounded-xl border border-border">
-                      <div className="font-semibold text-foreground">{address.addressLine1}</div>
-                      {address.addressLine2 && <div className="text-muted-foreground">{address.addressLine2}</div>}
-                      <div className="text-muted-foreground">{address.area}, {address.city}</div>
-                      <div className="text-muted-foreground">{address.state} - {address.pincode}</div>
+                    <div className="text-sm space-y-3 bg-background p-4 rounded-xl border border-border">
+                      <div>
+                        <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">Collection Charge</div>
+                        <div className="font-semibold text-foreground">
+                          <span className="text-green-600">FREE</span> within 5 km &bull; <span className="font-bold">₹200</span> beyond 5 km
+                        </div>
+                      </div>
+                      <div className="pt-3 border-t border-border">
+                        <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">Address</div>
+                        <div className="font-semibold text-foreground">{address.addressLine1}</div>
+                        {address.addressLine2 && <div className="text-muted-foreground">{address.addressLine2}</div>}
+                        <div className="text-muted-foreground">{address.area}, {address.city}</div>
+                        <div className="text-muted-foreground">{address.state} - {address.pincode}</div>
+                      </div>
                       {(date || time) && (
                         <div className="mt-4 pt-4 border-t border-border">
                           <div className="text-muted-foreground uppercase tracking-wider font-bold text-xs mb-1">Preferred Time</div>

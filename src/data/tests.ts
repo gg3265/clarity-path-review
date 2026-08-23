@@ -1,4 +1,4 @@
-export type TestCategory =
+﻿export type TestCategory =
   | "Oncopathology"
   | "Molecular & Ancillary Testing"
   | "Haematology"
@@ -70,7 +70,7 @@ export const tests: DiagnosticTest[] = [
   { id: "t46", name: "ELECTROLYTES", category: "Clinical Pathology & Biochemistry", sheet1Price: 500, priceStatus: "Confirmed", aliases: [] },
   { id: "t47", name: "ESR", category: "Haematology", sheet1Price: 150, sheet2MRP: 150, priceStatus: "Confirmed", aliases: [] },
   { id: "t48", name: "ESTROGEN (ESTRODIAL) /E2", category: "Clinical Pathology & Biochemistry", sheet1Price: 700, priceStatus: "Confirmed", aliases: [] },
-  { id: "t49", name: "FBS/PPBS/RBS (ANY ONE)", category: "Clinical Pathology & Biochemistry", sheet1Price: 80, priceStatus: "Confirmed", aliases: ["glucose", "sugar"] },
+  { id: "t49", name: "Blood Sugar (FBS/PPBS/RBS)", category: "Clinical Pathology & Biochemistry", sheet1Price: 49, priceStatus: "Confirmed", aliases: ["glucose", "sugar", "blood sugar"] },
   { id: "t50", name: "FBS AND PPBS", category: "Clinical Pathology & Biochemistry", sheet1Price: 150, priceStatus: "Confirmed", aliases: ["glucose", "sugar"] },
   { id: "t51", name: "FASTING URINE SUGAR/ PP URINE SUGAR", category: "Clinical Pathology & Biochemistry", sheet1Price: 100, priceStatus: "Confirmed", aliases: ["glucose", "sugar"] },
   { id: "t52", name: "FECAL CALPROTECTIN", category: "Clinical Pathology & Biochemistry", sheet1Price: 3200, priceStatus: "Confirmed", aliases: [] },
@@ -159,5 +159,6 @@ export const tests: DiagnosticTest[] = [
   { id: "t133", name: "HIV", category: "Clinical Pathology & Biochemistry", sheet2MRP: 520, priceStatus: "Sheet 2 Only", aliases: [] },
   { id: "t134", name: "VIT D", category: "Clinical Pathology & Biochemistry", sheet2MRP: 1500, priceStatus: "Sheet 2 Only", aliases: ["vit d3", "vitamin d3"] },
   { id: "t135", name: "VIT B", category: "Clinical Pathology & Biochemistry", sheet2MRP: 1000, priceStatus: "Sheet 2 Only", aliases: ["vit b12", "vitamin b12"] },
-  { id: "t136", name: "THYROID PROFILE", category: "Clinical Pathology & Biochemistry", sheet2MRP: 500, priceStatus: "Sheet 2 Only", aliases: ["thyroid"] },
+  { id: "t136", name: "Thyroid Profile (T3, T4, TSH)", category: "Clinical Pathology & Biochemistry", sheet1Price: 299, sheet2MRP: 500, priceStatus: "Confirmed", aliases: ["thyroid", "thyroid test"] },
 ];
+

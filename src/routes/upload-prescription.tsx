@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+﻿import { useState, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { CheckCircle2, Upload, FileText, X, Image as ImageIcon, ArrowLeft, ChevronRight } from "lucide-react";
@@ -194,9 +194,9 @@ function UploadPrescriptionPage() {
             {/* Desktop Progress */}
             <div className="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
               <span className={cn(step === "UPLOAD" && "text-primary")}>01 Upload</span>
-              <span className="text-muted-foreground/30">→</span>
+              <span className="text-muted-foreground/30">â†’</span>
               <span className={cn(step === "COLLECTION" && "text-primary")}>02 Collection</span>
-              <span className="text-muted-foreground/30">→</span>
+              <span className="text-muted-foreground/30">â†’</span>
               <span className={cn(step === "REVIEW" && "text-primary")}>03 Review</span>
             </div>
           </div>
@@ -372,7 +372,7 @@ function UploadPrescriptionPage() {
                   
                   <div className="mb-6">
                     <div className="inline-flex items-center gap-2 font-bold text-primary bg-primary/10 px-4 py-2 rounded-xl">
-                      {collectionMethod === "HOME" ? "🏠 Home Collection (Pune)" : "📍 Walk-in Centre (Pune)"}
+                      {collectionMethod === "HOME" ? "ðŸ  Home Collection (Pune)" : "ðŸ“ Walk-in Centre (Pune)"}
                     </div>
                   </div>
 
@@ -389,7 +389,7 @@ function UploadPrescriptionPage() {
                       <div className="text-muted-foreground">557, Vireen Heights, 3rd Floor,</div>
                       <div className="text-muted-foreground">Laxmi Road, Sadashiv Peth, Pune 411030</div>
                       <div className="mt-4">
-                        <a href="https://maps.google.com/?q=557,+Vireen+Heights,+3rd+Floor,+Laxmi+Road,+Sadashiv+Peth,+Pune+411030" target="_blank" rel="noreferrer" className="text-primary font-semibold hover:underline">Get Directions →</a>
+                        <a href="https://maps.google.com/?q=557,+Vireen+Heights,+3rd+Floor,+Laxmi+Road,+Sadashiv+Peth,+Pune+411030" target="_blank" rel="noreferrer" className="text-primary font-semibold hover:underline">Get Directions â†’</a>
                       </div>
                     </div>
                   )}
@@ -425,3 +425,4 @@ function UploadPrescriptionPage() {
     </>
   );
 }
+

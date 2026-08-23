@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+﻿import { useState, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { tests, TestCategory, DiagnosticTest } from "@/data/tests";
 import { packages, HealthPackage } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { BookingBar } from "@/components/BookingBar";
 import { BackButton } from "@/components/BackButton";
 import { useCart } from "@/context/CartContext";
@@ -106,6 +107,7 @@ function TestsPage() {
 
   return (
     <>
+      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Test Directory"
         title="Diagnostic Test Menu"
@@ -204,7 +206,7 @@ function TestsPage() {
                         <div className="mt-5 pt-4 border-t border-border/50 flex flex-col gap-4">
                           <div className="flex items-end justify-between">
                             <div className="font-display font-bold text-lg text-foreground">
-                              ₹{pkg.price}
+                              â‚¹{pkg.price}
                             </div>
                             <div className="text-xs font-semibold text-primary hover:underline cursor-pointer" onClick={() => navigate({ to: `/packages/${pkg.id}` })}>
                               View Details
@@ -265,12 +267,12 @@ function TestsPage() {
                           <div className="flex items-end justify-between">
                             {test.priceStatus === "Confirmed" && (test.sheet1Price || test.sheet2MRP) ? (
                               <div className="font-display font-bold text-lg text-foreground">
-                                ₹{test.sheet1Price || test.sheet2MRP}
+                                â‚¹{test.sheet1Price || test.sheet2MRP}
                               </div>
                             ) : test.priceStatus === "Sheet 2 Only" ? (
                               <div>
                                 <div className="font-display font-bold text-lg text-foreground">
-                                  ₹{test.sheet2MRP}
+                                  â‚¹{test.sheet2MRP}
                                 </div>
                                 <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                                   MRP Source
@@ -337,3 +339,4 @@ function TestsPage() {
     </>
   );
 }
+

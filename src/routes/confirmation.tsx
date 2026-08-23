@@ -66,7 +66,7 @@ Booking ID: ${ref}
 Patient: ${patient.name}
 Items: ${itemNames}
 Collection: ${collectionMethod === "HOME" ? "Home Collection" : "Walk-in Centre"}
-Amount: ₹${totalEstimatedPrice}
+Amount: ₹${totalEstimatedPrice} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
 
 Please confirm my booking.`;
 
@@ -129,6 +129,11 @@ Please confirm my booking.`;
               <div className="text-xl font-bold text-foreground">
                 ₹{totalEstimatedPrice}
               </div>
+              {collectionMethod === "HOME" && (
+                <div className="text-xs text-muted-foreground mt-1 font-medium">
+                  + ₹200 (if beyond 5 km)
+                </div>
+              )}
             </div>
             <div>
               <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">

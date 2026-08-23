@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { CaseMaterials } from "@/components/CaseMaterials";
 import { PageHeader } from "@/components/PageHeader";
 import { ReferringSection } from "@/components/ReferringSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 const title =
-  "Services | Histopathology, Oncopathology & IHC in Pune — Second Opinion CRL";
+  "Services | Histopathology, Oncopathology & IHC in Pune â€” Second Opinion CRL";
 const description =
   "Pathology services at SECOND OPINION CRL Pune: histopathology, oncopathology, cytopathology, immunohistochemistry, clinical pathology, haematology and molecular testing.";
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/services")({
 function Services() {
   return (
     <>
+      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Our Services"
         title="Our Services"
@@ -41,3 +43,5 @@ function Services() {
     </>
   );
 }
+
+

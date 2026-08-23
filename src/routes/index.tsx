@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { CaseMaterials } from "@/components/CaseMaterials";
 import { ContactSection } from "@/components/ContactSection";
 import { Hero } from "@/components/Hero";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { ReferringSection } from "@/components/ReferringSection";
 import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
@@ -38,7 +39,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "MedicalClinic",
           name: "SECOND OPINION CRL",
-          alternateName: "Second Opinion CRL — Clinical Reference Laboratory",
+          alternateName: "Second Opinion CRL â€” Clinical Reference Laboratory",
           description,
           telephone: "+919359777222",
           email: "secondopinioncrl@gmail.com",
@@ -63,6 +64,7 @@ function Home() {
   return (
     <>
       <Hero />
+      <FeaturedTestsBar />
       <WhyUs />
       <ServiceGrid />
       <CancerSection />
@@ -77,3 +79,4 @@ function Home() {
     </>
   );
 }
+

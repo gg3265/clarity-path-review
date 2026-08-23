@@ -4,6 +4,7 @@ import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { WhyUs } from "@/components/WhyUs";
 import { WhatWeReview } from "@/components/WhatWeReview";
 import { FAQ } from "@/components/FAQ";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 const title = "Specialist Pathology Second Opinion | Second Opinion CRL";
 const description = "Independent specialist review for diagnostically challenging pathology cases.";
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/second-opinion")({
 function SecondOpinion() {
   return (
     <>
+      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Specialist Pathology Review"
         title="Pathology Second Opinion"
@@ -40,3 +42,4 @@ function SecondOpinion() {
     </>
   );
 }
+

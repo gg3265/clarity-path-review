@@ -1,4 +1,4 @@
-import { Home, MapPin } from "lucide-react";
+﻿import { Home, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type CollectionMethod = "HOME" | "WALK_IN" | null;
@@ -25,7 +25,17 @@ export function CollectionSelector({ selected, onChange }: CollectionSelectorPro
           <Home className="size-6" />
         </div>
         <h3 className="text-xl font-bold text-foreground mb-2">Home Collection</h3>
-        <p className="text-sm text-muted-foreground mb-6">A sample collection professional visits your preferred location in Pune.</p>
+        <p className="text-sm text-muted-foreground mb-2">A sample collection professional visits your preferred location in Pune.</p>
+        <div className="bg-background rounded-lg border border-border p-3 w-full mb-6 text-sm font-medium">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-foreground">Within 5 km</span>
+            <span className="text-green-600 font-bold">FREE</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-foreground">Beyond 5 km</span>
+            <span className="text-foreground font-bold">₹200</span>
+          </div>
+        </div>
         
         <div className={cn("mt-auto text-sm font-bold", selected === "HOME" ? "text-primary" : "text-muted-foreground")}>
           {selected === "HOME" ? "Selected" : "Select Home Collection"}

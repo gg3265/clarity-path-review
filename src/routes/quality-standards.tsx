@@ -1,82 +1,65 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
-import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ShieldCheck, CheckCircle2 } from "lucide-react";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 export const Route = createFileRoute("/quality-standards")({
-  head: () => ({
-    meta: [
-      { title: "Quality & Diagnostic Standards | Second Opinion CRL" },
-      { name: "description", content: "Our diagnostic approach and evidence-based pathology practices." },
-    ],
-  }),
   component: QualityStandards,
 });
+
+const standardsList = [
+  "WHO Classification of Tumours",
+  "CAP protocols",
+  "ICC/WHO haematolymphoid classifications",
+  "AJCC TNM",
+  "ASCO/CAP biomarker guidelines",
+  "International cytology reporting systems",
+  "Relevant specialty guidelines",
+];
 
 function QualityStandards() {
   return (
     <>
+      <FeaturedTestsBar />
       <PageHeader
-        eyebrow="Quality & Standards"
+        eyebrow="Commitment to Excellence"
         title="Quality & Diagnostic Standards"
-        intro="Evidence-based practices and structured diagnostic reporting."
+        intro="Evidence-based pathology practices for clearer diagnostic decisions."
         showBack={true}
+        backFallback="/about"
       />
-      <div className="bg-background py-16 md:py-24">
-        <div className="container-page max-w-3xl">
-          <div className="prose prose-slate prose-lg max-w-none text-muted-foreground">
-            <p className="lead text-xl text-foreground font-medium mb-12">
-              Our diagnostic approach incorporates current evidence-based pathology practices, relevant tumour classification systems, staging frameworks, biomarker guidelines and structured reporting principles, as applicable to each case.
-            </p>
 
-            <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">Evidence-Based Pathology Practice</h2>
-            <p>
-              Diagnostic assessments are conducted with careful attention to morphological detail and correlation with clinical findings. We integrate up-to-date pathology literature and established diagnostic criteria to ensure robust, reproducible, and clinically meaningful interpretations.
-            </p>
+      <section className="bg-background py-20 lg:py-28">
+        <div className="container-page max-w-4xl">
+          <div className="bg-surface rounded-3xl p-8 sm:p-14 border border-border shadow-soft relative overflow-hidden">
+            <div aria-hidden="true" className="absolute -top-24 -right-24 size-[24rem] bg-teal/5 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="size-14 rounded-full bg-teal/10 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="size-7 text-teal" />
+                </div>
+                <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-navy">
+                  Quality & Diagnostic Standards
+                </h2>
+              </div>
+              
+              <p className="text-lg text-foreground font-medium leading-relaxed mb-10 border-l-2 border-teal/30 pl-5">
+                Our diagnostic approach follows current evidence and professional standards, with references to appropriate:
+              </p>
 
-            <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">Relevant Tumour Classification Systems</h2>
-            <p>
-              Where applicable, cases involving neoplasms are evaluated utilizing relevant and recognized tumour classification systems. This supports accurate diagnostic categorization essential for guiding appropriate clinical management.
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">Staging Frameworks</h2>
-            <p>
-              For relevant oncological resection specimens, our reviews incorporate established staging frameworks to accurately define the extent of disease based on the submitted histopathological material.
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">Biomarker Guidelines</h2>
-            <p>
-              Interpretation of immunohistochemical and ancillary molecular studies is guided by current recommendations. We strive to provide clear insights regarding prognostic and predictive biomarkers when they are critical for patient care.
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">Structured Reporting</h2>
-            <p>
-              We prioritize clarity and precision in our communication. Final pathology opinions are delivered through structured reporting principles, ensuring that referring physicians and clinical teams receive comprehensive, organized, and easily interpretable diagnostic data.
-            </p>
-          </div>
-
-          <div className="mt-20 rounded-2xl bg-surface border border-border p-8 text-center sm:p-12">
-            <h3 className="font-display text-2xl font-bold text-foreground">
-              Consult a specialist pathologist
-            </h3>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                to="/services"
-                className="w-full sm:w-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-navy px-8 text-sm font-semibold text-white transition-transform hover:scale-105"
-              >
-                View Services
-                <ArrowRight className="size-4" />
-              </Link>
-              <Link
-                to="/second-opinion"
-                className="w-full sm:w-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-navy/20 bg-transparent px-8 text-sm font-semibold text-navy transition-colors hover:bg-navy/5"
-              >
-                Learn About Second Opinions
-              </Link>
+              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                {standardsList.map((standard, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-background border border-border hover:border-teal/30 transition-colors shadow-sm">
+                    <CheckCircle2 className="size-5 text-teal shrink-0 mt-0.5" />
+                    <span className="font-semibold text-foreground">{standard}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

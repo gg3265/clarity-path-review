@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { ContactSection } from "@/components/ContactSection";
 import { PageHeader } from "@/components/PageHeader";
+import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
-const title = "Contact | Second Opinion CRL — Pathology Laboratory in Pune";
+const title = "Contact | Second Opinion CRL â€” Pathology Laboratory in Pune";
 const description =
-  "Contact SECOND OPINION CRL, Clinical Reference Laboratory in Sadashiv Peth, Pune — call 9359777222 or email secondopinioncrl@gmail.com to discuss a pathology review.";
+  "Contact SECOND OPINION CRL, Clinical Reference Laboratory in Sadashiv Peth, Pune â€” call 9359777222 or email secondopinioncrl@gmail.com to discuss a pathology review.";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/contact")({
 function Contact() {
   return (
     <>
+      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Contact"
         title="Contact Second Opinion CRL"
@@ -36,3 +38,4 @@ function Contact() {
     </>
   );
 }
+
