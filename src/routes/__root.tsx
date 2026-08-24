@@ -17,6 +17,7 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
 import { ContactAction } from "@/components/ContactAction";
+import { EntryPopup } from "@/components/EntryPopup";
 
 function NotFoundComponent() {
   return (
