@@ -160,7 +160,8 @@ function RootComponent() {
         </main>
         <Footer />
         <MobileContactBar />
-        <Toaster position="top-center" />
+        <EntryPopup />
+          <Toaster position="top-center" />
       </CartProvider>
     </QueryClientProvider>
   );

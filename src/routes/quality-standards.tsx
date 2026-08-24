@@ -1,7 +1,6 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 export const Route = createFileRoute("/quality-standards")({
   component: QualityStandards,
@@ -20,7 +19,6 @@ const standardsList = [
 function QualityStandards() {
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Commitment to Excellence"
         title="Quality & Diagnostic Standards"

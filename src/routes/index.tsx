@@ -2,7 +2,6 @@
 import { CaseMaterials } from "@/components/CaseMaterials";
 import { ContactSection } from "@/components/ContactSection";
 import { Hero } from "@/components/Hero";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { ReferringSection } from "@/components/ReferringSection";
 import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
@@ -64,7 +63,6 @@ function Home() {
   return (
     <>
       <Hero />
-      <FeaturedTestsBar />
       <WhyUs />
       <ServiceGrid />
       <CancerSection />

@@ -1,6 +1,5 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { ForDoctors } from "@/components/ForDoctors";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Activity, FlaskConical, Network, Users } from "lucide-react";
@@ -12,7 +11,6 @@ export const Route = createFileRoute("/doctors")({
 function DoctorsPage() {
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="For Doctors & Referral Laboratories"
         title="Specialist Pathology Consultation"

@@ -3,7 +3,6 @@ import { CaseMaterials } from "@/components/CaseMaterials";
 import { PageHeader } from "@/components/PageHeader";
 import { ReferringSection } from "@/components/ReferringSection";
 import { ServiceGrid } from "@/components/ServiceGrid";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 const title =
   "Services | Histopathology, Oncopathology & IHC in Pune â€” Second Opinion CRL";
@@ -29,7 +28,6 @@ export const Route = createFileRoute("/services")({
 function Services() {
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Our Services"
         title="Our Services"

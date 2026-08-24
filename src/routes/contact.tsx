@@ -1,7 +1,6 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { ContactSection } from "@/components/ContactSection";
 import { PageHeader } from "@/components/PageHeader";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 
 const title = "Contact | Second Opinion CRL â€” Pathology Laboratory in Pune";
 const description =
@@ -26,7 +25,6 @@ export const Route = createFileRoute("/contact")({
 function Contact() {
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Contact"
         title="Contact Second Opinion CRL"

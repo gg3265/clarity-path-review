@@ -1,6 +1,5 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { DiagnosticApproachSection, SpecialistCTA } from "@/components/SpecialistContent";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ShieldCheck } from "lucide-react";
@@ -21,7 +20,6 @@ export const Route = createFileRoute("/about")({
 function About() {
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="About Us"
         title="Clinical Reference Laboratory"

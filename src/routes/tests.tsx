@@ -5,7 +5,6 @@ import { Search, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { tests, TestCategory, DiagnosticTest } from "@/data/tests";
 import { packages, HealthPackage } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
-import { FeaturedTestsBar } from "@/components/FeaturedTestsBar";
 import { BookingBar } from "@/components/BookingBar";
 import { BackButton } from "@/components/BackButton";
 import { useCart } from "@/context/CartContext";
@@ -108,7 +107,6 @@ function TestsPage() {
 
   return (
     <>
-      <FeaturedTestsBar />
       <PageHeader
         eyebrow="Test Directory"
         title="Diagnostic Test Menu"
