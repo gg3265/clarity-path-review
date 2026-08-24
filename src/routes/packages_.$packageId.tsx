@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { packages } from "@/data/packages";
 import { useCart } from "@/context/CartContext";

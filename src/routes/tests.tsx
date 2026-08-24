@@ -1,4 +1,5 @@
-﻿import { useState, useMemo } from "react";
+import { formatPrice } from "@/utils/formatPrice";
+import { useState, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { tests, TestCategory, DiagnosticTest } from "@/data/tests";

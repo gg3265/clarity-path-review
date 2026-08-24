@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";

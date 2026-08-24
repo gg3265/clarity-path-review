@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, X, ChevronRight, AlertCircle } from "lucide-react";

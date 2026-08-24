@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Package } from "lucide-react";
 import { packages } from "@/data/packages";

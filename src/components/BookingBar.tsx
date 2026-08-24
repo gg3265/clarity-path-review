@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { useCart } from "@/context/CartContext";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronRight, AlertCircle } from "lucide-react";

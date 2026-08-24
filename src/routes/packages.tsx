@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/formatPrice";
 import { createFileRoute, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { packages, PackageCategory } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
