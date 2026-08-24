@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { X, ArrowRight } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
@@ -51,7 +51,7 @@ export function EntryPopup() {
     const test = tests.find(t => t.id === testId);
     if (test) {
       addTest(test);
-      toast.success(Added ${test.name} to booking);
+      toast.success(`Added ${test.name} to booking`);
       navigate({ to: "/tests" });
     }
   };
