@@ -1,4 +1,4 @@
-﻿import { Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import heroOptics from "@/assets/hero-optics.jpg";
 import { LogoMark } from "@/components/Logo";
@@ -29,12 +29,12 @@ export function Hero() {
           <h1 className="mt-5 font-display text-[2.75rem] leading-[1.05] font-extrabold text-navy sm:text-[3.5rem] lg:text-[4rem]">
             Specialist Pathology Second Opinions
           </h1>
-          <p className="mt-5 text-xl font-medium leading-relaxed text-muted-foreground sm:text-2xl">
-            Clearer Diagnostic Decisions
+          <p className="mt-5 font-display text-[1.35rem] font-bold leading-snug text-teal sm:text-3xl">
+            Precision in Diagnosis. Confidence in Care.
           </p>
           
           <p className="mt-6 text-sm font-semibold tracking-wide text-foreground">
-            Histopathology &bull; Cytopathology &bull; Oncopathology &bull; IHC
+            Histopathology &bull; Cytopathology &bull; Oncopathology &bull; IHC &bull; Molecular &amp; Ancillary Testing
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
