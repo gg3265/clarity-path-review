@@ -1,4 +1,4 @@
-import { Mail, MapPin, ArrowRight, UserCircle2, Stethoscope, Beaker, Phone } from "lucide-react";
+import { Mail, MapPin, Search, ArrowRight, UserCircle2, Stethoscope, Beaker } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/Reveal";
 import { ContactAction } from "@/components/ContactAction";
@@ -7,49 +7,45 @@ import { Link } from "@tanstack/react-router";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="bg-background py-24 lg:py-32">
-      <div className="container-page max-w-6xl">
+    <section id="contact" className="bg-background">
+      <div className="container-page py-20 md:py-28">
         
         {/* Contact Info Header */}
-        <Reveal className="mb-20 text-center">
-          <ul className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+        <Reveal className="max-w-4xl text-center mx-auto mb-20">
+          <ul className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-12 gap-y-6">
             <li className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-full bg-teal/10">
-                <MapPin className="size-4 text-teal" />
-              </div>
-              <span className="font-semibold text-navy">Pune</span>
+              <MapPin className="size-5 text-teal" />
+              <span className="font-medium text-foreground">Pune</span>
             </li>
             <li className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-full bg-teal/10">
-                <Mail className="size-4 text-teal" />
-              </div>
-              <a href={`mailto:${site.email}`} className="font-semibold text-navy transition-colors hover:text-teal">
+              <Mail className="size-5 text-teal" />
+              <a href={`mailto:${site.email}`} className="font-medium text-foreground hover:text-teal">
                 {site.email}
               </a>
             </li>
             <li className="flex items-center gap-3">
-              <ContactAction context="general" type="call" variant="outline" className="h-12 rounded-full px-6 font-semibold" />
+              <ContactAction context="general" type="call" variant="outline" className="h-10 px-4 text-xs bg-transparent" />
             </li>
             <li className="flex items-center gap-3">
-              <ContactAction context="general" type="whatsapp" variant="solid" className="h-12 rounded-full px-6 font-semibold" />
+              <ContactAction context="general" type="whatsapp" variant="solid" className="h-10 px-4 text-xs" />
             </li>
           </ul>
         </Reveal>
 
         {/* Action Pathways */}
-        <div className="mb-24 grid gap-6 sm:grid-cols-3">
-          <Reveal delay={0} className="h-full">
-            <div className="flex h-full flex-col justify-between rounded-[2rem] border border-border bg-surface p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal/30 hover:shadow-md lg:p-10">
+        <div className="grid gap-6 md:grid-cols-3 mb-24">
+          <Reveal delay={0}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-teal/10 transition-colors group-hover:bg-teal">
-                  <UserCircle2 className="size-8 text-teal transition-colors group-hover:text-white" strokeWidth={1.5} />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <UserCircle2 className="size-6 text-teal" />
                 </div>
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">For Patients</p>
-                <h3 className="font-display text-2xl font-bold leading-tight text-navy">Pathology Second Opinion</h3>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Patients</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Pathology Second Opinion</h3>
               </div>
               <Link
                 to="/services/pathology-second-opinion-slide-review"
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-navy py-4 text-sm font-bold text-white transition-colors hover:bg-teal"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
               >
                 Request a Second Opinion
                 <ArrowRight className="size-4" />
@@ -57,19 +53,19 @@ export function ContactSection() {
             </div>
           </Reveal>
 
-          <Reveal delay={50} className="h-full">
-            <div className="flex h-full flex-col justify-between rounded-[2rem] border border-border bg-surface p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal/30 hover:shadow-md lg:p-10">
+          <Reveal delay={50}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-teal/10 transition-colors group-hover:bg-teal">
-                  <Stethoscope className="size-8 text-teal transition-colors group-hover:text-white" strokeWidth={1.5} />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <Stethoscope className="size-6 text-teal" />
                 </div>
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">For Doctors / Laboratories</p>
-                <h3 className="font-display text-2xl font-bold leading-tight text-navy">Specialist Consultation</h3>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">For Doctors / Laboratories</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Specialist Consultation</h3>
               </div>
               <Link
                 to="/services/pathology-second-opinion-slide-review"
                 search={{ role: "doctor" }}
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-navy bg-transparent py-4 text-sm font-bold text-navy transition-colors hover:bg-navy hover:text-white"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-navy bg-transparent px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-105 hover:bg-navy hover:text-white"
               >
                 Refer a Case
                 <ArrowRight className="size-4" />
@@ -77,18 +73,18 @@ export function ContactSection() {
             </div>
           </Reveal>
 
-          <Reveal delay={100} className="h-full">
-            <div className="flex h-full flex-col justify-between rounded-[2rem] border border-border bg-surface p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal/30 hover:shadow-md lg:p-10">
+          <Reveal delay={100}>
+            <div className="h-full rounded-2xl border border-border bg-surface p-8 text-center flex flex-col justify-between hover:shadow-soft transition-shadow">
               <div>
-                <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-teal/10 transition-colors group-hover:bg-teal">
-                  <Beaker className="size-8 text-teal transition-colors group-hover:text-white" strokeWidth={1.5} />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal/10 mb-6">
+                  <Beaker className="size-6 text-teal" />
                 </div>
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Routine Investigations</p>
-                <h3 className="font-display text-2xl font-bold leading-tight text-navy">Clinical & Pathology Tests</h3>
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Routine Investigations</p>
+                <h3 className="font-display text-xl font-bold text-foreground">Clinical & Pathology Tests</h3>
               </div>
               <Link
                 to="/tests"
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-white py-4 text-sm font-bold text-navy transition-colors hover:border-teal/30 hover:bg-teal/5"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition-transform hover:scale-105 hover:border-foreground/20"
               >
                 Book a Test
                 <ArrowRight className="size-4" />
@@ -98,12 +94,12 @@ export function ContactSection() {
         </div>
 
         {/* Existing Form */}
-        <Reveal className="mx-auto max-w-2xl">
-          <div className="rounded-[2rem] border border-border bg-white p-8 shadow-sm sm:p-12">
-            <h3 className="mb-3 text-center font-display text-3xl font-bold text-navy">
+        <Reveal className="max-w-2xl mx-auto">
+          <div className="rounded-[1.5rem] border border-border bg-surface p-6 shadow-soft sm:p-10">
+            <h3 className="font-display text-2xl font-bold text-center text-foreground mb-2">
               Send an Enquiry
             </h3>
-            <p className="mb-10 text-center text-base font-medium text-muted-foreground">
+            <p className="text-center text-sm leading-relaxed text-muted-foreground mb-8">
               For general questions or additional information, please fill out the form below.
             </p>
             <ContactForm />
@@ -112,40 +108,39 @@ export function ContactSection() {
       </div>
 
       {/* Map Section */}
-      <div className="mt-24 border-t border-border bg-surface py-20 lg:py-24">
-        <div className="container-page max-w-6xl">
-          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-            <Reveal>
-              <p className="eyebrow mb-4">Location</p>
-              <h2 className="font-display text-3xl font-extrabold text-navy sm:text-4xl">
-                Visit SECOND OPINION CRL
-              </h2>
-              <address className="mt-6 max-w-sm text-lg font-medium leading-relaxed text-muted-foreground not-italic">
-                {site.address}
-              </address>
-              <a
-                href={mapsDirectionsUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mt-8 inline-flex h-12 items-center justify-center rounded-full border border-border bg-white px-8 text-sm font-bold text-navy transition-all hover:border-teal/30 hover:bg-teal/5"
-              >
-                Get Directions
-              </a>
-            </Reveal>
-            <Reveal delay={100} className="h-full min-h-[300px]">
-              <div className="h-full overflow-hidden rounded-[2rem] border border-border bg-background shadow-soft">
-                <iframe
-                  title={`Map showing ${site.name} in Pune`}
-                  src={mapsEmbedUrl}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="size-full min-h-[300px] border-0 lg:min-h-[400px]"
-                />
-              </div>
-            </Reveal>
-          </div>
+      <div className="border-t border-border bg-surface">
+        <div className="container-page grid gap-10 py-16 md:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+          <Reveal>
+            <p className="eyebrow">Location</p>
+            <h2 className="mt-5 font-display text-2xl font-extrabold text-foreground sm:text-3xl">
+              Visit SECOND OPINION CRL
+            </h2>
+            <address className="mt-4 max-w-sm text-base leading-relaxed text-muted-foreground not-italic">
+              {site.address}
+            </address>
+            <a
+              href={mapsDirectionsUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full border border-input bg-background px-7 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+            >
+              Get Directions
+            </a>
+          </Reveal>
+          <Reveal delay={90}>
+            <div className="overflow-hidden rounded-2xl border border-border shadow-soft">
+              <iframe
+                title={`Map showing ${site.name} in Pune`}
+                src={mapsEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-64 w-full border-0 sm:h-72"
+              />
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
   );
 }
+

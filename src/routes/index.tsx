@@ -1,17 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Hero } from "@/components/Hero";
-import { WhyUs } from "@/components/WhyUs";
-import { CancerSection, WhenToSeekSection, DiagnosticApproachSection, SpecialistCTA } from "@/components/SpecialistContent";
-import { QualityStandardsHome } from "@/components/QualityStandardsHome";
-import { WhatWeReview } from "@/components/WhatWeReview";
-import { ProcessTimeline } from "@/components/ProcessTimeline";
-import { ForDoctorsSection } from "@/components/ForDoctorsSection";
-import { ExpertsHome } from "@/components/ExpertsHome";
-import { OurCommitment } from "@/components/OurCommitment";
-import { PackagesHomeSection } from "@/components/PackagesHomeSection";
-import { PopularTests } from "@/components/PopularTests";
-import { TestSearch } from "@/components/TestSearch";
+﻿import { createFileRoute } from "@tanstack/react-router";
+import { CaseMaterials } from "@/components/CaseMaterials";
 import { ContactSection } from "@/components/ContactSection";
+import { Hero } from "@/components/Hero";
+import { ReferringSection } from "@/components/ReferringSection";
+import { SecondOpinionSection } from "@/components/SecondOpinionSection";
+import { ServiceGrid } from "@/components/ServiceGrid";
+import { WhyUs } from "@/components/WhyUs";
+import { TestSearch } from "@/components/TestSearch";
+import { PathologyPackagesHome, ClinicalPackagesHome } from "@/components/PackagesHomeSection";
+import { 
+  CancerSection, 
+  WhenToSeekSection, 
+  DiagnosticApproachSection, 
+  SpecialistCTA 
+} from "@/components/SpecialistContent";
 
 const title = "Second Opinion CRL | Pathology Second Opinion in Pune";
 const description =
@@ -36,7 +38,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "MedicalClinic",
           name: "SECOND OPINION CRL",
-          alternateName: "Second Opinion CRL – Clinical Reference Laboratory",
+          alternateName: "Second Opinion CRL â€” Clinical Reference Laboratory",
           description,
           telephone: "+919359777222",
           email: "secondopinioncrl@gmail.com",
@@ -62,19 +64,17 @@ function Home() {
     <>
       <Hero />
       <WhyUs />
+      <ServiceGrid />
       <CancerSection />
       <WhenToSeekSection />
       <DiagnosticApproachSection />
-      <QualityStandardsHome />
-      <WhatWeReview />
-      <ProcessTimeline />
-      <ForDoctorsSection />
-      <ExpertsHome />
-      <OurCommitment />
-      <PackagesHomeSection />
-      <PopularTests />
+      <SpecialistCTA />
+      <SecondOpinionSection />
+      <PathologyPackagesHome />
+      <ClinicalPackagesHome />
       <TestSearch />
       <ContactSection />
     </>
   );
 }
+
