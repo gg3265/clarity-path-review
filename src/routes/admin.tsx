@@ -91,7 +91,7 @@ function AdminLayout() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md border border-gray-100 text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-6">Unauthorized</h1>
-          <p className="text-gray-500 mb-4">Your account ({session.user.email}) does not have admin privileges.</p>
+          <p className="text-gray-500 mb-4">Your account ({session?.user?.email}) does not have admin privileges.</p>
           <p className="text-gray-500 mb-8 text-sm">Please ask a system administrator to add your email to the admin_users table.</p>
           <button 
             onClick={() => supabase.auth.signOut()} 
@@ -113,7 +113,7 @@ function AdminLayout() {
               <span className="text-xl font-bold text-gray-900">CRL Admin</span>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">{session.user.email}</span>
+              <span className="text-sm text-gray-500">{session?.user?.email}</span>
               <button 
                 onClick={() => supabase.auth.signOut()}
                 className="text-sm text-red-600 hover:text-red-800 font-semibold"

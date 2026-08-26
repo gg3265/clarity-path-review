@@ -1,0 +1,1 @@
+function e(e){if(e==null)return``;let t=typeof e==`string`?parseFloat(e):e;if(isNaN(t))return``;let n=t.toString(),r=n.substring(n.length-3),i=n.substring(0,n.length-3);return i!=``&&(r=`,`+r),`₹`+(i.replace(/\B(?=(\d{2})+(?!\d))/g,`,`)+r)}export{e as t};
