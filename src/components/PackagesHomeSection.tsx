@@ -111,12 +111,17 @@ export function PathologyPackagesHome() {
 }
 
 export function ClinicalPackagesHome() {
+  const { data: packages = [] } = useQuery({
+    queryKey: ['packages'],
+    queryFn: fetchAdminPackages
+  });
+
   const highlightIds = [
     "pkg-crl-essential",
     "pkg-crl-vital",
     "pkg-crl-complete"
   ];
-  const clinicalPkgs = highlightIds.map(id => packages.find(p => p.id === id)).filter(Boolean) as typeof packages;
+  const clinicalPkgs = highlightIds.map(id => packages.find((p: any) => p.id === id)).filter(Boolean);
 
   return (
     <section className="bg-background py-20 overflow-hidden border-b border-border">
