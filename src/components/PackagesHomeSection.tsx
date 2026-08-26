@@ -1,71 +1,84 @@
 import { formatPrice } from "@/utils/formatPrice";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Package, Microscope, Activity } from "lucide-react";
+import { ArrowRight, Activity, Beaker } from "lucide-react";
 import { packages } from "@/data/packages";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/Reveal";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-function PackageCard({ pkg, isFlagship }: { pkg: any, isFlagship?: boolean }) {
+function HealthPackageCard({ pkg, isFlagship }: { pkg: any, isFlagship?: boolean }) {
   return (
     <div 
       className={cn(
-        "group relative flex flex-col justify-between p-6 sm:p-8 rounded-3xl border shadow-sm hover:shadow-xl transition-all duration-300",
+        "group flex flex-col justify-between rounded-[2rem] border p-7 sm:p-9 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1",
         isFlagship 
-          ? "bg-navy text-white border-navy-soft lg:col-span-2 md:col-span-2" 
-          : "bg-background border-border hover:border-primary/20"
+          ? "border-teal/30 bg-white" 
+          : "border-border bg-surface hover:border-teal/20 hover:bg-white"
       )}
     >
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <div className={cn(
-            "text-[10px] font-bold uppercase tracking-widest",
-            isFlagship ? "text-blue-300" : "text-primary/70"
-          )}>
-            {pkg.category.replace(" Packages", "").replace(" Series", "")}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-teal">
+            <Activity className="size-3.5" />
+            <span>Health Check</span>
           </div>
-          {pkg.badge && (
-            <span className={cn(
-              "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm",
-              isFlagship ? "bg-blue-900/50 text-blue-200" : "bg-secondary text-primary"
-            )}>
-              {pkg.badge}
+          {isFlagship && (
+            <span className="rounded-full bg-teal/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-teal">
+              Most Comprehensive
             </span>
           )}
         </div>
-        <h3 className={cn(
-          "text-xl sm:text-2xl font-bold mb-3 leading-tight transition-colors",
-          isFlagship ? "text-white" : "text-foreground group-hover:text-primary"
-        )}>
+        
+        <h3 className="mb-3 font-display text-2xl font-bold leading-tight text-navy">
           {pkg.name}
         </h3>
-        <p className={cn(
-          "text-sm mb-6",
-          isFlagship ? "text-blue-100/80" : "text-muted-foreground"
-        )}>
+        
+        <p className="mb-6 text-sm font-medium leading-relaxed text-muted-foreground">
           {pkg.description}
         </p>
       </div>
 
-      <div className={cn("mt-6 pt-6 border-t flex flex-col sm:flex-row sm:items-end justify-between gap-4", isFlagship ? "border-blue-800/50" : "border-border/50")}>
-        <div>
-          <div className={cn("text-xs font-semibold uppercase tracking-wider mb-1", isFlagship ? "text-blue-300" : "text-muted-foreground")}>
-            Package Price
+      <div>
+        <Accordion type="single" collapsible className="mb-6 w-full">
+          <AccordionItem value="details" className="border-border">
+            <AccordionTrigger className="py-3 text-sm font-semibold text-navy hover:text-teal hover:no-underline data-[state=open]:text-teal">
+              View Details
+            </AccordionTrigger>
+            <AccordionContent className="pt-2 text-sm text-muted-foreground">
+              <div className="grid gap-2">
+                {pkg.testIds?.slice(0, 10).map((id: string) => (
+                  <div key={id} className="flex items-center gap-2">
+                    <div className="size-1.5 rounded-full bg-teal/50" />
+                    <span className="truncate">{id.replace(/-/g, " ")}</span>
+                  </div>
+                ))}
+                {pkg.testIds?.length > 10 && (
+                  <div className="pl-3.5 pt-1 text-xs italic text-teal/70">
+                    + {pkg.testIds.length - 10} more tests
+                  </div>
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <div className="flex items-end justify-between border-t border-border pt-6">
+          <div>
+            <div className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Total Package
+            </div>
+            <div className="font-display text-3xl font-extrabold text-navy">
+              {formatPrice(pkg.price)}
+            </div>
           </div>
-          <div className={cn("font-display font-bold text-3xl", isFlagship ? "text-white" : "text-foreground")}>
-            {formatPrice(pkg.price)}
-          </div>
-        </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <Link to={`/packages/${pkg.id}`} className={cn(
-            "flex-1 sm:flex-none flex h-10 items-center justify-center rounded-xl px-4 text-xs font-semibold transition-colors",
-            isFlagship ? "bg-blue-900/40 hover:bg-blue-800/60 text-white" : "bg-secondary/50 hover:bg-secondary text-primary"
-          )}>
-            View Details
-          </Link>
-          <Link to={`/packages/${pkg.id}`} className={cn(
-            "flex-1 sm:flex-none flex h-10 items-center justify-center rounded-xl px-6 text-xs font-bold transition-all shadow-sm",
-            isFlagship ? "bg-white text-navy hover:bg-blue-50" : "bg-primary text-primary-foreground hover:bg-navy-soft"
-          )}>
-            {pkg.ctaText || "Book Package"}
+          
+          <Link to={`/packages/${pkg.id}`} className="inline-flex h-12 items-center justify-center rounded-xl bg-navy px-6 text-sm font-bold text-white transition-colors hover:bg-teal sm:px-8">
+            Book
           </Link>
         </div>
       </div>
@@ -73,77 +86,48 @@ function PackageCard({ pkg, isFlagship }: { pkg: any, isFlagship?: boolean }) {
   );
 }
 
-export function PathologyPackagesHome() {
-  const highlightIds = [
-    "pkg-cytosure",
-    "pkg-histosure",
-    "pkg-ihc-expert",
-    "pkg-signature-opinion"
-  ];
-  const pathologyPkgs = highlightIds.map(id => packages.find(p => p.id === id)).filter(Boolean) as typeof packages;
-
-  return (
-    <section id="packages" className="bg-surface py-20 lg:py-28 overflow-hidden border-b border-border">
-      <div className="container-page max-w-6xl">
-        <div className="mb-14">
-          <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-xs uppercase mb-4">
-            <Microscope className="size-4" />
-            <span>Specialist Review</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-display font-extrabold text-foreground leading-tight">
-            Pathology Second Opinion
-          </h2>
-          <p className="mt-5 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Expert review packages for outside slides, blocks, and pathology reports.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          {pathologyPkgs.map((pkg, idx) => (
-            <PackageCard key={pkg.id} pkg={pkg} isFlagship={pkg.id === "pkg-signature-opinion"} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function ClinicalPackagesHome() {
+export function PackagesHomeSection() {
   const highlightIds = [
     "pkg-crl-essential",
     "pkg-crl-vital",
-    "pkg-crl-complete"
+    "pkg-crl-complete",
+    "pkg-signature-health"
   ];
-  const clinicalPkgs = highlightIds.map(id => packages.find(p => p.id === id)).filter(Boolean) as typeof packages;
+  
+  const healthPkgs = highlightIds
+    .map(id => packages.find(p => p.id === id))
+    .filter(Boolean) as typeof packages;
 
   return (
-    <section className="bg-background py-20 overflow-hidden border-b border-border">
+    <section className="bg-background py-24 lg:py-32">
       <div className="container-page max-w-6xl">
-        <div className="mb-14 text-center max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-2 text-primary font-bold tracking-widest text-xs uppercase mb-4">
-            <Activity className="size-4" />
-            <span>Health & Wellness</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-display font-extrabold text-foreground leading-tight">
-            Clinical Health Packages
+        <Reveal className="mb-16 text-center">
+          <p className="eyebrow mb-4">Routine Clinical Testing</p>
+          <h2 className="font-display text-3xl font-extrabold text-navy sm:text-4xl lg:text-5xl">
+            Preventive Health Packages
           </h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Preventive health screening packages designed for different levels of routine health assessment.
+          <p className="mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-muted-foreground">
+            Comprehensive diagnostic screening packages designed for routine health assessment and monitoring.
           </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {clinicalPkgs.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} />
+        </Reveal>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {healthPkgs.map((pkg, idx) => (
+            <Reveal key={pkg.id} delay={idx * 100}>
+              <HealthPackageCard pkg={pkg} isFlagship={pkg.id === "pkg-signature-health"} />
+            </Reveal>
           ))}
         </div>
-        <div className="flex justify-center">
+
+        <Reveal delay={200} className="mt-14 flex justify-center">
           <Link 
             to="/packages"
-            className="group flex h-12 items-center justify-center gap-2 rounded-full border border-border bg-background px-8 text-sm font-semibold text-foreground transition-all hover:bg-secondary"
+            className="group flex h-14 items-center justify-center gap-3 rounded-full border-2 border-border bg-white px-8 text-sm font-bold text-navy transition-all hover:border-teal/30 hover:bg-teal/5"
           >
             Explore All Health Packages
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </Link>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

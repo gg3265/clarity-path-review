@@ -1,4 +1,6 @@
-import { Link } from "@tanstack/react-router";
+﻿const fs = require('fs');
+
+const heroContent = \import { Link } from "@tanstack/react-router";
 import { ArrowRight, Microscope } from "lucide-react";
 import heroOptics from "@/assets/hero-optics.jpg";
 import { LogoMark } from "@/components/Logo";
@@ -107,3 +109,7 @@ export function Hero() {
     </section>
   );
 }
+\;
+
+fs.writeFileSync('src/components/Hero.tsx', heroContent, 'utf8');
+console.log('Hero updated');

@@ -1,33 +1,51 @@
 import { Reveal } from "@/components/Reveal";
 import { principles } from "@/lib/site";
+import { Search, Eye, FlaskConical, FileText, Lock } from "lucide-react";
+
+const icons = [
+  Search,
+  Eye,
+  FlaskConical,
+  FileText,
+  Lock,
+];
 
 export function WhyUs() {
   return (
-    <section className="bg-background">
-      <div className="container-page grid gap-14 py-20 md:py-28 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <Reveal>
-          <p className="eyebrow">Why Choose Second Opinion CRL</p>
-          <h2 className="mt-5 font-display text-3xl leading-[1.1] font-extrabold text-foreground sm:text-4xl lg:text-[2.75rem]">
-            Built around diagnostic clarity.
+    <section className="bg-surface py-24 lg:py-32">
+      <div className="container-page">
+        <Reveal className="mb-16 max-w-3xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-navy sm:text-4xl lg:text-[2.75rem]">
+            Why choose Second Opinion CRL?
           </h2>
         </Reveal>
 
-        <ul className="divide-y divide-border border-t border-border">
-          {principles.map((principle, i) => (
-            <Reveal as="li" key={principle.title} delay={i * 70}>
-              <div className="group grid gap-3 py-7 transition-colors sm:grid-cols-[10rem_1fr] sm:gap-8">
-                <h3 className="font-display text-base font-bold text-foreground">
-                  <span className="accent-rule inline-block pb-1">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {principles.map((principle, i) => {
+            const Icon = icons[i] || Search;
+            return (
+              <Reveal as="div" key={principle.title} delay={i * 70}>
+                <div className="group relative flex h-full flex-col rounded-3xl border border-border bg-background p-8 shadow-sm transition-all hover:-translate-y-1 hover:border-teal/30 hover:shadow-md">
+                  <div className="mb-6 flex size-12 items-center justify-center rounded-2xl bg-teal/10 text-teal transition-colors group-hover:bg-teal group-hover:text-white">
+                    <Icon strokeWidth={1.5} className="size-6" />
+                  </div>
+                  
+                  <div className="mb-4 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                    0{i + 1}
+                  </div>
+                  
+                  <h3 className="mb-3 font-display text-lg font-bold leading-snug text-navy">
                     {principle.title}
-                  </span>
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {principle.description}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </ul>
+                  </h3>
+                  
+                  <p className="text-sm font-medium leading-relaxed text-muted-foreground">
+                    {principle.description}
+                  </p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

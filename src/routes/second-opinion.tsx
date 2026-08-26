@@ -1,8 +1,9 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { SecondOpinionSection } from "@/components/SecondOpinionSection";
 import { WhyUs } from "@/components/WhyUs";
 import { WhatWeReview } from "@/components/WhatWeReview";
+import { ProcessTimeline } from "@/components/ProcessTimeline";
 import { FAQ } from "@/components/FAQ";
 
 const title = "Specialist Pathology Second Opinion | Second Opinion CRL";
@@ -34,10 +35,11 @@ function SecondOpinion() {
       
       <WhatWeReview />
       
+      <ProcessTimeline />
+      
       <SecondOpinionSection />
       
       <FAQ />
     </>
   );
 }
-

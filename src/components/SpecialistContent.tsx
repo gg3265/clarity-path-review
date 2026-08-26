@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Hexagon, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { cn } from "@/lib/utils";
+import aboutSlide from "@/assets/about-slide.jpg";
 
 const cancerSpecialties = [
   { name: "Breast Pathology", slug: "breast-pathology", desc: "Specialist review of breast lesions, carcinomas, and receptor status." },
@@ -20,19 +20,30 @@ const cancerSpecialties = [
 
 export function CancerSection() {
   return (
-    <section id="cancer-services" className="bg-surface py-20 lg:py-28 overflow-hidden">
+    <section id="cancer-services" className="overflow-hidden bg-white py-24 lg:py-32">
       <div className="container-page">
-        <Reveal className="max-w-3xl text-center mx-auto mb-16">
-          <p className="eyebrow">Cancer Pathology Services</p>
-          <h2 className="mt-5 font-display text-3xl leading-tight font-extrabold text-foreground sm:text-4xl lg:text-5xl">
-            Specialist pathology review across major cancer and tumour types.
-          </h2>
-          <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
-            Select the pathology area relevant to your case and provide the available clinical and diagnostic information. Our team can review the submitted pathology material and relevant reports where appropriate.
-          </p>
-        </Reveal>
+        <div className="mb-16 grid items-end gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+          <Reveal className="max-w-2xl">
+            <p className="eyebrow">Cancer Pathology Services</p>
+            <h2 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-navy lg:text-5xl">
+              Cancer & Oncopathology
+            </h2>
+            <p className="mt-6 text-xl font-medium leading-relaxed text-muted-foreground sm:text-2xl">
+              Specialist pathology review for complex and cancer-related cases
+            </p>
+          </Reveal>
+          
+          <Reveal delay={100} className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl lg:aspect-[16/7]">
+            <img 
+              src={aboutSlide}
+              alt="High-resolution digital pathology visual"
+              className="size-full object-cover transition-transform duration-1000 hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-navy/10 mix-blend-multiply" />
+          </Reveal>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
           {cancerSpecialties.map((specialty, i) => (
             <Reveal
               key={specialty.slug}
@@ -40,20 +51,19 @@ export function CancerSection() {
             >
               <Link
                 to={`/cancer-pathology/${specialty.slug}`}
-                className="group flex flex-col h-full items-start justify-between p-6 rounded-2xl border border-border bg-background shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300 text-left"
+                className="group flex h-full flex-col items-start justify-between rounded-2xl border border-border bg-surface p-7 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal/30 hover:bg-white hover:shadow-md"
               >
                 <div>
-                  <Hexagon className="size-6 text-primary/30 mb-4 group-hover:text-primary transition-colors" strokeWidth={1.5} />
-                  <h3 className="font-semibold text-foreground text-base sm:text-lg leading-tight mb-2">
+                  <h3 className="mb-2 font-display text-lg font-bold leading-tight text-navy">
                     {specialty.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                     {specialty.desc}
                   </p>
                 </div>
                 
-                <div className="mt-6 flex items-center text-xs font-bold text-primary group-hover:text-navy-soft transition-colors">
-                  Request Review <ArrowRight className="ml-2 size-3.5 group-hover:translate-x-1 transition-transform" />
+                <div className="mt-6 flex items-center text-xs font-bold uppercase tracking-wide text-teal transition-colors group-hover:text-teal-soft">
+                  Request Review <ArrowRight className="ml-2 size-3.5 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
             </Reveal>
@@ -81,34 +91,27 @@ const secondOpinionReasons = [
 
 export function WhenToSeekSection() {
   return (
-    <section className="bg-background py-20 lg:py-28">
+    <section className="bg-surface py-24 lg:py-32">
       <div className="container-page">
-        <div className="grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start">
-          <Reveal className="max-w-xl">
-            <h2 className="font-display text-3xl leading-tight font-extrabold text-foreground sm:text-4xl">
-              When should you seek a second opinion?
-            </h2>
-            <p className="mt-6 text-lg text-muted-foreground leading-relaxed border-l-2 border-primary/20 pl-6">
-              An independent pathology review may be useful in selected complex or uncertain cases, providing additional clarity where clinically appropriate.
-            </p>
-          </Reveal>
+        <Reveal className="mb-14 max-w-3xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">
+            When a second opinion may help
+          </h2>
+          <p className="mt-6 border-l-2 border-teal/30 pl-6 text-lg leading-relaxed text-muted-foreground">
+            An independent pathology review may be useful in selected complex or uncertain cases, providing additional clarity where clinically appropriate.
+          </p>
+        </Reveal>
 
-          <Reveal delay={100}>
-            <div className="bg-surface rounded-3xl p-8 sm:p-10 border border-border">
-              <h3 className="font-display font-bold text-xl mb-8">
-                When a second opinion may help:
-              </h3>
-              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-4">
-                {secondOpinionReasons.map((reason) => (
-                  <li key={reason} className="flex items-start gap-3">
-                    <CheckCircle2 className="size-5 text-primary/60 shrink-0 mt-0.5" />
-                    <span className="text-sm sm:text-base text-foreground font-medium">{reason}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
+        <Reveal delay={100}>
+          <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+            {secondOpinionReasons.map((reason) => (
+              <div key={reason} className="flex items-start gap-4 rounded-xl border border-border bg-white p-5 shadow-sm">
+                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-teal/70" />
+                <span className="text-sm font-semibold leading-snug text-navy sm:text-base">{reason}</span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -144,38 +147,39 @@ const diagnosticSteps = [
 
 export function DiagnosticApproachSection() {
   return (
-    <section className="bg-navy text-white py-20 lg:py-28 overflow-hidden relative">
-      <div aria-hidden="true" className="lab-grid-dark absolute inset-0 opacity-40" />
-      <div className="relative container-page">
-        <Reveal className="text-center max-w-3xl mx-auto mb-20">
-          <p className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase text-teal-soft mb-4">
-            Methodology
-          </p>
-          <h2 className="font-display text-3xl leading-tight font-extrabold sm:text-4xl lg:text-5xl">
+    <section className="relative overflow-hidden bg-navy py-24 text-white lg:py-32">
+      <div aria-hidden="true" className="lab-grid-dark absolute inset-0 opacity-[0.07]" />
+      <div className="container-page relative">
+        <Reveal className="mb-20 max-w-3xl text-center md:mx-auto">
+          <p className="eyebrow !text-teal-soft mb-5">Methodology</p>
+          <h2 className="font-display text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
             Our Diagnostic Approach
           </h2>
         </Reveal>
 
         <div className="relative">
-          <div className="hidden lg:block absolute top-[2.25rem] left-0 right-0 h-px bg-white/10" />
+          {/* Horizontal Line for Desktop */}
+          <div className="absolute top-[2.25rem] left-0 right-0 hidden h-px bg-white/10 lg:block" />
           
-          <div className="grid gap-12 lg:gap-6 lg:grid-cols-5 relative z-10">
+          <div className="relative z-10 grid gap-12 lg:grid-cols-5 lg:gap-6">
             {diagnosticSteps.map((step, i) => (
-              <Reveal key={step.num} delay={i * 100} className="relative flex flex-col lg:items-center lg:text-center group">
-                <div className="hidden lg:flex w-full absolute top-[2.25rem] left-1/2 right-0 h-px bg-teal/0 group-hover:bg-teal/50 transition-colors" />
+              <Reveal key={step.num} delay={i * 100} className="group relative flex flex-col lg:items-center lg:text-center">
+                {/* Horizontal Progress Line for Hover */}
+                <div className="absolute top-[2.25rem] left-1/2 right-0 hidden h-px w-full bg-transparent transition-colors group-hover:bg-teal lg:flex" />
                 
+                {/* Vertical Line for Mobile */}
                 {i !== diagnosticSteps.length - 1 && (
-                  <div className="lg:hidden absolute left-[1.125rem] top-12 bottom-[-3rem] w-px bg-white/10" />
+                  <div className="absolute top-12 bottom-[-3rem] left-[1.125rem] w-px bg-white/10 lg:hidden" />
                 )}
 
-                <div className="relative flex items-center justify-center size-[4.5rem] rounded-full bg-navy border-2 border-white/20 text-white font-display font-bold text-xl mb-6 shadow-[0_0_15px_rgba(0,0,0,0.5)] z-10 group-hover:border-teal group-hover:text-teal transition-colors">
+                <div className="relative z-10 mb-6 flex size-[4.5rem] items-center justify-center rounded-full border-2 border-white/20 bg-navy font-display text-xl font-bold text-white shadow-xl transition-colors group-hover:border-teal group-hover:bg-teal">
                   {step.num}
                 </div>
                 <div className="ml-16 lg:ml-0">
-                  <h3 className="font-display font-bold text-lg mb-3">
+                  <h3 className="mb-3 font-display text-lg font-bold text-white">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-white/70 leading-relaxed">
+                  <p className="text-sm leading-relaxed text-white/70">
                     {step.desc}
                   </p>
                 </div>
@@ -190,33 +194,36 @@ export function DiagnosticApproachSection() {
 
 export function SpecialistCTA() {
   return (
-    <section className="bg-surface border-y border-border py-16">
-      <div className="container-page flex flex-col lg:flex-row items-center justify-between gap-8 bg-background p-8 sm:p-12 rounded-3xl border border-border shadow-sm">
-        <Reveal className="max-w-xl">
-          <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl mb-3">
-            Need an independent pathology review?
-          </h2>
-          <p className="text-muted-foreground">
-            Connect with our specialist team to review your diagnostic material.
-          </p>
-        </Reveal>
-        <Reveal delay={100} className="flex flex-col sm:flex-row w-full lg:w-auto gap-4 shrink-0">
-          <Link
-            to="/services/pathology-second-opinion-slide-review"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground transition-transform duration-200 hover:scale-[1.03]"
-          >
-            Request a Second Opinion
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-          <Link
-            to="/services/pathology-second-opinion-slide-review"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-input bg-background px-8 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
-          >
-            Refer a Case
-          </Link>
-        </Reveal>
+    <section className="border-y border-border bg-white py-20">
+      <div className="container-page">
+        <div className="flex flex-col items-center justify-between gap-10 rounded-[2rem] border border-border bg-surface p-10 shadow-sm lg:flex-row lg:p-14">
+          <Reveal className="max-w-xl text-center lg:text-left">
+            <h2 className="mb-4 font-display text-3xl font-extrabold text-navy sm:text-4xl">
+              Need an independent pathology review?
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Connect with our specialist team to review your diagnostic material.
+            </p>
+          </Reveal>
+          
+          <Reveal delay={100} className="flex w-full shrink-0 flex-col gap-4 sm:flex-row sm:justify-center lg:w-auto">
+            <Link
+              to="/services/pathology-second-opinion-slide-review"
+              className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-navy px-8 text-sm font-semibold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-navy-soft hover:shadow-md"
+            >
+              Request a Second Opinion
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </Link>
+            <Link
+              to="/services/pathology-second-opinion-slide-review"
+              search={{ role: "doctor" }}
+              className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border-2 border-border bg-white px-8 text-sm font-semibold text-navy transition-colors hover:border-teal/30 hover:bg-teal/5"
+            >
+              Refer a Case
+            </Link>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
 }
-
