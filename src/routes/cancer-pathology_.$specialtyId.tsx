@@ -558,6 +558,8 @@ function CancerPathologyForm() {
             </div>
           </div>
         );
+      default:
+        return null;
     }
   };
 

@@ -1,6 +1,6 @@
 import { formatPrice } from "@/utils/formatPrice";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { packages } from "@/data/packages";
+import { fetchPackages } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { BackButton } from "@/components/BackButton";
 import { ContactAction } from "@/components/ContactAction";
@@ -9,8 +9,9 @@ import { BookingBar } from "@/components/BookingBar";
 
 export const Route = createFileRoute("/packages_/$packageId")({
   component: PackageDetailPage,
-  loader: ({ params }) => {
-    const pkg = packages.find(p => p.id === params.packageId);
+  loader: async ({ params }) => {
+    const pkgs = await fetchPackages();
+    const pkg = pkgs.find(p => p.id === params.packageId);
     if (!pkg) throw new Error("Package not found");
     return pkg;
   }
@@ -147,7 +148,7 @@ function PackageDetailPage() {
             <div className="mt-12 pt-10 border-t border-border">
               <h3 className="text-xl font-bold text-foreground mb-6 text-center">Need to discuss this package?</h3>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-                <ContactAction context="packages" type="call" variant="outline" className="w-full" />
+                <ContactAction context={"packages" as any} type="call" variant="outline" className="w-full" />
                 <a 
                   href={`https://wa.me/919359777222?text=${encodeURIComponent(whatsappMessage)}`}
                   target="_blank"

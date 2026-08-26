@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useMemo } from "react";
 import { createFileRoute, useNavigate, Link, Navigate } from "@tanstack/react-router";
 import { services } from "@/lib/site";

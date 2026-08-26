@@ -2,13 +2,14 @@ import { formatPrice } from "@/utils/formatPrice";
 import { useState, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search, AlertCircle, X, CheckCircle2 } from "lucide-react";
-import { tests, TestCategory, DiagnosticTest } from "@/data/tests";
-import { packages, HealthPackage } from "@/data/packages";
+import { TestCategory, DiagnosticTest } from "@/data/tests";
+import { HealthPackage } from "@/data/packages";
 import { PageHeader } from "@/components/PageHeader";
 import { BookingBar } from "@/components/BookingBar";
 import { BackButton } from "@/components/BackButton";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
+import { fetchTests, fetchPackages } from "@/lib/api";
 
 // Validate search params for TanStack Router
 export const Route = createFileRoute("/tests")({
@@ -17,6 +18,13 @@ export const Route = createFileRoute("/tests")({
       q: typeof search.q === "string" ? search.q : undefined,
       category: typeof search.category === "string" ? search.category : undefined,
     };
+  },
+  loader: async () => {
+    const [fetchedTests, fetchedPackages] = await Promise.all([
+      fetchTests(),
+      fetchPackages()
+    ]);
+    return { tests: fetchedTests, packages: fetchedPackages };
   },
   head: () => ({
     meta: [
@@ -57,6 +65,7 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
 
 function TestsPage() {
   const searchParams = Route.useSearch();
+  const { tests, packages } = Route.useLoaderData();
   const navigate = useNavigate({ from: "/tests" });
   
   const [activeCategory, setActiveCategory] = useState<string>(searchParams.category || "All");
@@ -217,7 +226,7 @@ function TestsPage() {
                             <div className="font-display font-bold text-lg text-foreground">
                               {formatPrice(pkg.price)}
                             </div>
-                            <div className="text-xs font-semibold text-primary hover:underline cursor-pointer" onClick={() => navigate({ to: `/packages/${pkg.id}` })}>
+                            <div className="text-xs font-semibold text-primary hover:underline cursor-pointer" onClick={() => navigate({ to: `/packages/${pkg.id}` as any })}>
                               View Details
                             </div>
                           </div>
@@ -237,7 +246,7 @@ function TestsPage() {
                                 if (pkg.bookingType === "booking") {
                                   addPackage(pkg);
                                 } else {
-                                  navigate({ to: `/packages/${pkg.id}` });
+                                  navigate({ to: `/packages/${pkg.id}` as any });
                                 }
                               }}
                               className="w-full h-10 rounded-lg bg-secondary text-sm font-bold text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"

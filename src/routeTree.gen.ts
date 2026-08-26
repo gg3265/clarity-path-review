@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as ConfirmationRouteImport } from './routes/confirmation'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -22,6 +23,7 @@ import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TestsRouteImport } from './routes/tests'
 import { Route as UploadPrescriptionRouteImport } from './routes/upload-prescription'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as CancerPathologySpecialtyIdRouteImport } from './routes/cancer-pathology_.$specialtyId'
 import { Route as PackagesPackageIdRouteImport } from './routes/packages_.$packageId'
 import { Route as ServicesServiceIdRouteImport } from './routes/services_.$serviceId'
@@ -34,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -91,6 +98,11 @@ const UploadPrescriptionRoute = UploadPrescriptionRouteImport.update({
   path: '/upload-prescription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CancerPathologySpecialtyIdRoute =
   CancerPathologySpecialtyIdRouteImport.update({
     id: '/cancer-pathology_/$specialtyId',
@@ -111,6 +123,7 @@ const ServicesServiceIdRoute = ServicesServiceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/book': typeof BookRoute
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
@@ -125,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/cancer-pathology/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,11 +157,13 @@ export interface FileRoutesByTo {
   '/cancer-pathology/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages/$packageId': typeof PackagesPackageIdRoute
   '/services/$serviceId': typeof ServicesServiceIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/book': typeof BookRoute
   '/confirmation': typeof ConfirmationRoute
   '/contact': typeof ContactRoute
@@ -162,12 +178,14 @@ export interface FileRoutesById {
   '/cancer-pathology_/$specialtyId': typeof CancerPathologySpecialtyIdRoute
   '/packages_/$packageId': typeof PackagesPackageIdRoute
   '/services_/$serviceId': typeof ServicesServiceIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/book'
     | '/confirmation'
     | '/contact'
@@ -182,6 +200,7 @@ export interface FileRouteTypes {
     | '/cancer-pathology/$specialtyId'
     | '/packages/$packageId'
     | '/services/$serviceId'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -200,10 +219,12 @@ export interface FileRouteTypes {
     | '/cancer-pathology/$specialtyId'
     | '/packages/$packageId'
     | '/services/$serviceId'
+    | '/admin'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/book'
     | '/confirmation'
     | '/contact'
@@ -218,11 +239,13 @@ export interface FileRouteTypes {
     | '/cancer-pathology_/$specialtyId'
     | '/packages_/$packageId'
     | '/services_/$serviceId'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BookRoute: typeof BookRoute
   ConfirmationRoute: typeof ConfirmationRoute
   ContactRoute: typeof ContactRoute
@@ -253,6 +276,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -332,6 +362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UploadPrescriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/cancer-pathology_/$specialtyId': {
       id: '/cancer-pathology_/$specialtyId'
       path: '/cancer-pathology/$specialtyId'
@@ -356,9 +393,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   BookRoute: BookRoute,
   ConfirmationRoute: ConfirmationRoute,
   ContactRoute: ContactRoute,

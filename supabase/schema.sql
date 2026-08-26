@@ -193,3 +193,102 @@ INSERT INTO storage.buckets (id, name, public) VALUES ('second-opinion-documents
 -- Enable RLS for Storage
 CREATE POLICY "Allow anonymous uploads to prescriptions" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'prescriptions');
 CREATE POLICY "Allow anonymous uploads to second-opinion-documents" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'second-opinion-documents');
+
+-- ==========================================
+-- ADMIN DASHBOARD EXTENSIONS
+-- ==========================================
+
+-- Alter Tests Table
+ALTER TABLE public.tests 
+ADD COLUMN IF NOT EXISTS crl_code TEXT,
+ADD COLUMN IF NOT EXISTS description TEXT,
+ADD COLUMN IF NOT EXISTS preparation TEXT,
+ADD COLUMN IF NOT EXISTS specimen TEXT,
+ADD COLUMN IF NOT EXISTS turnaround_time TEXT,
+ADD COLUMN IF NOT EXISTS notes TEXT,
+ADD COLUMN IF NOT EXISTS aliases TEXT[],
+ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true,
+ADD COLUMN IF NOT EXISTS requires_confirmation BOOLEAN DEFAULT false,
+ADD COLUMN IF NOT EXISTS is_popular BOOLEAN DEFAULT false;
+
+-- Alter Packages Table
+ALTER TABLE public.packages 
+ADD COLUMN IF NOT EXISTS description TEXT,
+ADD COLUMN IF NOT EXISTS short_description TEXT,
+ADD COLUMN IF NOT EXISTS badge TEXT,
+ADD COLUMN IF NOT EXISTS included_tests JSONB,
+ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true,
+ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+
+-- Create Cancer Services Table
+CREATE TABLE IF NOT EXISTS public.cancer_services (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    price NUMERIC,
+    required_patient_info JSONB,
+    required_case_info JSONB,
+    required_documents JSONB,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create App Settings Table
+CREATE TABLE IF NOT EXISTS public.app_settings (
+    key TEXT PRIMARY KEY,
+    value JSONB NOT NULL,
+    description TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- ADMIN RLS POLICIES
+-- ==========================================
+
+ALTER TABLE public.cancer_services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access
+CREATE POLICY "Enable read access for all users" ON public.cancer_services FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON public.app_settings FOR SELECT USING (true);
+
+
+-- ==========================================
+-- ADMIN AUTHORIZATION SYSTEM
+-- ==========================================
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    email TEXT PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Note: The client must insert their admin email into this table via the Supabase Dashboard
+-- Example: INSERT INTO public.admin_users (email) VALUES ('client@crl.com');
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean AS $
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.admin_users 
+    WHERE email = (auth.jwt() ->> 'email')::text
+  );
+END;
+$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Allow authorized admins to perform CRUD operations on all tables
+-- NOTE: We rely on Supabase Auth. Any authenticated user is considered an admin for this MVP.
+CREATE POLICY "Enable insert for authenticated users" ON public.tests FOR INSERT WITH CHECK (public.is_admin());
+CREATE POLICY "Enable update for authenticated users" ON public.tests FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Enable delete for authenticated users" ON public.tests FOR DELETE USING (public.is_admin());
+
+CREATE POLICY "Enable insert for authenticated users" ON public.packages FOR INSERT WITH CHECK (public.is_admin());
+CREATE POLICY "Enable update for authenticated users" ON public.packages FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Enable delete for authenticated users" ON public.packages FOR DELETE USING (public.is_admin());
+
+CREATE POLICY "Enable insert for authenticated users" ON public.cancer_services FOR INSERT WITH CHECK (public.is_admin());
+CREATE POLICY "Enable update for authenticated users" ON public.cancer_services FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Enable delete for authenticated users" ON public.cancer_services FOR DELETE USING (public.is_admin());
+
+CREATE POLICY "Enable insert for authenticated users" ON public.app_settings FOR INSERT WITH CHECK (public.is_admin());
+CREATE POLICY "Enable update for authenticated users" ON public.app_settings FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Enable delete for authenticated users" ON public.app_settings FOR DELETE USING (public.is_admin());

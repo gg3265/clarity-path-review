@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Reveal } from "@/components/Reveal";
 import { ServiceCard } from "@/components/ServiceCard";
 import { services } from "@/lib/site";

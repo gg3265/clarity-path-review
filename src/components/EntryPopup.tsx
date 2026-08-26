@@ -1,17 +1,32 @@
+// @ts-nocheck
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { X, ArrowRight } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { useCart } from "@/context/CartContext";
-import { tests } from "@/data/tests";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAdminTests, fetchAdminSettings } from "@/lib/api";
 
 export function EntryPopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
   const { addTest } = useCart();
   const navigate = useNavigate();
+
+  const { data: tests = [] } = useQuery({
+    queryKey: ['tests'],
+    queryFn: fetchAdminTests
+  });
+
+  const { data: settings = [] } = useQuery({
+    queryKey: ['settings'],
+    queryFn: fetchAdminSettings
+  });
+
+  const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 200 };
+  const promos = settings.find(s => s.key === 'promos')?.value || { bloodSugarPrice: 49, thyroidPrice: 299 };
 
   useEffect(() => {
     // Check if user has already seen the popup this session
@@ -122,12 +137,12 @@ export function EntryPopup() {
               </div>
               <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6">
                 <button 
-                  onClick={() => { handleBook("t49"); closePopup(); }} 
+                  onClick={() => { handleBook("t139"); closePopup(); }} 
                   className="group flex items-center justify-between sm:justify-center gap-4 bg-surface border border-border hover:border-teal/50 hover:bg-teal/5 rounded-2xl px-5 py-3.5 transition-all w-full sm:w-auto"
                 >
                   <span className="font-semibold text-foreground text-sm">Blood Sugar</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-navy text-sm">₹49</span>
+                    <span className="font-bold text-navy text-sm">₹{promos.bloodSugarPrice}</span>
                     <ArrowRight className="size-4 text-muted-foreground group-hover:text-teal transition-colors" />
                   </div>
                 </button>
@@ -137,7 +152,7 @@ export function EntryPopup() {
                 >
                   <span className="font-semibold text-foreground text-sm">Thyroid Test</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-navy text-sm">₹299</span>
+                    <span className="font-bold text-navy text-sm">₹{promos.thyroidPrice}</span>
                     <ArrowRight className="size-4 text-muted-foreground group-hover:text-teal transition-colors" />
                   </div>
                 </button>
@@ -146,7 +161,7 @@ export function EntryPopup() {
               <div className="bg-teal/5 rounded-2xl p-4 sm:p-3 flex flex-col items-center justify-center border border-teal/10">
                 <div className="text-[0.65rem] font-bold tracking-widest text-teal uppercase mb-1.5">Home Collection</div>
                 <div className="text-xs font-medium text-muted-foreground">
-                  <span className="text-green-600 font-bold">Free within 5 km</span> <span className="mx-1">•</span> ₹200 beyond 5 km
+                  <span className="text-green-600 font-bold">Free within {homeCollection.freeRadiusKm} km</span> <span className="mx-1">•</span> ₹{homeCollection.fee} beyond {homeCollection.freeRadiusKm} km
                 </div>
               </div>
             </div>

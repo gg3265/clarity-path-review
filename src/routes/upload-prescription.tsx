@@ -1,7 +1,8 @@
-﻿import { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
-import { CheckCircle2, Upload, FileText, X, Image as ImageIcon, ArrowLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, Upload, FileText, X, Image as ImageIcon, ArrowLeft, ChevronRight, MapPin, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 import { CollectionSelector, CollectionMethod } from "@/components/booking/CollectionSelector";
 import { AddressForm, AddressData } from "@/components/booking/AddressForm";
 import { WalkInMap } from "@/components/booking/WalkInMap";
@@ -180,7 +181,6 @@ function UploadPrescriptionPage() {
               onClick={() => {
                 if (step === "REVIEW") handleNext("COLLECTION");
                 else if (step === "COLLECTION") handleNext("UPLOAD");
-                else return false;
               }}
             />
             

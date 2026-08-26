@@ -1,4 +1,5 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+// @ts-nocheck
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";

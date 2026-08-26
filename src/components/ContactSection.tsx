@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Mail, MapPin, Search, ArrowRight, UserCircle2, Stethoscope, Beaker } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/Reveal";

@@ -11,6 +11,7 @@ import { WalkInMap } from "@/components/booking/WalkInMap";
 import { ContactAction } from "@/components/ContactAction";
 import { BackButton } from "@/components/BackButton";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -44,14 +45,14 @@ function BookPage() {
 
   const handleRemoveTest = (id: string) => {
     removeTest(id);
-    if (totalItems === 1 && selectedTests.length === 1 && selectedTests[0].id === id) {
+    if (totalItems === 1 && selectedTests.length === 1 && selectedTests[0]?.id === id) {
       setStep("TESTS");
     }
   };
 
   const handleRemovePackage = (id: string) => {
     removePackage(id);
-    if (totalItems === 1 && selectedPackages.length === 1 && selectedPackages[0].id === id) {
+    if (totalItems === 1 && selectedPackages.length === 1 && selectedPackages[0]?.id === id) {
       setStep("TESTS");
     }
   };
@@ -87,15 +88,76 @@ function BookPage() {
 
   const [isConfirming, setIsConfirming] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (isConfirming) return;
     setIsConfirming(true);
 
-    setTimeout(() => {
-      // Generate mock reference
+    try {
       const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       
-      const bookingData = {
+      // 1. Insert patient
+      const { data: patientData, error: patientError } = await supabase
+        .from('patients')
+        .insert({
+          name: patient.name,
+          age: patient.age,
+          gender: patient.gender,
+          mobile: patient.mobile,
+          email: patient.email
+        })
+        .select()
+        .single();
+        
+      if (patientError) throw patientError;
+
+      // 2. Insert booking
+      const { data: bookingDataDB, error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          ref_id: ref,
+          patient_id: patientData.id,
+          collection_method: collectionMethod,
+          address_line1: address.addressLine1,
+          address_line2: address.addressLine2,
+          area: address.area,
+          city: address.city,
+          state: address.state,
+          pincode: address.pincode,
+          appointment_date: date,
+          appointment_time: time,
+          notes: "",
+          total_price: totalEstimatedPrice,
+          status: 'PENDING'
+        })
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      // 3. Insert tests (preserving the exact current price)
+      if (selectedTests.length > 0) {
+        const testsToInsert = selectedTests.map(t => ({
+          booking_id: bookingDataDB.id,
+          test_id: t.id,
+          price_at_booking: t.price || t.sheet1Price || 0
+        }));
+        const { error: testsError } = await supabase.from('booking_tests').insert(testsToInsert);
+        if (testsError) throw testsError;
+      }
+
+      // 4. Insert packages (preserving the exact current price)
+      if (selectedPackages.length > 0) {
+        const pkgsToInsert = selectedPackages.map(p => ({
+          booking_id: bookingDataDB.id,
+          package_id: p.id,
+          price_at_booking: p.price
+        }));
+        const { error: pkgsError } = await supabase.from('booking_packages').insert(pkgsToInsert);
+        if (pkgsError) throw pkgsError;
+      }
+
+      // Save to session storage for the confirmation page
+      const bookingDataLocal = {
         ref,
         patient,
         selectedTests,
@@ -106,16 +168,16 @@ function BookPage() {
         appointment: (date || time) ? { date, time } : undefined,
         notes: "",
       };
-
-      try {
-        sessionStorage.setItem("lastBookingConfirmation", JSON.stringify(bookingData));
-      } catch (e) {
-        // Safe to ignore
-      }
-
+      sessionStorage.setItem("lastBookingConfirmation", JSON.stringify(bookingDataLocal));
+      
       clearCart();
       navigate({ to: "/confirmation" });
-    }, 1500);
+
+    } catch (e: any) {
+      console.error(e);
+      toast.error("Failed to submit booking: " + e.message);
+      setIsConfirming(false);
+    }
   };
 
   // Validation before allowing Review step
@@ -143,7 +205,7 @@ function BookPage() {
   if (totalItems === 0 && !isConfirming) {
     return (
       <>
-        <PageHeader title="Booking" subtitle="Secure checkout" />
+        <PageHeader title="Booking" eyebrow="Checkout" intro="Secure checkout" />
         <section className="py-12 md:py-20 min-h-[60vh] bg-background">
           <div className="container-page max-w-3xl">
             <div className="text-center py-16 bg-surface rounded-3xl border border-border shadow-soft">
@@ -179,7 +241,6 @@ function BookPage() {
                 if (step === "REVIEW") handleNext("COLLECTION");
                 else if (step === "COLLECTION") handleNext("DETAILS");
                 else if (step === "DETAILS") handleNext("TESTS");
-                else return false;
               }}
             />
             

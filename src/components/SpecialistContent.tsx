@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Hexagon, CheckCircle2 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";

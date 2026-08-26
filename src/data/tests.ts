@@ -21,10 +21,11 @@ export interface DiagnosticTest {
   id: string;
   crlCode?: string;
   name: string;
-  category: TestCategory | string;
+  category: string;
   specimen?: string;
   sheet1Price?: number;
   sheet2MRP?: number;
+  price?: number;
   priceStatus: "Confirmed" | "Price confirmation required" | "Sheet 2 Only";
   notes?: string;
   aliases?: string[];
