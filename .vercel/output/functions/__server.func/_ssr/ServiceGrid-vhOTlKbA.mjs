@@ -2,7 +2,7 @@ import { r as require_jsx_runtime } from "../_libs/react+tanstack__react-query.m
 import { v as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { F as ArrowUpRight, O as CircleDot, P as Beaker, T as Dna, _ as Layers, i as Target, s as Search, w as Droplet, x as FlaskConical } from "../_libs/lucide-react.mjs";
 import { t as Reveal } from "./Reveal-BFNJgJax.mjs";
-import { T as cn, g as services } from "./router-Y1X9ZrKJ.mjs";
+import { T as cn, g as services } from "./router-dwDVHqyE.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/ServiceGrid-vhOTlKbA.js
 var import_jsx_runtime = require_jsx_runtime();
 var icons = {

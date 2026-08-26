@@ -3,7 +3,7 @@ import { v as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { C as FileText, E as ClipboardList, I as ArrowRight, N as Box, a as Stethoscope, f as Microscope } from "../_libs/lucide-react.mjs";
 import { t as PageHeader } from "./PageHeader-BZXfVBGb.mjs";
 import { t as Reveal } from "./Reveal-BFNJgJax.mjs";
-import { u as caseMaterials } from "./router-Y1X9ZrKJ.mjs";
+import { u as caseMaterials } from "./router-dwDVHqyE.mjs";
 import { t as ServiceGrid } from "./ServiceGrid-vhOTlKbA.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/services-CIV39WOo.js
 var import_jsx_runtime = require_jsx_runtime();

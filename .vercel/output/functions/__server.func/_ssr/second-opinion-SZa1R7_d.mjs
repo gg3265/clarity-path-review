@@ -4,7 +4,7 @@ import { v as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { I as ArrowRight, M as ChevronDown, O as CircleDot, T as Dna, f as Microscope, w as Droplet, x as FlaskConical } from "../_libs/lucide-react.mjs";
 import { t as PageHeader } from "./PageHeader-BZXfVBGb.mjs";
 import { t as Reveal } from "./Reveal-BFNJgJax.mjs";
-import { T as cn } from "./router-Y1X9ZrKJ.mjs";
+import { T as cn } from "./router-dwDVHqyE.mjs";
 import { n as WhyUs, t as SecondOpinionSection } from "./WhyUs-d50Fqqj6.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/second-opinion-SZa1R7_d.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
