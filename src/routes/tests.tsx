@@ -29,14 +29,22 @@ export const Route = createFileRoute("/tests")({
 
 const ALL_CATEGORIES = [
   "All",
+  "Clinical - Hematology",
+  "Clinical - Biochemistry",
+  "Clinical - Endocrinology / Hormones",
+  "Clinical - Vitamins / Trace Elements",
+  "Clinical - Immunology / Autoimmune",
+  "Clinical - Serology / Infectious Diseases",
+  "Clinical - Clinical Pathology",
+  "Clinical - Microbiology",
+  "Clinical - Protein Studies",
+  "Clinical - Cancer-related Serum Markers",
   "Histopathology",
-  "Oncopathology",
-  "Second Opinion & Slide Review",
-  "Cytopathology",
-  "Immunohistochemistry",
-  "Clinical Pathology & Biochemistry",
-  "Haematology",
-  "Molecular & Ancillary Testing"
+  "Cytology",
+  "IHC",
+  "Molecular / Referral",
+  "Hematopathology",
+  "Renal / Liver / Breast"
 ];
 
 // Service descriptions for categories without raw tests
@@ -66,15 +74,17 @@ function TestsPage() {
     let result = tests;
     
     if (activeCategory !== "All") {
-      result = result.filter(t => t.category === activeCategory);
+      result = result.filter(t => t.category === activeCategory || t.category?.includes(activeCategory));
     }
 
     const q = (searchParams.q || "").toLowerCase().trim();
     if (q) {
       result = result.filter(test => {
         const matchName = test.name.toLowerCase().includes(q);
-        const matchAlias = test.aliases.some(a => a.toLowerCase().includes(q));
-        return matchName || matchAlias;
+        const matchAlias = (test.aliases || []).some(a => a.toLowerCase().includes(q));
+        const matchCrl = test.crlCode?.toLowerCase().includes(q) || false;
+        const matchCategory = test.category?.toLowerCase().includes(q) || false;
+        return matchName || matchAlias || matchCrl || matchCategory;
       });
     }
     return result.sort((a, b) => a.name.localeCompare(b.name));
@@ -260,6 +270,18 @@ function TestsPage() {
                           <h4 className="font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">
                             {test.name}
                           </h4>
+                          {test.specimen && (
+                            <p className="text-xs text-muted-foreground mt-2 font-medium flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 inline-block"></span>
+                              Sample: {test.specimen}
+                            </p>
+                          )}
+                          {test.notes && (
+                            <div className="mt-3 inline-flex items-start gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1.5 rounded-md border border-amber-200">
+                              <AlertCircle className="size-4 shrink-0 mt-0.5" />
+                              <span>{test.notes}</span>
+                            </div>
+                          )}
                         </div>
                         
                         <div className="mt-5 pt-4 border-t border-border/50 flex flex-col gap-4">
