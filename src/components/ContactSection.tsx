@@ -46,6 +46,8 @@ export function ContactSection() {
               </div>
               <Link
                 to="/services/pathology-second-opinion-slide-review"
+                activeProps={{}}
+                activeClass=""
                 className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
               >
                 Request a Second Opinion
@@ -66,6 +68,8 @@ export function ContactSection() {
               <Link
                 to="/services/pathology-second-opinion-slide-review"
                 search={{ role: "doctor" }}
+                activeProps={{}}
+                activeClass=""
                 className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-navy bg-transparent px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-105 hover:bg-navy hover:text-white"
               >
                 Refer a Case
@@ -85,6 +89,8 @@ export function ContactSection() {
               </div>
               <Link
                 to="/tests"
+                activeProps={{}}
+                activeClass=""
                 className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition-transform hover:scale-105 hover:border-foreground/20"
               >
                 Book a Test
