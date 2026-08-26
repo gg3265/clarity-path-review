@@ -188,14 +188,31 @@ function TestsManager() {
   }, [tests, search, category]);
 
   const handlePriceUpdate = async (id: string, newPrice: number) => {
-    const { error } = await supabase.from('tests').update({ price: newPrice }).eq('id', id)
+    const test = tests.find(t => t.id === id);
+    if (!test) return;
+    const { error } = await supabase.from('tests').upsert({ 
+      id, 
+      name: test.name, 
+      category: test.category || null, 
+      price: newPrice,
+      price_status: test.price_status || 'Confirmed'
+    }, { onConflict: 'id' })
     if (error) throw error
     setTests(tests.map(t => t.id === id ? { ...t, price: newPrice } : t))
   }
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase.from('tests').update({ is_active: !currentStatus }).eq('id', id)
+      const test = tests.find(t => t.id === id);
+      if (!test) return;
+      const { error } = await supabase.from('tests').upsert({ 
+        id, 
+        name: test.name, 
+        category: test.category || null, 
+        price: test.price,
+        price_status: test.price_status || 'Confirmed',
+        is_active: !currentStatus 
+      }, { onConflict: 'id' })
       if (error) throw error;
       setTests(tests.map(t => t.id === id ? { ...t, is_active: !currentStatus } : t))
     } catch(e: any) {
@@ -309,14 +326,29 @@ function PackagesManager({ categoryFilter }: { categoryFilter: string }) {
   }, [packages, categoryFilter])
 
   const handlePriceUpdate = async (id: string, newPrice: number) => {
-    const { error } = await supabase.from('packages').update({ price: newPrice }).eq('id', id)
+    const pkg = packages.find(p => p.id === id);
+    if (!pkg) return;
+    const { error } = await supabase.from('packages').upsert({
+      id,
+      name: pkg.name,
+      category: pkg.category || null,
+      price: newPrice
+    }, { onConflict: 'id' })
     if (error) throw error
     setPackages(packages.map(p => p.id === id ? { ...p, price: newPrice } : p))
   }
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase.from('packages').update({ is_active: !currentStatus }).eq('id', id)
+      const pkg = packages.find(p => p.id === id);
+      if (!pkg) return;
+      const { error } = await supabase.from('packages').upsert({
+        id,
+        name: pkg.name,
+        category: pkg.category || null,
+        price: pkg.price,
+        is_active: !currentStatus
+      }, { onConflict: 'id' })
       if (error) throw error;
       setPackages(packages.map(p => p.id === id ? { ...p, is_active: !currentStatus } : p))
     } catch(e: any) {

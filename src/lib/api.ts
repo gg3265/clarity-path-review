@@ -23,26 +23,34 @@ export const DEFAULT_SETTINGS: AppSettings = {
 
 export async function fetchTests(): Promise<DiagnosticTest[]> {
   try {
-    const { data, error } = await supabase.from("tests").select("*").eq('is_active', true);
+    // Fetch any overrides from Supabase (ignoring is_active if it causes errors, just get price updates)
+    const { data, error } = await supabase.from("tests").select("id, price, price_status, is_active");
     
-    if (error) throw error;
+    if (error) {
+      console.warn("Failed to fetch test overrides from Supabase, returning local baseline.", error.message);
+      return localTests;
+    }
     
+    // Merge Supabase data over localTests
     if (data && data.length > 0) {
-      return data.map(t => ({
-        id: t.id,
-        crlCode: t.crl_code,
-        name: t.name,
-        category: t.category,
-        specimen: t.specimen,
-        // Map price to sheet1Price for compatibility with existing CartContext
-        sheet1Price: t.price,
-        priceStatus: t.price_status || "Confirmed",
-        notes: t.notes || t.description,
-        aliases: t.aliases || [],
-      }));
+      const overrides = new Map(data.map(t => [t.id, t]));
+      
+      return localTests.map(t => {
+        const override = overrides.get(t.id);
+        if (override) {
+          // If the admin deactivated it (and is_active exists), we could filter it out. 
+          // For now we just merge the price.
+          return {
+            ...t,
+            sheet1Price: override.price !== null ? Number(override.price) : t.sheet1Price,
+            priceStatus: override.price_status || t.priceStatus,
+          };
+        }
+        return t;
+      });
     }
   } catch (err) {
-    console.error("Failed to fetch tests from Supabase, falling back to local data", err);
+    console.error("Failed to merge Supabase tests", err);
   }
   
   return localTests;
@@ -50,23 +58,25 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
 
 export async function fetchPackages(): Promise<HealthPackage[]> {
   try {
-    const { data, error } = await supabase.from("packages").select("*").eq('is_active', true);
+    const { data, error } = await supabase.from("packages").select("id, price, is_active");
     
-    if (error) throw error;
+    if (error) {
+      console.warn("Failed to fetch packages from Supabase, returning local baseline.", error.message);
+      return localPackages;
+    }
     
     if (data && data.length > 0) {
-      return data.map(p => ({
-        id: p.id,
-        name: p.name,
-        category: p.category,
-        price: p.price,
-        shortDescription: p.short_description || p.description,
-        description: p.description,
-        badge: p.badge,
-        includedTests: p.included_tests || [],
-        ctaText: "Book Package",
-        bookingType: "booking" as const
-      }));
+      const overrides = new Map(data.map(p => [p.id, p]));
+      return localPackages.map(p => {
+        const override = overrides.get(p.id);
+        if (override) {
+          return {
+            ...p,
+            price: override.price !== null ? Number(override.price) : p.price
+          };
+        }
+        return p;
+      });
     }
   } catch (err) {
     console.error("Failed to fetch packages from Supabase, falling back to local data", err);
@@ -104,15 +114,68 @@ export async function fetchSettings(): Promise<AppSettings> {
 
 // Admin fetchers (includes inactive)
 export async function fetchAdminTests() {
-  const { data, error } = await supabase.from("tests").select("*").order('name');
-  if (error) throw error;
-  return data;
+  try {
+    const { data, error } = await supabase.from("tests").select("*");
+    if (error) {
+      console.warn("Failed to fetch admin tests from Supabase, returning local baseline.", error.message);
+      return localTests;
+    }
+    
+    // Merge Supabase overrides over local baseline
+    const overrides = new Map((data || []).map(t => [t.id, t]));
+    
+    return localTests.map(t => {
+      const override = overrides.get(t.id);
+      if (override) {
+        return {
+          ...t,
+          // Admin UI expects 'price' but localTests uses 'sheet1Price'
+          price: override.price !== null ? Number(override.price) : t.sheet1Price,
+          price_status: override.price_status || t.priceStatus,
+          is_active: override.is_active !== false // default true
+        };
+      }
+      return {
+        ...t,
+        price: t.sheet1Price,
+        price_status: t.priceStatus,
+        is_active: true
+      };
+    }).sort((a, b) => a.name.localeCompare(b.name));
+    
+  } catch (err) {
+    console.error("Admin tests fetch failed:", err);
+    return localTests.map(t => ({ ...t, price: t.sheet1Price, price_status: t.priceStatus, is_active: true }));
+  }
 }
 
 export async function fetchAdminPackages() {
-  const { data, error } = await supabase.from("packages").select("*").order('category').order('name');
-  if (error) throw error;
-  return data;
+  try {
+    const { data, error } = await supabase.from("packages").select("*");
+    if (error) {
+      console.warn("Failed to fetch admin packages from Supabase, returning local baseline.", error.message);
+      return localPackages;
+    }
+    
+    const overrides = new Map((data || []).map(p => [p.id, p]));
+    return localPackages.map(p => {
+      const override = overrides.get(p.id);
+      if (override) {
+        return {
+          ...p,
+          price: override.price !== null ? Number(override.price) : p.price,
+          is_active: override.is_active !== false
+        };
+      }
+      return {
+        ...p,
+        is_active: true
+      };
+    }).sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+  } catch (err) {
+    console.error("Admin packages fetch failed:", err);
+    return localPackages.map(p => ({ ...p, is_active: true }));
+  }
 }
 
 export async function fetchAdminSettings() {
