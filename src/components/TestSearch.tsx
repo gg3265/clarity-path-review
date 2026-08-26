@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Search, X, ChevronRight, AlertCircle, TestTube2 } from "lucide-react";
+import { Search, X, ChevronRight, AlertCircle, TestTube2, ArrowRight } from "lucide-react";
 import { tests } from "@/data/tests";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/utils/formatPrice";
@@ -15,7 +15,7 @@ export function TestSearch() {
   const navigate = useNavigate();
 
   // Simple client-side search across tests
-  const results = React.useMemo(() => {
+  const results = useMemo(() => {
     if (!query.trim()) return [];
     const lowerQuery = query.toLowerCase().trim();
     return tests.filter((test) => {
