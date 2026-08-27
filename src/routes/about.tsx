@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { DiagnosticApproachSection, SpecialistCTA } from "@/components/SpecialistContent";
 import { Link } from "@tanstack/react-router";
@@ -42,7 +42,14 @@ function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Card 1 */}
             <div className="bg-surface border border-border rounded-2xl p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-teal/30 group">
-              <h3 className="text-xl font-bold text-navy mb-1 group-hover:text-teal transition-colors">Dr. Vandana Gite</h3>
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-xl mb-6 bg-muted">
+                <img 
+                  src="/images/team/vandana_gite.jpg" 
+                  alt="Dr. Vandna Gite" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                />
+              </div>
+              <h3 className="text-xl font-bold text-navy mb-1 group-hover:text-teal transition-colors">Dr. Vandna Gite</h3>
               <p className="text-sm font-semibold text-teal mb-4">MD Pathology | Senior Pathologist</p>
               <div className="inline-block bg-teal/10 text-teal text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full mb-6">
                 20+ years of experience
@@ -59,6 +66,13 @@ function About() {
 
             {/* Card 2 */}
             <div className="bg-surface border border-border rounded-2xl p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-teal/30 group">
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-xl mb-6 bg-muted">
+                <img 
+                  src="/images/team/maruti_dhakane.jpg" 
+                  alt="Dr. Maruti Dhakane" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                />
+              </div>
               <h3 className="text-xl font-bold text-navy mb-1 group-hover:text-teal transition-colors">Dr. Maruti Dhakane</h3>
               <p className="text-sm font-semibold text-teal mb-4">Senior Pathologist</p>
               <div className="inline-block bg-teal/10 text-teal text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full mb-6">
@@ -76,6 +90,13 @@ function About() {
 
             {/* Card 3 */}
             <div className="bg-surface border border-border rounded-2xl p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-teal/30 group">
+              <div className="aspect-[4/5] w-full overflow-hidden rounded-xl mb-6 bg-muted">
+                <img 
+                  src="/images/team/vishal_shukla.jpg" 
+                  alt="Mr. Vishal Shukla" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                />
+              </div>
               <h3 className="text-xl font-bold text-navy mb-1 group-hover:text-teal transition-colors">Mr. Vishal Shukla</h3>
               <p className="text-sm font-semibold text-teal mb-4">MSc Microbiology | Senior Microbiologist</p>
               <div className="inline-block bg-teal/10 text-teal text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full mb-6">
