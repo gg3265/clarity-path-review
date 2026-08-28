@@ -1,4 +1,4 @@
-﻿import { Home, MapPin } from "lucide-react";
+import { Home, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type CollectionMethod = "HOME" | "WALK_IN" | null;
@@ -33,7 +33,7 @@ export function CollectionSelector({ selected, onChange }: CollectionSelectorPro
           </div>
           <div className="flex justify-between items-center">
             <span className="text-foreground">Beyond 5 km</span>
-            <span className="text-foreground font-bold">₹200</span>
+            <span className="text-foreground font-bold">₹100</span>
           </div>
         </div>
         
