@@ -25,7 +25,7 @@ export function EntryPopup() {
     queryFn: fetchAdminSettings
   });
 
-  const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 200 };
+  const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 100 };
   const promos = settings.find(s => s.key === 'promos')?.value || { bloodSugarPrice: 49, thyroidPrice: 299 };
 
   useEffect(() => {
