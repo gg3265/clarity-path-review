@@ -14,7 +14,7 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   homeCollectionFreeRadiusKm: 5,
-  homeCollectionFee: 200,
+  homeCollectionFee: 100,
   promos: {
     bloodSugarPrice: 49,
     thyroidPrice: 299,

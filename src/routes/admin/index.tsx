@@ -544,7 +544,7 @@ function SettingsManager() {
 
   if (loading) return <div className="py-20 text-center text-gray-500 font-medium">Loading settings...</div>
 
-  const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 200 }
+  const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 100 }
   const promos = settings.find(s => s.key === 'promos')?.value || { bloodSugarPrice: 49, thyroidPrice: 299 }
 
   return (

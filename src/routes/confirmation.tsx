@@ -68,7 +68,7 @@ Booking ID: ${ref}
 Patient: ${patient.name}
 Items: ${itemNames}
 Collection: ${collectionMethod === "HOME" ? "Home Collection" : "Walk-in Centre"}
-Amount: ${hasConflict ? "TBA (Price confirmation required)" : formatPrice(totalEstimatedPrice)} ${collectionMethod === "HOME" ? "(+ ₹200 if beyond 5km)" : ""}
+Amount: ${hasConflict ? "TBA (Price confirmation required)" : formatPrice(totalEstimatedPrice)} ${collectionMethod === "HOME" ? "(+ ₹100 if beyond 5km)" : ""}
 
 Please confirm my booking.`;
 
@@ -137,7 +137,7 @@ Please confirm my booking.`;
               </div>
               {collectionMethod === "HOME" && (
                 <div className="text-xs text-muted-foreground mt-1 font-medium">
-                  + ₹200 (if beyond 5 km)
+                  + ₹100 (if beyond 5 km)
                 </div>
               )}
             </div>

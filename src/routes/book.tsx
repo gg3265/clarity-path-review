@@ -596,7 +596,7 @@ function BookPage() {
                       <div>
                         <div className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1">Collection Charge</div>
                         <div className="font-semibold text-foreground">
-                          <span className="text-green-600">FREE</span> within 5 km &bull; <span className="font-bold">₹200</span> beyond 5 km
+                          <span className="text-green-600">FREE</span> within 5 km &bull; <span className="font-bold">₹100</span> beyond 5 km
                         </div>
                       </div>
                       <div className="pt-3 border-t border-border">
