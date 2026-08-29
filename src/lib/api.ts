@@ -6,6 +6,7 @@ import { packages as localPackages, HealthPackage } from "@/data/packages";
 export interface AppSettings {
   homeCollectionFreeRadiusKm: number;
   homeCollectionFee: number;
+  freePincodes: string[];
   promos: {
     bloodSugarPrice: number;
     thyroidPrice: number;
@@ -15,6 +16,7 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   homeCollectionFreeRadiusKm: 5,
   homeCollectionFee: 100,
+  freePincodes: ["411030"],
   promos: {
     bloodSugarPrice: 49,
     thyroidPrice: 299,
@@ -98,6 +100,9 @@ export async function fetchSettings(): Promise<AppSettings> {
         if (row.key === 'home_collection') {
           settings.homeCollectionFreeRadiusKm = row.value.freeRadiusKm || settings.homeCollectionFreeRadiusKm;
           settings.homeCollectionFee = row.value.fee || settings.homeCollectionFee;
+          if (Array.isArray(row.value.freePincodes)) {
+            settings.freePincodes = row.value.freePincodes;
+          }
         } else if (row.key === 'promos') {
           settings.promos = { ...settings.promos, ...row.value };
         }

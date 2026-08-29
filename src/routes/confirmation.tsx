@@ -54,12 +54,26 @@ function ConfirmationPage() {
     );
   }
 
-  const { ref, patient, selectedTests, selectedPackages, totalEstimatedPrice, collectionMethod, address } = bookingData;
-  const hasConflict = selectedTests?.some((t: any) => t.priceStatus === "Price confirmation required");
+  const {
+    ref,
+    patient,
+    selectedTests = [],
+    selectedPackages = [],
+    totalEstimatedPrice = 0,
+    applicableCollectionFee = 0,
+    finalPrice = 0,
+    address,
+    appointment,
+    collectionMethod
+  } = bookingData;
 
+  const hasConflict = selectedTests?.some(
+    (t: any) => t.priceStatus === "Price confirmation required" || !t.priceStatus
+  );
+  
   const itemNames = [
-    ...(selectedPackages || []).map((p: any) => p.name),
-    ...(selectedTests || []).map((t: any) => t.name)
+    ...selectedPackages.map((p: any) => p.name),
+    ...selectedTests.map((t: any) => t.name)
   ].join(", ");
 
   const whatsappMessage = `Hello SECOND OPINION CRL, I have submitted a booking request.
@@ -68,7 +82,7 @@ Booking ID: ${ref}
 Patient: ${patient.name}
 Items: ${itemNames}
 Collection: ${collectionMethod === "HOME" ? "Home Collection" : "Walk-in Centre"}
-Amount: ${hasConflict ? "TBA (Price confirmation required)" : formatPrice(totalEstimatedPrice)} ${collectionMethod === "HOME" ? "(+ ₹100 if beyond 5km)" : ""}
+Amount: ${hasConflict ? "TBA (Price confirmation required)" : formatPrice(finalPrice)}
 
 Please confirm my booking.`;
 
@@ -133,11 +147,11 @@ Please confirm my booking.`;
                 Total Amount
               </div>
               <div className="text-xl font-bold text-foreground">
-                {hasConflict ? <span className="text-amber-600 text-lg">TBA (Confirmation Required)</span> : formatPrice(totalEstimatedPrice)}
+                {hasConflict ? <span className="text-amber-600 text-lg">TBA (Confirmation Required)</span> : formatPrice(finalPrice)}
               </div>
-              {collectionMethod === "HOME" && (
-                <div className="text-xs text-muted-foreground mt-1 font-medium">
-                  + ₹100 (if beyond 5 km)
+              {applicableCollectionFee > 0 && (
+                <div className="text-xs font-semibold text-muted-foreground mt-1 bg-surface p-2 rounded-lg border border-border inline-block">
+                  Includes {formatPrice(applicableCollectionFee)} Home Collection Fee
                 </div>
               )}
             </div>

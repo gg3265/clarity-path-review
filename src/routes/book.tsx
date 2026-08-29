@@ -2,6 +2,8 @@ import { formatPrice } from "@/utils/formatPrice";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSettings } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { PageHeader } from "@/components/PageHeader";
 import { AlertCircle, ArrowLeft, CheckCircle2, ChevronRight, Search } from "lucide-react";
@@ -38,6 +40,8 @@ function BookPage() {
   const { selectedTests, selectedPackages, isLoaded, removeTest, removePackage, totalEstimatedPrice, hasConflict, clearCart } = useCart();
   const navigate = useNavigate();
   const totalItems = (selectedTests?.length || 0) + (selectedPackages?.length || 0);
+
+  const { data: settings } = useQuery({ queryKey: ["settings"], queryFn: fetchSettings });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -86,6 +90,14 @@ function BookPage() {
     setStep(nextStep);
   };
 
+  const isHomeCollection = collectionMethod === "HOME";
+  const homeCollectionFee = settings?.homeCollectionFee || 100;
+  const freePincodes = settings?.freePincodes || ["411030"];
+  // We assume distance is beyond 5km if pincode is NOT in freePincodes
+  const isFreePincode = freePincodes.includes(address.pincode.trim());
+  const applicableCollectionFee = (isHomeCollection && !isFreePincode) ? homeCollectionFee : 0;
+  const finalPrice = totalEstimatedPrice + applicableCollectionFee;
+
   const [isConfirming, setIsConfirming] = useState(false);
 
   const handleConfirm = async () => {
@@ -126,7 +138,7 @@ function BookPage() {
           appointment_date: date,
           appointment_time: time,
           notes: "",
-          total_price: totalEstimatedPrice,
+          total_price: finalPrice,
           status: 'PENDING'
         })
         .select()
@@ -163,6 +175,8 @@ function BookPage() {
         selectedTests,
         selectedPackages,
         totalEstimatedPrice,
+        applicableCollectionFee,
+        finalPrice,
         collectionMethod,
         address: collectionMethod === "HOME" ? address : undefined,
         appointment: (date || time) ? { date, time } : undefined,
@@ -540,10 +554,16 @@ function BookPage() {
                       </div>
                     ))}
                   </div>
+                  {applicableCollectionFee > 0 && (
+                    <div className="border-t border-border pt-3 pb-3 flex justify-between items-center text-sm text-muted-foreground">
+                      <span>Home Collection Fee</span>
+                      <span className="font-medium text-foreground">{formatPrice(applicableCollectionFee)}</span>
+                    </div>
+                  )}
                   <div className="border-t border-border pt-4 flex justify-between items-center font-bold">
                     <span>Estimated Total</span>
                     <span className="text-xl">
-                      {hasConflict ? <span className="text-amber-600 text-sm">Price TBA</span> : formatPrice(totalEstimatedPrice)}
+                      {hasConflict ? <span className="text-amber-600 text-sm">Price TBA</span> : formatPrice(finalPrice)}
                     </span>
                   </div>
                 </div>
