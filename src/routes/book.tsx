@@ -106,28 +106,30 @@ function BookPage() {
 
     try {
       const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const patientId = crypto.randomUUID();
+      const bookingId = crypto.randomUUID();
       
       // 1. Insert patient
-      const { data: patientData, error: patientError } = await supabase
+      const { error: patientError } = await supabase
         .from('patients')
         .insert({
+          id: patientId,
           name: patient.name,
           age: patient.age,
           gender: patient.gender,
           mobile: patient.mobile,
           email: patient.email
-        })
-        .select()
-        .single();
+        });
         
       if (patientError) throw patientError;
 
       // 2. Insert booking
-      const { data: bookingDataDB, error: bookingError } = await supabase
+      const { error: bookingError } = await supabase
         .from('bookings')
         .insert({
+          id: bookingId,
           ref_id: ref,
-          patient_id: patientData.id,
+          patient_id: patientId,
           collection_method: collectionMethod,
           address_line1: address.addressLine1,
           address_line2: address.addressLine2,
@@ -140,16 +142,14 @@ function BookPage() {
           notes: "",
           total_price: finalPrice,
           status: 'PENDING'
-        })
-        .select()
-        .single();
+        });
 
       if (bookingError) throw bookingError;
 
       // 3. Insert tests (preserving the exact current price)
       if (selectedTests.length > 0) {
         const testsToInsert = selectedTests.map(t => ({
-          booking_id: bookingDataDB.id,
+          booking_id: bookingId,
           test_id: t.id,
           price_at_booking: t.price || t.sheet1Price || 0
         }));
@@ -160,7 +160,7 @@ function BookPage() {
       // 4. Insert packages (preserving the exact current price)
       if (selectedPackages.length > 0) {
         const pkgsToInsert = selectedPackages.map(p => ({
-          booking_id: bookingDataDB.id,
+          booking_id: bookingId,
           package_id: p.id,
           price_at_booking: p.price
         }));
