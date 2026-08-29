@@ -150,6 +150,12 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [files, setFiles] = useState<{ [label: string]: File | null }>({});
+
+  const handleFileChange = (label: string, file: File | null) => {
+    setFiles(prev => ({ ...prev, [label]: file }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -160,13 +166,41 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
     }
     
     setIsSubmitting(true);
+    let uploadedPaths: string[] = [];
     try {
       const { supabase } = await import("@/lib/supabase");
 
+      const fileEntries = Object.entries(files).filter(([_, f]) => f !== null) as [string, File][];
+      const requestId = crypto.randomUUID();
+      const fileRecordsToInsert: any[] = [];
+      let uploadedUrls: string[] = [];
+
+      for (const [label, file] of fileEntries) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${requestId}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `second-opinion/${requestId}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('prescriptions')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+        
+        uploadedPaths.push(filePath);
+
+        fileRecordsToInsert.push({
+          request_id: requestId,
+          file_path: filePath,
+          file_name: file.name,
+          file_type: file.type || 'unknown'
+        });
+
+        uploadedUrls.push(`- ${label}: ${file.name}`);
+      }
+      
       let requestData;
       
       if (isSecondOpinion) {
-        const requestId = crypto.randomUUID();
         const { error } = await supabase.from('second_opinion_requests').insert([{
           id: requestId,
           patient_name: patient.name,
@@ -176,9 +210,15 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
           status: 'PENDING'
         }]);
         if (error) throw error;
+        
+        if (fileRecordsToInsert.length > 0) {
+          const { error: fileErr } = await supabase.from('second_opinion_files').insert(fileRecordsToInsert);
+          if (fileErr) throw fileErr;
+        }
+        
         requestData = { id: requestId };
       } else {
-        const requestId = crypto.randomUUID();
+        const appendedMessage = uploadedUrls.length > 0 ? `\n\nAttachments:\n${uploadedUrls.join('\n')}` : '';
         const { error } = await supabase.from('service_requests').insert([{
           id: requestId,
           service_id: serviceId,
@@ -186,7 +226,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
           patient_name: patient.name,
           mobile: patient.mobile,
           email: patient.email || null,
-          message: `Age: ${patient.age}, Gender: ${patient.gender}\nDoctor: ${patient.doctor}\nHospital: ${patient.hospital}\n\nCase Details: ${JSON.stringify(formData)}`,
+          message: `Age: ${patient.age}, Gender: ${patient.gender}\nDoctor: ${patient.doctor}\nHospital: ${patient.hospital}\n\nCase Details: ${JSON.stringify(formData)}${appendedMessage}`,
           status: 'PENDING'
         }]);
         if (error) throw error;
@@ -198,6 +238,12 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
     } catch (err) {
       console.error(err);
       toast.error("Failed to submit request.");
+      // Cleanup files on failure
+      if (uploadedPaths.length > 0) {
+        import("@/lib/supabase").then(({ supabase }) => {
+          supabase.storage.from('prescriptions').remove(uploadedPaths).catch(console.error);
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -451,26 +497,26 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
         <div className="grid sm:grid-cols-2 gap-4">
           {isSecondOpinion ? (
             <>
-              <FileUploadBox label="Upload Report" />
-              <FileUploadBox label="Upload IHC Report" />
+              <FileUploadBox label="Upload Report" selectedFile={files["Upload Report"]} onFileChange={(f) => handleFileChange("Upload Report", f)} />
+              <FileUploadBox label="Upload IHC Report" selectedFile={files["Upload IHC Report"]} onFileChange={(f) => handleFileChange("Upload IHC Report", f)} />
               <div className="sm:col-span-2">
-                <FileUploadBox label="Upload Other Document" />
+                <FileUploadBox label="Upload Other Document" selectedFile={files["Upload Other Document"]} onFileChange={(f) => handleFileChange("Upload Other Document", f)} />
               </div>
             </>
           ) : isOnco ? (
             <>
-              <FileUploadBox label="Upload Previous Reports" />
-              <FileUploadBox label="Upload relevant pathology documents" />
+              <FileUploadBox label="Upload Previous Reports" selectedFile={files["Upload Previous Reports"]} onFileChange={(f) => handleFileChange("Upload Previous Reports", f)} />
+              <FileUploadBox label="Upload relevant pathology documents" selectedFile={files["Upload relevant pathology documents"]} onFileChange={(f) => handleFileChange("Upload relevant pathology documents", f)} />
             </>
           ) : isIHC ? (
             <>
-              {formData.prevHisto === "Yes" && <FileUploadBox label="Upload Histopathology Report" />}
-              {formData.prevIhc === "Yes" && <FileUploadBox label="Upload Previous IHC Report" />}
-              {formData.prevHisto !== "Yes" && formData.prevIhc !== "Yes" && <FileUploadBox label="Upload Relevant Reports" />}
+              {formData.prevHisto === "Yes" && <FileUploadBox label="Upload Histopathology Report" selectedFile={files["Upload Histopathology Report"]} onFileChange={(f) => handleFileChange("Upload Histopathology Report", f)} />}
+              {formData.prevIhc === "Yes" && <FileUploadBox label="Upload Previous IHC Report" selectedFile={files["Upload Previous IHC Report"]} onFileChange={(f) => handleFileChange("Upload Previous IHC Report", f)} />}
+              {formData.prevHisto !== "Yes" && formData.prevIhc !== "Yes" && <FileUploadBox label="Upload Relevant Reports" selectedFile={files["Upload Relevant Reports"]} onFileChange={(f) => handleFileChange("Upload Relevant Reports", f)} />}
             </>
           ) : (
             <div className="sm:col-span-2">
-              <FileUploadBox label="Upload relevant documents" />
+              <FileUploadBox label="Upload relevant documents" selectedFile={files["Upload relevant documents"]} onFileChange={(f) => handleFileChange("Upload relevant documents", f)} />
             </div>
           )}
         </div>
@@ -505,8 +551,12 @@ function RadioGroup({ label, name, onChange }: { label: string, name: string, on
   );
 }
 
-function FileUploadBox({ label }: { label: string }) {
-  const [file, setFile] = useState<File | null>(null);
+function FileUploadBox({ label, selectedFile, onFileChange }: { label: string; selectedFile?: File | null; onFileChange?: (f: File | null) => void }) {
+  const file = selectedFile;
+  
+  const handleSetFile = (f: File | null) => {
+    if (onFileChange) onFileChange(f);
+  };
 
   return (
     <div className="space-y-2">
@@ -522,7 +572,7 @@ function FileUploadBox({ label }: { label: string }) {
               <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
             </div>
           </div>
-          <button type="button" onClick={() => setFile(null)} className="p-2 text-muted-foreground hover:text-destructive">
+          <button type="button" onClick={() => handleSetFile(null)} className="p-2 text-muted-foreground hover:text-destructive">
             <X className="size-4" />
           </button>
         </div>
@@ -534,7 +584,14 @@ function FileUploadBox({ label }: { label: string }) {
           <p className="mt-4 text-sm font-medium text-foreground">Click to upload document</p>
           <p className="mt-1 text-xs text-muted-foreground">PDF, JPG, PNG up to 10MB</p>
           <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => {
-            if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+            if (e.target.files && e.target.files[0]) {
+              const f = e.target.files[0];
+              if (f.size > 10 * 1024 * 1024) {
+                toast.error("File size must be less than 10MB");
+                return;
+              }
+              handleSetFile(f);
+            }
           }} />
         </label>
       )}
