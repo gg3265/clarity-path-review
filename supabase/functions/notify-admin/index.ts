@@ -2,15 +2,6 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as encodeBase64 } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
-const resendApiKey = Deno.env.get('RESEND_API_KEY');
-const adminEmail = Deno.env.get('ADMIN_NOTIFICATION_EMAIL') || 'secondopinioncrl@gmail.com';
-const adminDashboardUrl = 'https://claritypathreview.com/admin';
-
-const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 function escapeHtml(unsafe: any) {
   if (unsafe == null) return '';
   return String(unsafe)
@@ -32,6 +23,18 @@ async function fetchWithRetry(fetcher: () => Promise<any[]>, retries = 5, delayM
 }
 
 serve(async (req) => {
+  // CRITICAL FIX: Initialize Supabase client INSIDE the serve handler. 
+  // Deno Edge Functions inject environment variables (like SUPABASE_SERVICE_ROLE_KEY) per-request context.
+  // Initializing globally causes the client to miss the Service Role Key, acting as an anonymous user 
+  // and receiving 'Object not found' from private storage buckets.
+  const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  const resendApiKey = Deno.env.get('RESEND_API_KEY');
+  const adminEmail = Deno.env.get('ADMIN_NOTIFICATION_EMAIL') || 'secondopinioncrl@gmail.com';
+  const adminDashboardUrl = 'https://claritypathreview.com/admin';
+
   try {
     const payload = await req.json();
     const { type, table, record } = payload;
@@ -50,7 +53,6 @@ serve(async (req) => {
     if (table === 'bookings') {
       subject = `New Booking: ${escapeHtml(record.ref_id)}`;
       
-      // Wait for booking_tests and booking_packages to be inserted by the frontend to prevent race conditions
       const tests = await fetchWithRetry(async () => {
         const { data } = await supabase.from('booking_tests').select('*, tests(*)').eq('booking_id', record.id);
         return data || [];
@@ -75,9 +77,6 @@ serve(async (req) => {
       }
       itemsHtml += "</ul>";
       
-      // Note: Bookings currently have no file uploads/attachments defined in the schema.
-      // Attachments array remains empty for bookings, preventing failed downloads.
-
       htmlContent = `
         <h2>New Booking Received (${escapeHtml(record.collection_method)})</h2>
         <p><strong>Reference ID:</strong> ${escapeHtml(record.ref_id)}</p>
@@ -108,7 +107,6 @@ serve(async (req) => {
         <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">Secure Admin Access</a>
       `;
       
-      // Get attachments with retry to prevent race conditions with frontend inserts
       const filesData = await fetchWithRetry(async () => {
         const { data } = await supabase.from('second_opinion_files').select('*').eq('request_id', record.id);
         return data || [];
@@ -136,7 +134,6 @@ serve(async (req) => {
       let messageContent = escapeHtml(record.message)?.replace(/\n/g, '<br/>');
       let storagePaths: string[] = [];
       
-      // Extract _STORAGE_PATHS_: from message if present
       if (record.message && record.message.includes('_STORAGE_PATHS_:')) {
         const parts = record.message.split('_STORAGE_PATHS_:');
         messageContent = escapeHtml(parts[0].trim())?.replace(/\n/g, '<br/>');
@@ -158,7 +155,6 @@ serve(async (req) => {
         <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">View in Dashboard</a>
       `;
       
-      // The paths were appended instantly on insert, no race condition here.
       if (storagePaths.length > 0) {
         for (const path of storagePaths) {
           const cleanPath = path.trim();
@@ -191,7 +187,6 @@ serve(async (req) => {
         <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">Secure Admin Access</a>
       `;
       
-      // Get attachments with retry to prevent race conditions
       const filesData = await fetchWithRetry(async () => {
         const { data } = await supabase.from('prescription_files').select('*').eq('request_id', record.id);
         return data || [];
