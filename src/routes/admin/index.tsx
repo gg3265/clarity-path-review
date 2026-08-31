@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { fetchAdminTests, fetchAdminPackages, fetchAdminSettings } from '@/lib/api'
 import { Search, Save, X, Edit2, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { CasesManager } from '@/components/admin/CasesManager'
 
 export const Route = createFileRoute('/admin/')({
   component: AdminDashboard,
@@ -19,13 +20,14 @@ const formatCurrency = (amount: number) => {
 }
 
 function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'tests' | 'clinical' | 'second_opinion' | 'cancer' | 'settings'>('tests')
+  const [activeTab, setActiveTab] = useState<'cases' | 'tests' | 'clinical' | 'second_opinion' | 'cancer' | 'settings'>('cases')
   
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="border-b border-gray-200 bg-gray-50/50">
         <nav className="flex overflow-x-auto custom-scrollbar -mb-px">
           {[
+            { id: 'cases', label: 'Incoming Cases' },
             { id: 'tests', label: 'Test Directory' },
             { id: 'clinical', label: 'Health Packages' },
             { id: 'second_opinion', label: 'Second Opinion' },
@@ -48,6 +50,7 @@ function AdminDashboard() {
       </div>
 
       <div className="p-4 sm:p-6 lg:p-8 min-h-[600px]">
+        {activeTab === 'cases' && <CasesManager />}
         {activeTab === 'tests' && <TestsManager />}
         {activeTab === 'clinical' && <PackagesManager categoryFilter="Clinical Health Packages" />}
         {activeTab === 'second_opinion' && <PackagesManager categoryFilter="Pathology Second Opinion" />}

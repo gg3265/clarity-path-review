@@ -63,26 +63,36 @@ export function ContactForm() {
     setErrors({});
     const v = parsed.data;
     const body = [
-      `Full Name: ${v.name}`,
-      `Mobile: ${v.mobile}`,
-      `Email: ${v.email}`,
       `Patient / Case Reference: ${v.caseRef || "-"}`,
       `Referring Doctor / Hospital: ${v.referrer || "-"}`,
       `Type of Review: ${v.reviewType}`,
       "",
       "Message:",
       v.message || "-",
-      "",
-      "Consent: Provided",
     ].join("\n");
 
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      `Second Opinion enquiry — ${v.name}`,
-    )}&body=${encodeURIComponent(body)}`;
-
-    toast.success(
-      "Your enquiry is ready to send from your email app. Attach documents there if needed.",
-    );
+    const submitContact = async () => {
+      try {
+        const { supabase } = await import("@/lib/supabase");
+        const { error } = await supabase.from('contact_enquiries').insert([{
+          id: crypto.randomUUID(),
+          name: v.name,
+          mobile: v.mobile,
+          email: v.email,
+          message: body,
+          status: 'NEW'
+        }]);
+        if (error) throw error;
+        
+        toast.success("Your enquiry has been securely submitted! We will contact you soon.");
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to submit enquiry. Please try again or contact us directly.");
+      }
+    };
+    
+    submitContact();
   };
 
   return (

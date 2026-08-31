@@ -218,7 +218,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
         
         requestData = { id: requestId };
       } else {
-        const appendedMessage = uploadedUrls.length > 0 ? `\n\nAttachments:\n${uploadedUrls.join('\n')}` : '';
+        const appendedMessage = uploadedUrls.length > 0 ? `\n\nAttachments:\n${uploadedUrls.join('\n')}\n\n_STORAGE_PATHS_: ${uploadedPaths.join(',')}` : '';
         const { error } = await supabase.from('service_requests').insert([{
           id: requestId,
           service_id: serviceId,
