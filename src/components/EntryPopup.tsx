@@ -16,12 +16,12 @@ export function EntryPopup() {
   const navigate = useNavigate();
 
   const { data: tests = [] } = useQuery({
-    queryKey: ['tests'],
+    queryKey: ['adminTests'],
     queryFn: fetchAdminTests
   });
 
   const { data: settings = [] } = useQuery({
-    queryKey: ['settings'],
+    queryKey: ['adminSettings'],
     queryFn: fetchAdminSettings
   });
 

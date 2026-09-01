@@ -33,7 +33,7 @@ serve(async (req) => {
 
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   const adminEmail = Deno.env.get('ADMIN_NOTIFICATION_EMAIL') || 'secondopinioncrl@gmail.com';
-  const adminDashboardUrl = 'https://claritypathreview.com/admin';
+  const adminDashboardUrl = 'https://secondopinioncrl.com/admin';
 
   try {
     const payload = await req.json();
@@ -234,7 +234,7 @@ serve(async (req) => {
     }
 
     const payloadObj: any = {
-      from: 'CRL Notifications <notifications@claritypathreview.com>',
+      from: 'CRL Notifications <notifications@secondopinioncrl.com>',
       to: [adminEmail],
       subject: subject,
       html: `
