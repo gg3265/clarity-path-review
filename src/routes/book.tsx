@@ -108,6 +108,46 @@ function BookPage() {
       const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       const patientId = crypto.randomUUID();
       const bookingId = crypto.randomUUID();
+
+      // PRE-FLIGHT CHECK: Validate tests exist in database to prevent FK violation
+      if (selectedTests.length > 0) {
+        const testIds = selectedTests.map(t => t.id);
+        const { data: validTests, error: validationError } = await supabase
+          .from('tests')
+          .select('id')
+          .in('id', testIds);
+        
+        if (validationError) throw validationError;
+        
+        const validTestIds = new Set((validTests || []).map(t => t.id));
+        const invalidTests = selectedTests.filter(t => !validTestIds.has(t.id));
+        
+        if (invalidTests.length > 0) {
+          // Remove invalid tests from cart
+          invalidTests.forEach(t => removeTest(t.id));
+          throw new Error(`The following tests are currently unavailable and have been removed from your cart: ${invalidTests.map(t => t.name).join(', ')}. Please review your cart and try again.`);
+        }
+      }
+
+      // PRE-FLIGHT CHECK: Validate packages exist in database
+      if (selectedPackages.length > 0) {
+        const packageIds = selectedPackages.map(p => p.id);
+        const { data: validPkgs, error: validationError } = await supabase
+          .from('packages')
+          .select('id')
+          .in('id', packageIds);
+        
+        if (validationError) throw validationError;
+        
+        const validPkgIds = new Set((validPkgs || []).map(p => p.id));
+        const invalidPkgs = selectedPackages.filter(p => !validPkgIds.has(p.id));
+        
+        if (invalidPkgs.length > 0) {
+          invalidPkgs.forEach(p => removePackage(p.id));
+          throw new Error(`The following packages are currently unavailable and have been removed from your cart: ${invalidPkgs.map(p => p.name).join(', ')}. Please review your cart and try again.`);
+        }
+      }
+
       
       // 1. Insert patient
       const { error: patientError } = await supabase
