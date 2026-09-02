@@ -12,7 +12,24 @@ function escapeHtml(unsafe: any) {
     .replace(/'/g, "&#039;");
 }
 
-// Polling mechanism to resolve Webhook race conditions (front-end inserts _files rows immediately after main row)
+function renderSection(title: string, content: string) {
+  if (!content || content.trim() === '') return '';
+  return `
+    <div style="margin-bottom: 25px;">
+      <h3 style="color: #1e3a8a; margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eaeaea; padding-bottom: 5px;">${escapeHtml(title).toUpperCase()}</h3>
+      <div style="font-size: 14px; color: #333; line-height: 1.6;">
+        ${content}
+      </div>
+    </div>
+  `;
+}
+
+function renderField(label: string, value: any) {
+  if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) return '';
+  const displayValue = Array.isArray(value) ? value.join(', ') : String(value);
+  return `<div style="margin-bottom: 5px;"><strong>${escapeHtml(label)}:</strong><br/>${escapeHtml(displayValue).replace(/\n/g, '<br/>')}</div>`;
+}
+
 async function fetchWithRetry(fetcher: () => Promise<any[]>, retries = 5, delayMs = 1000): Promise<any[]> {
   for (let i = 0; i < retries; i++) {
     const data = await fetcher();
@@ -23,14 +40,9 @@ async function fetchWithRetry(fetcher: () => Promise<any[]>, retries = 5, delayM
 }
 
 serve(async (req) => {
-  // CRITICAL FIX: Initialize Supabase client INSIDE the serve handler. 
-  // Deno Edge Functions inject environment variables (like SUPABASE_SERVICE_ROLE_KEY) per-request context.
-  // Initializing globally causes the client to miss the Service Role Key, acting as an anonymous user 
-  // and receiving 'Object not found' from private storage buckets.
   const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   const adminEmail = Deno.env.get('ADMIN_NOTIFICATION_EMAIL') || 'secondopinioncrl@gmail.com';
   const adminDashboardUrl = 'https://secondopinioncrl.com/admin';
@@ -40,140 +52,192 @@ serve(async (req) => {
     const { type, table, record } = payload;
     
     if (type !== 'INSERT') {
-      return new Response(JSON.stringify({ message: "Ignored non-insert event" }), { 
-        status: 200, 
-        headers: { "Content-Type": "application/json" } 
-      });
+      return new Response(JSON.stringify({ message: "Ignored non-insert event" }), { status: 200 });
     }
     
-    let subject = "New Notification from CRL Website";
-    let htmlContent = "<h2>New Submission</h2>";
+    let requestType = "Unknown Request";
+    let referenceId = record.id || record.ref_id || 'N/A';
+    let customerDetails = '';
+    let requestDetails = '';
+    let selectedService = '';
+    let caseInformation = '';
+    let additionalInfo = '';
+    let uploadedDocs = '';
     let attachments: any[] = [];
-    
+
+    // Helper to download files
+    const downloadAndAttach = async (paths: string[], getFilename: (p: string) => string) => {
+      let docList = '';
+      for (const path of paths) {
+        const cleanPath = path.trim();
+        if (!cleanPath) continue;
+        const { data: fileBlob, error: downloadError } = await supabase.storage.from('prescriptions').download(cleanPath);
+        if (downloadError) {
+          console.error(`Failed to download ${cleanPath}:`, downloadError);
+          continue;
+        }
+        const arrayBuffer = await fileBlob.arrayBuffer();
+        const filename = getFilename(cleanPath);
+        attachments.push({ filename, content: encodeBase64(arrayBuffer) });
+        docList += `<li>${escapeHtml(filename)}</li>`;
+      }
+      return docList ? `<ul>${docList}</ul>` : '';
+    };
+
     if (table === 'bookings') {
-      subject = `New Booking: ${escapeHtml(record.ref_id)}`;
+      requestType = record.collection_method === 'Home Collection' ? "Home Collection Booking" : "Walk-in Booking";
+      referenceId = record.ref_id || record.id;
       
       const tests = await fetchWithRetry(async () => {
         const { data } = await supabase.from('booking_tests').select('*, tests(*)').eq('booking_id', record.id);
         return data || [];
       });
-      
       const packages = await fetchWithRetry(async () => {
         const { data } = await supabase.from('booking_packages').select('*, packages(*)').eq('booking_id', record.id);
         return data || [];
       });
-
       const { data: patient } = await supabase.from('patients').select('*').eq('id', record.patient_id).single();
 
-      let itemsHtml = "<ul>";
+      customerDetails += renderField('Name', patient?.name);
+      customerDetails += renderField('Age', patient?.age);
+      customerDetails += renderField('Gender', patient?.gender);
+      customerDetails += renderField('Mobile', patient?.mobile);
+      customerDetails += renderField('Email', patient?.email);
+      
+      requestDetails += renderField('Collection Method', record.collection_method);
+      if (record.collection_method === 'Home Collection') {
+        requestDetails += renderField('Address', [record.address_line1, record.address_line2, record.area, record.city, record.state, record.pincode].filter(Boolean).join(', '));
+        requestDetails += renderField('Preferred Date', record.appointment_date);
+        requestDetails += renderField('Preferred Time', record.appointment_time);
+      }
+      requestDetails += renderField('Status', record.status);
+      
+      additionalInfo += renderField('Notes', record.notes);
+      
+      let itemsList = '';
+      let testCount = 0;
+      let packageCount = 0;
       if (tests.length > 0) {
-        tests.forEach(t => { itemsHtml += `<li>Test: ${escapeHtml(t.tests?.name || t.test_id)} (₹${escapeHtml(t.price_at_booking)})</li>`; });
+        itemsList += '<strong>BOOKED TESTS:</strong><ol style="margin-top:5px; margin-bottom:15px;">';
+        tests.forEach(t => { 
+          const name = t.tests?.name || t.test_id;
+          const cat = t.tests?.category ? ` (${t.tests.category})` : '';
+          itemsList += `<li>${escapeHtml(name)}${escapeHtml(cat)} &mdash; ₹${t.price_at_booking}</li>`; 
+          testCount++;
+        });
+        itemsList += '</ol>';
       }
       if (packages.length > 0) {
-        packages.forEach(p => { itemsHtml += `<li>Package: ${escapeHtml(p.packages?.name || p.package_id)} (₹${escapeHtml(p.price_at_booking)})</li>`; });
+        itemsList += '<strong>SELECTED PACKAGE:</strong><ol style="margin-top:5px; margin-bottom:15px;">';
+        packages.forEach(p => { 
+          const name = p.packages?.name || p.package_id;
+          itemsList += `<li>${escapeHtml(name)} &mdash; ₹${p.price_at_booking}</li>`; 
+          packageCount++;
+        });
+        itemsList += '</ol>';
       }
-      if (tests.length === 0 && packages.length === 0) {
-        itemsHtml += "<li>Items pending or not found.</li>";
+      if (itemsList) {
+        selectedService = itemsList + `<p><strong>TOTAL AMOUNT:</strong> ₹${record.total_price}</p>`;
       }
-      itemsHtml += "</ul>";
       
-      htmlContent = `
-        <h2>New Booking Received (${escapeHtml(record.collection_method)})</h2>
-        <p><strong>Reference ID:</strong> ${escapeHtml(record.ref_id)}</p>
-        <p><strong>Patient Name:</strong> ${escapeHtml(patient?.name || 'Unknown')}</p>
-        <p><strong>Patient Contact:</strong> ${escapeHtml(patient?.mobile || 'Unknown')}</p>
-        <hr />
-        <h3>Booking Items:</h3>
-        ${itemsHtml}
-        <hr />
-        <p><strong>Total Amount:</strong> ₹${escapeHtml(record.total_price)}</p>
-        <p><strong>Status:</strong> ${escapeHtml(record.status)}</p>
-        <br />
-        <p>Please log in to the admin dashboard for full patient details.</p>
-        <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#000;color:#fff;text-decoration:none;border-radius:5px;">Go to Dashboard</a>
-      `;
-      
+      if (testCount > 0 && packageCount === 0) requestType = "Individual Test Booking";
+      if (packageCount > 0 && testCount === 0) requestType = "Clinical Health Package Booking";
+      if (packageCount > 0 && testCount > 0) requestType = "Mixed Test & Package Booking";
+
+      // File attachment logic? Bookings don't upload files directly, but let's check prescription_requests?
+      // Bookings just have items.
+
     } else if (table === 'second_opinion_requests') {
-      subject = `New Second Opinion Request (${escapeHtml(record.id).split('-')[0]})`;
-      htmlContent = `
-        <h2>New Second Opinion Case</h2>
-        <p><strong>Patient Name:</strong> ${escapeHtml(record.patient_name)}</p>
-        <p><strong>Contact:</strong> ${escapeHtml(record.mobile)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(record.email) || 'N/A'}</p>
-        <hr />
-        <p><strong>Note:</strong> Uploaded documents are attached securely to this email.</p>
-        <br />
-        <p>Please log in securely to the admin dashboard to review the full case details:</p>
-        <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">Secure Admin Access</a>
-      `;
+      requestType = "Pathology Second Opinion";
+      
+      customerDetails += renderField('Name', record.patient_name);
+      customerDetails += renderField('Mobile', record.mobile);
+      customerDetails += renderField('Email', record.email);
+      
+      // Parse case_description which has "Role: \nDoctor: \nHospital: \n\nCase Details: "
+      let rawMessage = record.case_description || '';
+      let role = '', doctor = '', hospital = '', details = '';
+      
+      if (rawMessage.includes('Role: ')) {
+        const parts = rawMessage.split('\n');
+        parts.forEach(p => {
+          if (p.startsWith('Role: ')) role = p.replace('Role: ', '').trim();
+          else if (p.startsWith('Doctor: ')) doctor = p.replace('Doctor: ', '').trim();
+          else if (p.startsWith('Hospital: ')) hospital = p.replace('Hospital: ', '').trim();
+        });
+      }
+      
+      if (rawMessage.includes('Case Details: ')) {
+        details = rawMessage.split('Case Details: ')[1].trim();
+      } else {
+        details = rawMessage;
+      }
+      
+      customerDetails += renderField('Role', role);
+      customerDetails += renderField('Referring Doctor', doctor);
+      customerDetails += renderField('Hospital', hospital);
+      
+      caseInformation += renderField('Case Details / Clinical History', details);
+      
+      selectedService = renderField('Service', 'Pathology Second Opinion & Slide Review');
       
       const filesData = await fetchWithRetry(async () => {
         const { data } = await supabase.from('second_opinion_files').select('*').eq('request_id', record.id);
         return data || [];
       });
-        
       if (filesData.length > 0) {
-        for (const file of filesData) {
-          const { data: fileBlob, error: downloadError } = await supabase.storage.from('prescriptions').download(file.file_path);
-          if (downloadError) {
-            console.error(`Failed to download attachment ${file.file_path}:`, downloadError);
-            throw downloadError;
-          }
-          const arrayBuffer = await fileBlob.arrayBuffer();
-          const base64String = encodeBase64(arrayBuffer);
-          attachments.push({
-            filename: file.file_name,
-            content: base64String
-          });
-        }
+        uploadedDocs = await downloadAndAttach(filesData.map(f => f.file_path), p => filesData.find(f => f.file_path === p)?.file_name || 'document.pdf');
       }
-      
+
     } else if (table === 'service_requests') {
-      subject = `New Service Request: ${escapeHtml(record.service_name)}`;
+      requestType = record.service_name.toLowerCase().includes('cancer') || record.service_name.toLowerCase().includes('tumour') || record.service_name.toLowerCase().includes('oncopathology') ? "Specialist Pathology Review" : "Specialist Pathology Services";
+      selectedService = renderField('Service', record.service_name);
+      
+      customerDetails += renderField('Name', record.patient_name);
+      customerDetails += renderField('Mobile', record.mobile);
+      customerDetails += renderField('Email', record.email);
       
       let rawMessage = record.message || '';
       let storagePaths: string[] = [];
       let uploadedUrlsList = '';
       
-      // 1. Extract storage paths
       if (rawMessage.includes('_STORAGE_PATHS_:')) {
         const parts = rawMessage.split('_STORAGE_PATHS_:');
         rawMessage = parts[0].trim();
         const pathsStr = parts[1].trim();
-        if (pathsStr) {
-          storagePaths = pathsStr.split(',');
-        }
+        if (pathsStr) storagePaths = pathsStr.split(',');
       }
-
-      // 2. Extract Attachments list
-      if (rawMessage.includes('Attachments:\n')) {
-        const parts = rawMessage.split('Attachments:\n');
+      if (rawMessage.includes('Attachments:\\n') || rawMessage.includes('Attachments:\n')) {
+        const sep = rawMessage.includes('Attachments:\\n') ? 'Attachments:\\n' : 'Attachments:\n';
+        const parts = rawMessage.split(sep);
         rawMessage = parts[0].trim();
         uploadedUrlsList = parts[1].trim();
       }
-
-      // 3. Extract JSON from Case Details
+      
       let patientInfoText = rawMessage;
       let caseDetailsObj: any = {};
-      
       if (rawMessage.includes('Case Details: ')) {
         const parts = rawMessage.split('Case Details: ');
         patientInfoText = parts[0].trim();
         const jsonStr = parts[1].trim();
-        try {
-          caseDetailsObj = JSON.parse(jsonStr);
-        } catch(e) {
-          caseDetailsObj = { "Raw Data": jsonStr };
-        }
+        try { caseDetailsObj = JSON.parse(jsonStr); } catch(e) { caseDetailsObj = { "Raw Data": jsonStr }; }
       }
+      
+      // patientInfoText contains Age, Gender, Doctor, Hospital
+      const pParts = patientInfoText.split('\n');
+      pParts.forEach(p => {
+        if (p.startsWith('Age:')) customerDetails += renderField('Age/Gender', p); // Age: 34, Gender: Male
+        else if (p.startsWith('Doctor:')) customerDetails += renderField('Referring Doctor', p.replace('Doctor:', '').trim());
+        else if (p.startsWith('Hospital:')) customerDetails += renderField('Hospital', p.replace('Hospital:', '').trim());
+        else if (p.trim()) additionalInfo += renderField('Info', p.trim());
+      });
 
-      // Format case details into readable HTML
       const formatLabel = (key: string) => {
         const labels: Record<string, string> = {
           caseDesc: 'Case Information / Description',
-          specimenType: 'Specimen Type',
+          specimenType: 'Specimen / Sample Details',
           specimenAvailable: 'Specimen Available',
-          prevReport: 'Previous Report Available',
+          prevReport: 'Previous Report / Diagnosis Information',
           prevIhc: 'Previous IHC Available',
           prevDiagnosis: 'Previous Diagnosis',
           sampleType: 'Sample Type',
@@ -181,180 +245,93 @@ serve(async (req) => {
           prevHisto: 'Previous Histopathology Available',
           materialTypes: 'Material Types',
           selectedTests: 'Selected Tests',
-          clinicalInfo: 'Clinical Information'
+          clinicalInfo: 'Clinical History / Details',
+          cancerType: 'Cancer / Tumour Type',
+          biopsySite: 'Biopsy Site',
+          biopsyDate: 'Biopsy Date',
+          stage: 'Stage'
         };
-        return labels[key] || key;
+        return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
       };
 
-      let caseDetailsHtml = '';
       if (Object.keys(caseDetailsObj).length > 0) {
         for (const [key, value] of Object.entries(caseDetailsObj)) {
-          if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
-            continue;
-          }
-          let displayValue = String(value);
-          if (Array.isArray(value)) {
-             displayValue = value.join(', ');
-          }
-          caseDetailsHtml += `<p style="margin-bottom:8px;"><strong>${escapeHtml(formatLabel(key))}:</strong><br/>${escapeHtml(displayValue).replace(/\n/g, '<br/>')}</p>`;
+          if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) continue;
+          caseInformation += renderField(formatLabel(key), value);
         }
-      } else {
-         caseDetailsHtml = '<p>No additional case details provided.</p>';
       }
 
-      htmlContent = `
-        <h2>New ${escapeHtml(record.service_name)} Request</h2>
-        <p><strong>Reference:</strong> ${escapeHtml(record.id || 'N/A')}</p>
-        
-        <h3>Patient / Contact Details</h3>
-        <p><strong>Patient Name:</strong> ${escapeHtml(record.patient_name)}</p>
-        <p><strong>Contact:</strong> ${escapeHtml(record.mobile)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(record.email) || 'N/A'}</p>
-        <p>${escapeHtml(patientInfoText).replace(/\n/g, '<br/>')}</p>
-        
-        <hr />
-        <h3>Case Information</h3>
-        ${caseDetailsHtml}
-        
-        ${uploadedUrlsList ? `
-        <hr />
-        <h3>Uploaded Documents</h3>
-        <p>${escapeHtml(uploadedUrlsList).replace(/\n/g, '<br/>')}</p>
-        ` : ''}
-
-        <br />
-        <p><strong>Note:</strong> Uploaded documents (if any) are attached securely to this email.</p>
-        <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">View in Dashboard</a>
-      `;
-      
       if (storagePaths.length > 0) {
-        for (const path of storagePaths) {
-          const cleanPath = path.trim();
-          if (!cleanPath) continue;
-
-          
-          const { data: fileBlob, error: downloadError } = await supabase.storage.from('prescriptions').download(cleanPath);
-          if (downloadError) {
-            console.error(`Failed to download attachment ${cleanPath}:`, downloadError);
-            throw downloadError;
-          }
-          const arrayBuffer = await fileBlob.arrayBuffer();
-          const base64String = encodeBase64(arrayBuffer);
-          const filename = cleanPath.split('/').pop() || 'attachment.pdf';
-          attachments.push({
-            filename: filename,
-            content: base64String
-          });
-        }
+        uploadedDocs = await downloadAndAttach(storagePaths, p => p.split('/').pop() || 'document.pdf');
       }
 
+    } else if (table === 'contact_enquiries') {
+      requestType = "Send an Enquiry";
+      customerDetails += renderField('Name', record.name);
+      customerDetails += renderField('Mobile', record.mobile);
+      customerDetails += renderField('Email', record.email);
+      caseInformation += renderField('Enquiry Message', record.message);
+      
     } else if (table === 'prescription_requests') {
-      subject = `New Prescription/Document Upload`;
-      htmlContent = `
-        <h2>New Document Upload</h2>
-        <p><strong>Patient Name:</strong> ${escapeHtml(record.patient_name)}</p>
-        <p><strong>Contact:</strong> ${escapeHtml(record.mobile)}</p>
-        <p><strong>Status:</strong> ${escapeHtml(record.status)}</p>
-        <hr />
-        <p>Uploaded documents are attached securely to this email. You can also view them in the admin dashboard.</p>
-        <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">Secure Admin Access</a>
-      `;
+      requestType = "Prescription / Document Upload";
+      customerDetails += renderField('Name', record.patient_name);
+      customerDetails += renderField('Mobile', record.mobile);
+      requestDetails += renderField('Status', record.status);
       
       const filesData = await fetchWithRetry(async () => {
         const { data } = await supabase.from('prescription_files').select('*').eq('request_id', record.id);
         return data || [];
       });
-        
       if (filesData.length > 0) {
-        for (const file of filesData) {
-          const { data: fileBlob, error: downloadError } = await supabase.storage.from('prescriptions').download(file.file_path);
-          if (downloadError) {
-            console.error(`Failed to download attachment ${file.file_path}:`, downloadError);
-            throw downloadError;
-          }
-          const arrayBuffer = await fileBlob.arrayBuffer();
-          const base64String = encodeBase64(arrayBuffer);
-          attachments.push({
-            filename: file.file_name,
-            content: base64String
-          });
-        }
+        uploadedDocs = await downloadAndAttach(filesData.map(f => f.file_path), p => filesData.find(f => f.file_path === p)?.file_name || 'document.pdf');
       }
-
-    } else if (table === 'contact_enquiries') {
-      subject = `New Contact Enquiry from ${escapeHtml(record.name)}`;
-      htmlContent = `
-        <h2>New Enquiry</h2>
-        <p><strong>Name:</strong> ${escapeHtml(record.name)}</p>
-        <p><strong>Contact:</strong> ${escapeHtml(record.mobile)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(record.email) || 'N/A'}</p>
-        <hr />
-        <p><strong>Message:</strong><br/>${escapeHtml(record.message)?.replace(/\n/g, '<br/>')}</p>
-      `;
     } else {
-      return new Response(JSON.stringify({ message: "Table not supported for notifications" }), { 
-        status: 200, 
-        headers: { "Content-Type": "application/json" } 
-      });
+      return new Response(JSON.stringify({ message: "Table not supported for notifications" }), { status: 200 });
     }
 
-    if (!resendApiKey) {
-      console.error("Missing RESEND_API_KEY environment variable.");
-      return new Response(JSON.stringify({ error: "Missing RESEND_API_KEY environment variable. Email cannot be sent." }), { 
-        status: 500, 
-        headers: { "Content-Type": "application/json" } 
-      });
-    }
+    if (!resendApiKey) throw new Error("Missing RESEND_API_KEY");
+
+    const htmlBody = `
+      <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; color: #111; line-height: 1.6; border: 1px solid #e2e8f0; border-radius: 8px; padding: 30px; background-color: #ffffff;">
+        <h2 style="margin: 0 0 20px 0; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; font-size: 20px;">NEW CRL REQUEST</h2>
+        
+        ${renderSection('Request Type', requestType)}
+        ${renderSection('Reference', referenceId)}
+        ${renderSection('Customer / Patient Details', customerDetails)}
+        ${renderSection('Selected Service / Test / Package', selectedService)}
+        ${renderSection('Request Details', requestDetails)}
+        ${renderSection('Case Information', caseInformation)}
+        ${renderSection('Additional Information', additionalInfo)}
+        ${renderSection('Uploaded Documents', uploadedDocs)}
+        ${renderSection('Submitted At', new Date(record.created_at || new Date()).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }))}
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center;">
+          <a href="${adminDashboardUrl}" style="display:inline-block;padding:12px 24px;background:#1e40af;color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;">View in Admin Dashboard</a>
+          <p style="margin-top: 15px; font-size: 12px; color: #64748b;">This is an automated notification from your website. Do not reply to this email directly.</p>
+        </div>
+      </div>
+    `;
 
     const payloadObj: any = {
       from: 'CRL Notifications <notifications@secondopinioncrl.com>',
       to: [adminEmail],
-      subject: subject,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
-          <div style="border-bottom: 2px solid #eaeaea; padding-bottom: 10px; margin-bottom: 20px;">
-            <h1 style="color: #1e3a8a; margin: 0; font-size: 24px;">SECOND OPINION CRL</h1>
-            <p style="color: #64748b; margin: 5px 0 0 0; font-size: 14px;">Specialist Pathology Second Opinion & Diagnostic Consultation</p>
-          </div>
-          ${htmlContent}
-          <div style="margin-top: 30px; font-size: 12px; color: #94a3b8; border-top: 1px solid #eaeaea; padding-top: 10px;">
-            This is an automated notification from your website. Do not reply to this email directly.
-          </div>
-        </div>
-      `
+      subject: `New ${requestType} - ${referenceId}`,
+      html: htmlBody
     };
 
-    if (attachments.length > 0) {
-      payloadObj.attachments = attachments;
-    }
+    if (attachments.length > 0) payloadObj.attachments = attachments;
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${resendApiKey}`
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resendApiKey}` },
       body: JSON.stringify(payloadObj)
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("Resend API Error:", errorText);
-      return new Response(JSON.stringify({ error: "Failed to send email via Resend", details: errorText }), { 
-        status: 502, 
-        headers: { "Content-Type": "application/json" } 
-      });
-    }
+    if (!res.ok) throw new Error(await res.text());
 
-    return new Response(JSON.stringify({ success: true, message: "Email sent successfully", attachmentsCount: attachments.length }), { 
-      status: 200, 
-      headers: { "Content-Type": "application/json" } 
-    });
+    return new Response(JSON.stringify({ success: true, message: "Email sent" }), { status: 200 });
   } catch (error: any) {
     console.error("Webhook processing error:", error.message);
-    return new Response(JSON.stringify({ error: "Internal Server Error", details: error.message }), { 
-      status: 500, 
-      headers: { "Content-Type": "application/json" } 
-    });
+    return new Response(JSON.stringify({ error: "Internal Error" }), { status: 500 });
   }
 });
