@@ -131,27 +131,99 @@ serve(async (req) => {
     } else if (table === 'service_requests') {
       subject = `New Service Request: ${escapeHtml(record.service_name)}`;
       
-      let messageContent = escapeHtml(record.message)?.replace(/\n/g, '<br/>');
+      let rawMessage = record.message || '';
       let storagePaths: string[] = [];
+      let uploadedUrlsList = '';
       
-      if (record.message && record.message.includes('_STORAGE_PATHS_:')) {
-        const parts = record.message.split('_STORAGE_PATHS_:');
-        messageContent = escapeHtml(parts[0].trim())?.replace(/\n/g, '<br/>');
+      // 1. Extract storage paths
+      if (rawMessage.includes('_STORAGE_PATHS_:')) {
+        const parts = rawMessage.split('_STORAGE_PATHS_:');
+        rawMessage = parts[0].trim();
         const pathsStr = parts[1].trim();
         if (pathsStr) {
           storagePaths = pathsStr.split(',');
         }
       }
+
+      // 2. Extract Attachments list
+      if (rawMessage.includes('Attachments:\n')) {
+        const parts = rawMessage.split('Attachments:\n');
+        rawMessage = parts[0].trim();
+        uploadedUrlsList = parts[1].trim();
+      }
+
+      // 3. Extract JSON from Case Details
+      let patientInfoText = rawMessage;
+      let caseDetailsObj: any = {};
       
+      if (rawMessage.includes('Case Details: ')) {
+        const parts = rawMessage.split('Case Details: ');
+        patientInfoText = parts[0].trim();
+        const jsonStr = parts[1].trim();
+        try {
+          caseDetailsObj = JSON.parse(jsonStr);
+        } catch(e) {
+          caseDetailsObj = { "Raw Data": jsonStr };
+        }
+      }
+
+      // Format case details into readable HTML
+      const formatLabel = (key: string) => {
+        const labels: Record<string, string> = {
+          caseDesc: 'Case Information / Description',
+          specimenType: 'Specimen Type',
+          specimenAvailable: 'Specimen Available',
+          prevReport: 'Previous Report Available',
+          prevIhc: 'Previous IHC Available',
+          prevDiagnosis: 'Previous Diagnosis',
+          sampleType: 'Sample Type',
+          purpose: 'Purpose',
+          prevHisto: 'Previous Histopathology Available',
+          materialTypes: 'Material Types',
+          selectedTests: 'Selected Tests',
+          clinicalInfo: 'Clinical Information'
+        };
+        return labels[key] || key;
+      };
+
+      let caseDetailsHtml = '';
+      if (Object.keys(caseDetailsObj).length > 0) {
+        for (const [key, value] of Object.entries(caseDetailsObj)) {
+          if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+            continue;
+          }
+          let displayValue = String(value);
+          if (Array.isArray(value)) {
+             displayValue = value.join(', ');
+          }
+          caseDetailsHtml += `<p style="margin-bottom:8px;"><strong>${escapeHtml(formatLabel(key))}:</strong><br/>${escapeHtml(displayValue).replace(/\n/g, '<br/>')}</p>`;
+        }
+      } else {
+         caseDetailsHtml = '<p>No additional case details provided.</p>';
+      }
+
       htmlContent = `
         <h2>New ${escapeHtml(record.service_name)} Request</h2>
+        <p><strong>Reference:</strong> ${escapeHtml(record.id || 'N/A')}</p>
+        
+        <h3>Patient / Contact Details</h3>
         <p><strong>Patient Name:</strong> ${escapeHtml(record.patient_name)}</p>
         <p><strong>Contact:</strong> ${escapeHtml(record.mobile)}</p>
         <p><strong>Email:</strong> ${escapeHtml(record.email) || 'N/A'}</p>
+        <p>${escapeHtml(patientInfoText).replace(/\n/g, '<br/>')}</p>
+        
         <hr />
-        <p><strong>Message / Clinical Data:</strong><br/>${messageContent}</p>
+        <h3>Case Information</h3>
+        ${caseDetailsHtml}
+        
+        ${uploadedUrlsList ? `
+        <hr />
+        <h3>Uploaded Documents</h3>
+        <p>${escapeHtml(uploadedUrlsList).replace(/\n/g, '<br/>')}</p>
+        ` : ''}
+
         <br />
-        <p><strong>Note:</strong> Uploaded documents are attached securely to this email.</p>
+        <p><strong>Note:</strong> Uploaded documents (if any) are attached securely to this email.</p>
         <a href="${adminDashboardUrl}" style="display:inline-block;padding:10px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:5px;">View in Dashboard</a>
       `;
       
@@ -159,6 +231,7 @@ serve(async (req) => {
         for (const path of storagePaths) {
           const cleanPath = path.trim();
           if (!cleanPath) continue;
+
           
           const { data: fileBlob, error: downloadError } = await supabase.storage.from('prescriptions').download(cleanPath);
           if (downloadError) {
