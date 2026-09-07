@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { mapsDirectionsUrl } from "@/lib/site";
 
 export function WalkInMap() {
   return (
@@ -8,7 +9,7 @@ export function WalkInMap() {
           <div>
             <h3 className="text-xl font-bold text-foreground mb-4">SECOND OPINION CRL</h3>
             <p className="text-muted-foreground leading-relaxed">
-              557, Vireen Heights, 3rd Floor,<br/>
+              557, Veeren Heights, 3rd Floor,<br/>
               Laxmi Road, Sadashiv Peth,<br/>
               Pune 411030
             </p>
@@ -21,7 +22,7 @@ export function WalkInMap() {
           </div>
 
           <a 
-            href="https://maps.google.com/?q=557,+Vireen+Heights,+3rd+Floor,+Laxmi+Road,+Sadashiv+Peth,+Pune+411030" 
+            href={mapsDirectionsUrl}
             target="_blank" 
             rel="noreferrer"
             className="inline-flex h-11 items-center justify-center rounded-full bg-secondary px-6 text-sm font-semibold text-foreground transition-colors hover:bg-secondary/80"

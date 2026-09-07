@@ -14,6 +14,7 @@ import { ContactAction } from "@/components/ContactAction";
 import { BackButton } from "@/components/BackButton";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { mapsDirectionsUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -676,10 +677,10 @@ function BookPage() {
                   ) : (
                     <div className="text-sm space-y-1 bg-background p-4 rounded-xl border border-border">
                       <div className="font-semibold text-foreground">SECOND OPINION CRL</div>
-                      <div className="text-muted-foreground">557, Vireen Heights, 3rd Floor,</div>
+                      <div className="text-muted-foreground">557, Veeren Heights, 3rd Floor,</div>
                       <div className="text-muted-foreground">Laxmi Road, Sadashiv Peth, Pune 411030</div>
                       <div className="mt-4">
-                        <a href="https://maps.google.com/?q=557,+Vireen+Heights,+3rd+Floor,+Laxmi+Road,+Sadashiv+Peth,+Pune+411030" target="_blank" rel="noreferrer" className="text-primary font-semibold hover:underline">Get Directions →</a>
+                        <a href={mapsDirectionsUrl} target="_blank" rel="noreferrer" className="text-primary font-semibold hover:underline">Get Directions →</a>
                       </div>
                     </div>
                   )}

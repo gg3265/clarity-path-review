@@ -10,7 +10,7 @@ export const site = {
     "557, Vireen Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
   city: "Pune",
   mapsQuery:
-    "557, Vireen Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
+    "SECOND OPINION CRL, Veeren Heights, 557, Laxmi Road, Sadashiv Peth, Pune, Maharashtra 411030",
 };
 
 export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
