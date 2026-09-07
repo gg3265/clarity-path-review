@@ -7,19 +7,19 @@ export const site = {
   phoneHref: "tel:+919359777222",
   email: "secondopinioncrl@gmail.com",
   address:
-    "557, Vireen Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
+    "557, Veeren Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
   city: "Pune",
   mapsQuery:
     "SECOND OPINION CRL, Veeren Heights, 557, Laxmi Road, Sadashiv Peth, Pune, Maharashtra 411030",
+  coordinates: {
+    lat: 18.5144342,
+    lng: 73.8504975,
+  }
 };
 
-export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-  site.mapsQuery,
-)}`;
+export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${site.coordinates.lat},${site.coordinates.lng}&travelmode=driving`;
 
-export const mapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-  site.mapsQuery,
-)}&output=embed`;
+export const mapsEmbedUrl = `https://www.google.com/maps?q=${site.coordinates.lat},${site.coordinates.lng}&output=embed`;
 
 export const nav = [
   { label: "Home", to: "/" as const },
