@@ -20,6 +20,7 @@ const formatCurrency = (amount: number) => {
 }
 
 function AdminDashboard() {
+  const ADMIN_BUILD_MARKER = "ADMIN BUILD: TEST-SSOT-FIX-02";
   const [activeTab, setActiveTab] = useState<'cases' | 'tests' | 'clinical' | 'second_opinion' | 'cancer' | 'settings'>('cases')
   
   return (
