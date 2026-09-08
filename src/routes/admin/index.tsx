@@ -376,6 +376,8 @@ function TestsManager() {
 
   const handlePriceUpdate = async (id: string, newPrice: number) => {
     const testId = id;
+    const test = tests.find(t => t.id === testId);
+    if (!test) throw new Error("Test not found in current UI state");
     
     // 1. Fetch BEFORE update directly from DB
     const { data: beforeData } = await supabase.from('tests').select('price').eq('id', testId).single();
