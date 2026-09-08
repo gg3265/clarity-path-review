@@ -34,10 +34,17 @@ export function ContactForm() {
     | "consent";
   const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
+    
+    // Honeypot check
+    if (data.get("website")) {
+      toast.success("Your message was sent. Thank you.");
+      return;
+    }
+
     const parsed = schema.safeParse({
       name: String(data.get("name") ?? ""),
       mobile: String(data.get("mobile") ?? ""),
@@ -97,6 +104,9 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
+      <div style={{ display: 'none' }} aria-hidden="true">
+        <input type="text" name="website" id="website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Full Name" name="name" error={errors["name"]} required>
           <input

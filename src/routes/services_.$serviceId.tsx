@@ -149,6 +149,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
   const isMolecular = serviceTitle === "Molecular & Ancillary Testing";
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const [files, setFiles] = useState<{ [label: string]: File | null }>({});
 
@@ -159,13 +160,20 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    if (honeypot) {
+      toast.success("Request submitted successfully!");
+      onSuccess();
+      return;
+    }
 
     if (!patient.name || (!isSecondOpinion && !patient.age) || (!isSecondOpinion && !patient.gender) || !patient.mobile) {
       toast.error("Please enter required patient details.");
+      setIsSubmitting(false);
       return;
     }
     
-    setIsSubmitting(true);
     let uploadedPaths: string[] = [];
     try {
       const { supabase } = await import("@/lib/supabase");
@@ -218,7 +226,7 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
         
         requestData = { id: requestId };
       } else {
-        const appendedMessage = uploadedUrls.length > 0 ? `\n\nAttachments:\n${uploadedUrls.join('\n')}\n\n_STORAGE_PATHS_: ${uploadedPaths.join(',')}` : '';
+        const appendedMessage = uploadedUrls.length > 0 ? `\n\nAttachments:\n${uploadedUrls.join('\n')}` : '';
         const { error } = await supabase.from('service_requests').insert([{
           id: requestId,
           service_id: serviceId,
@@ -230,6 +238,12 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
           status: 'PENDING'
         }]);
         if (error) throw error;
+        
+        if (fileRecordsToInsert.length > 0) {
+          const { error: fileErr } = await supabase.from('service_request_files').insert(fileRecordsToInsert);
+          if (fileErr) throw fileErr;
+        }
+
         requestData = { id: requestId };
       }
 
@@ -291,6 +305,9 @@ function ServiceForm({ serviceId, serviceTitle, onSuccess }: { serviceId: string
 
   return (
     <form onSubmit={handleSubmit} className="space-y-12 pb-12">
+      <div style={{ display: 'none' }} aria-hidden="true">
+        <input type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+      </div>
       
       {isSecondOpinion && (
         <section className="space-y-6">

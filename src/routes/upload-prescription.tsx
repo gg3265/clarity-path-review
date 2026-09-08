@@ -59,6 +59,10 @@ function UploadPrescriptionPage() {
       alert("Please upload a valid JPG, PNG, or PDF file.");
       return;
     }
+    if (selectedFile.size > 10 * 1024 * 1024) {
+      alert("File size exceeds 10MB limit. Please upload a smaller file.");
+      return;
+    }
     
     setFile(selectedFile);
     if (selectedFile.type.startsWith("image/")) {
@@ -97,10 +101,18 @@ function UploadPrescriptionPage() {
   };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async () => {
     if (isSubmitting || !file) return;
     setIsSubmitting(true);
+
+    if (honeypot) {
+      toast.success("Prescription uploaded successfully.");
+      setStep("SUCCESS");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const { supabase } = await import("@/lib/supabase");
@@ -272,6 +284,9 @@ function UploadPrescriptionPage() {
                   }} 
                   className="bg-surface rounded-3xl p-6 md:p-8 border border-border shadow-soft"
                 >
+                  <div style={{ display: 'none' }} aria-hidden="true">
+                    <input type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+                  </div>
                   <h3 className="text-xl font-bold text-foreground mb-6">Patient Details</h3>
                   <div className="space-y-5">
                     <div className="space-y-2">

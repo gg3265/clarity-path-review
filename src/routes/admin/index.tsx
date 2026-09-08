@@ -157,11 +157,190 @@ function InlineEdit({
 // TEST MANAGER
 // ==========================================
 
+
+// ==========================================
+// ADD TEST MODAL
+// ==========================================
+function AddTestModal({ 
+  isOpen, 
+  onClose, 
+  onSuccess, 
+  existingCategories 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  onSuccess: () => void;
+  existingCategories: string[];
+}) {
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    category: '',
+    price: '',
+    crl_code: '',
+    specimen: '',
+    turnaround_time: '',
+    description: '',
+    preparation: '',
+    is_active: true
+  });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    const { name, category, price } = formData;
+    
+    // Validation
+    if (!name.trim()) return setError("Test Name is required");
+    if (!category.trim()) return setError("Category is required");
+    
+    const numPrice = Number(price);
+    if (price !== '' && (isNaN(numPrice) || numPrice < 0)) {
+      return setError("Price must be a valid non-negative number");
+    }
+
+    setSaving(true);
+    
+    try {
+      // Duplicate protection: Check if a test with the same name already exists
+      const { data: existing } = await supabase
+        .from('tests')
+        .select('id')
+        .ilike('name', name.trim())
+        .limit(1);
+        
+      if (existing && existing.length > 0) {
+        throw new Error("A test with this exact name already exists in the database.");
+      }
+
+      // Generate a stable ID
+      const newId = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(Math.random() * 1000);
+
+      const { error: insertError } = await supabase.from('tests').insert([{
+        id: newId,
+        name: name.trim(),
+        category: category.trim(),
+        price: price === '' ? null : numPrice,
+        crl_code: formData.crl_code.trim() || null,
+        specimen: formData.specimen.trim() || null,
+        turnaround_time: formData.turnaround_time.trim() || null,
+        description: formData.description.trim() || null,
+        preparation: formData.preparation.trim() || null,
+        is_active: formData.is_active,
+        price_status: 'Confirmed'
+      }]);
+
+      if (insertError) throw insertError;
+
+      onSuccess();
+      onClose();
+      // Reset form
+      setFormData({
+        name: '', category: '', price: '', crl_code: '', specimen: '', turnaround_time: '', description: '', preparation: '', is_active: true
+      });
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to create test. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl my-8">
+        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 className="text-xl font-bold text-gray-900">Add New Test</h2>
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+            <X className="size-5" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {error && (
+            <div className="p-4 bg-red-50 text-red-700 rounded-lg text-sm flex items-start gap-3">
+              <AlertCircle className="size-5 shrink-0" />
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Test Name *</label>
+              <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. CRL Complete Liver Profile" required />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Category *</label>
+              <input type="text" list="categories-list" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Select or type category" required />
+              <datalist id="categories-list">
+                {existingCategories.filter(c => c !== 'All').map(c => <option key={c} value={c} />)}
+              </datalist>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Price (₹)</label>
+              <input type="number" min="0" step="1" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. 799" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">CRL Code</label>
+              <input type="text" value={formData.crl_code} onChange={e => setFormData({...formData, crl_code: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. CRL-LIV-01" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Sample Type (Specimen)</label>
+              <input type="text" value={formData.specimen} onChange={e => setFormData({...formData, specimen: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. Serum, 2ml" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Turnaround Time</label>
+              <input type="text" value={formData.turnaround_time} onChange={e => setFormData({...formData, turnaround_time: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. 24 Hours" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Preparation / Fasting</label>
+              <input type="text" value={formData.preparation} onChange={e => setFormData({...formData, preparation: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. 10-12 hours fasting required" />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+              <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" rows={3} placeholder="Brief description of the test..." />
+            </div>
+            
+            <div className="col-span-1 md:col-span-2">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" checked={formData.is_active} onChange={e => setFormData({...formData, is_active: e.target.checked})} className="size-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                <span className="text-sm font-semibold text-gray-900">Active (Visible to customers)</span>
+              </label>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
+            <button type="button" onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+              Cancel
+            </button>
+            <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2">
+              {saving ? 'Saving...' : 'Save Test'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function TestsManager() {
   const [tests, setTests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
+  const [showAddModal, setShowAddModal] = useState(false)
 
   const loadTests = async () => {
     setLoading(true)
@@ -176,6 +355,11 @@ function TestsManager() {
   }
 
   useEffect(() => { loadTests() }, [])
+  
+  const handleAddSuccess = () => {
+    loadTests();
+    // Optional toast notification here if you use sonner/react-hot-toast, but we will rely on reload
+  }
 
   const categories = useMemo(() => {
     return ['All', ...Array.from(new Set(tests.map(t => t.category).filter(Boolean)))]
@@ -233,6 +417,9 @@ function TestsManager() {
           <p className="text-sm text-gray-500 mt-1">Manage pricing and availability for {tests.length} tests.</p>
         </div>
         <div className="flex gap-3">
+          <button onClick={() => setShowAddModal(true)} className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors hidden sm:block">
+            + Add Test
+          </button>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
             <input 
@@ -252,6 +439,19 @@ function TestsManager() {
           </select>
         </div>
       </div>
+      
+      <div className="sm:hidden mb-4">
+        <button onClick={() => setShowAddModal(true)} className="w-full bg-black text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
+          + Add Test
+        </button>
+      </div>
+      
+      <AddTestModal 
+        isOpen={showAddModal} 
+        onClose={() => setShowAddModal(false)} 
+        onSuccess={handleAddSuccess}
+        existingCategories={categories}
+      />
       
       <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">

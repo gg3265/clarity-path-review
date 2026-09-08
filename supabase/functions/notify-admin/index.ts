@@ -42,6 +42,18 @@ async function fetchWithRetry(fetcher: () => Promise<any[]>, retries = 5, delayM
 serve(async (req) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+  const webhookSecret = Deno.env.get('WEBHOOK_SECRET');
+  const authHeader = req.headers.get('Authorization');
+
+  const isValidAuth = 
+    (webhookSecret && authHeader === `Bearer ${webhookSecret}`) || 
+    (supabaseServiceKey && authHeader === `Bearer ${supabaseServiceKey}`);
+
+  if (!isValidAuth) {
+    console.warn("Unauthorized webhook attempt");
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+  }
+
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   const adminEmail = Deno.env.get('ADMIN_NOTIFICATION_EMAIL') || 'secondopinioncrl@gmail.com';
@@ -261,8 +273,12 @@ serve(async (req) => {
         }
       }
 
-      if (storagePaths.length > 0) {
-        uploadedDocs = await downloadAndAttach(storagePaths, p => p.split('/').pop() || 'document.pdf');
+            const filesData = await fetchWithRetry(async () => {
+        const { data } = await supabase.from('service_request_files').select('*').eq('request_id', record.id);
+        return data || [];
+      });
+      if (filesData.length > 0) {
+        uploadedDocs = await downloadAndAttach(filesData.map(f => f.file_path), p => filesData.find(f => f.file_path === p)?.file_name || 'document.pdf');
       }
 
     } else if (table === 'contact_enquiries') {

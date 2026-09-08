@@ -100,10 +100,18 @@ function BookPage() {
   const finalPrice = totalEstimatedPrice + applicableCollectionFee;
 
   const [isConfirming, setIsConfirming] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const handleConfirm = async () => {
     if (isConfirming) return;
     setIsConfirming(true);
+
+    if (honeypot) {
+      toast.success("Booking confirmed successfully."); // Silent reject
+      setStep("SUCCESS");
+      setIsConfirming(false);
+      return;
+    }
 
     try {
       const ref = `SOCRL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -445,6 +453,9 @@ function BookPage() {
                 }}
                 className="space-y-8"
               >
+                <div style={{ display: 'none' }} aria-hidden="true">
+                  <input type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="bg-surface rounded-3xl p-6 md:p-8 border border-border shadow-soft space-y-6">
                   <h3 className="text-xl font-bold text-foreground border-b border-border pb-4">Patient Details</h3>
                   

@@ -25,31 +25,51 @@ export const DEFAULT_SETTINGS: AppSettings = {
 
 export async function fetchTests(): Promise<DiagnosticTest[]> {
   try {
-    // Fetch any overrides from Supabase (ignoring is_active if it causes errors, just get price updates)
-    const { data, error } = await supabase.from("tests").select("id, price, price_status, is_active");
+    const { data, error } = await supabase.from("tests").select("*");
     
     if (error) {
-      console.warn("Failed to fetch test overrides from Supabase, returning local baseline.", error.message);
+      console.warn("Failed to fetch tests from Supabase, returning local baseline.", error.message);
       return localTests;
     }
     
-    // Merge Supabase data over localTests
-    if (data && data.length > 0) {
+    if (data) {
       const overrides = new Map(data.map(t => [t.id, t]));
+      const localMap = new Map(localTests.map(t => [t.id, true]));
       
-      return localTests.map(t => {
+      const mergedTests = localTests.map(t => {
         const override = overrides.get(t.id);
         if (override) {
-          // If the admin deactivated it (and is_active exists), we could filter it out. 
-          // For now we just merge the price.
           return {
             ...t,
             sheet1Price: override.price !== null ? Number(override.price) : t.sheet1Price,
             priceStatus: override.price_status || t.priceStatus,
+            name: override.name || t.name,
+            category: override.category || t.category,
+            specimen: override.specimen || t.specimen,
+            crlCode: override.crl_code || t.crlCode,
           };
         }
         return t;
       });
+
+      // Add new tests that are only in Supabase
+      data.forEach(t => {
+        if (!localMap.has(t.id) && t.is_active !== false) {
+          mergedTests.push({
+            id: t.id,
+            crlCode: t.crl_code || '',
+            name: t.name,
+            category: t.category || 'Other',
+            specimen: t.specimen || '',
+            sheet1Price: t.price !== null ? Number(t.price) : 0,
+            price: t.price !== null ? Number(t.price) : 0,
+            priceStatus: (t.price_status as any) || 'Confirmed',
+            notes: t.notes || ''
+          });
+        }
+      });
+      
+      return mergedTests;
     }
   } catch (err) {
     console.error("Failed to merge Supabase tests", err);
@@ -126,18 +146,21 @@ export async function fetchAdminTests() {
       return localTests;
     }
     
-    // Merge Supabase overrides over local baseline
     const overrides = new Map((data || []).map(t => [t.id, t]));
+    const localMap = new Map(localTests.map(t => [t.id, true]));
     
-    return localTests.map(t => {
+    const mergedTests = localTests.map(t => {
       const override = overrides.get(t.id);
       if (override) {
         return {
           ...t,
-          // Admin UI expects 'price' but localTests uses 'sheet1Price'
           price: override.price !== null ? Number(override.price) : t.sheet1Price,
           price_status: override.price_status || t.priceStatus,
-          is_active: override.is_active !== false // default true
+          is_active: override.is_active !== false,
+          name: override.name || t.name,
+          category: override.category || t.category,
+          specimen: override.specimen || t.specimen,
+          crl_code: override.crl_code || t.crlCode,
         };
       }
       return {
@@ -146,12 +169,35 @@ export async function fetchAdminTests() {
         price_status: t.priceStatus,
         is_active: true
       };
-    }).sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    if (data) {
+      data.forEach(t => {
+        if (!localMap.has(t.id)) {
+          mergedTests.push({
+            id: t.id,
+            crlCode: t.crl_code,
+            crl_code: t.crl_code,
+            name: t.name,
+            category: t.category || 'Other',
+            specimen: t.specimen,
+            sheet1Price: t.price !== null ? Number(t.price) : 0,
+            price: t.price !== null ? Number(t.price) : 0,
+            priceStatus: t.price_status || 'Confirmed',
+            price_status: t.price_status || 'Confirmed',
+            is_active: t.is_active !== false,
+            notes: t.notes
+          } as any);
+        }
+      });
+    }
+
+    return mergedTests.sort((a, b) => a.name.localeCompare(b.name));
     
   } catch (err) {
-    console.error("Admin tests fetch failed:", err);
-    return localTests.map(t => ({ ...t, price: t.sheet1Price, price_status: t.priceStatus, is_active: true }));
+    console.error("Failed to merge Supabase admin tests", err);
   }
+  return localTests.map(t => ({ ...t, price: t.sheet1Price, price_status: t.priceStatus, is_active: true }));
 }
 
 export async function fetchAdminPackages() {
