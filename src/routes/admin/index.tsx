@@ -226,11 +226,6 @@ function AddTestModal({
         name: name.trim(),
         category: category.trim(),
         price: price === '' ? null : numPrice,
-        crl_code: formData.crl_code.trim() || null,
-        specimen: formData.specimen.trim() || null,
-        turnaround_time: formData.turnaround_time.trim() || null,
-        description: formData.description.trim() || null,
-        preparation: formData.preparation.trim() || null,
         is_active: formData.is_active,
         price_status: 'Confirmed'
       }]);
@@ -390,10 +385,8 @@ function TestsManager() {
       name: test.name,
       category: test.category || null,
       price: newPrice,
-      price_status: test.price_status || 'Confirmed',
-      is_active: test.is_active !== undefined ? test.is_active : true,
-      crl_code: test.crl_code || test.crlCode || null,
-      specimen: test.specimen || null
+      price_status: test.price_status || test.priceStatus || 'Confirmed',
+      is_active: test.is_active !== undefined ? test.is_active : true
     }, { onConflict: 'id' }).select();
 
     // 3. Fetch AFTER update directly from DB
