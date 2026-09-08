@@ -798,29 +798,6 @@ function SettingsManager() {
       </div>
       
       <div className="grid md:grid-cols-2 gap-8">
-        {/* PROMOS */}
-        <div className="border border-gray-200 rounded-2xl p-8 bg-white shadow-sm">
-          <h3 className="text-lg font-bold text-gray-900 mb-2">Promotional Highlights</h3>
-          <p className="text-sm text-gray-500 mb-8">These prices are displayed prominently on the homepage hero section.</p>
-          
-          <div className="space-y-6">
-            <div className="pb-6 border-b border-gray-100">
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Blood Sugar Promo Price</label>
-              <InlineEdit 
-                initialValue={promos.bloodSugarPrice}
-                onSave={(val) => handleUpdate('promos', { ...promos, bloodSugarPrice: Number(val) })}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Thyroid Promo Price</label>
-              <InlineEdit 
-                initialValue={promos.thyroidPrice}
-                onSave={(val) => handleUpdate('promos', { ...promos, thyroidPrice: Number(val) })}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* HOME COLLECTION */}
         <div className="border border-gray-200 rounded-2xl p-8 bg-white shadow-sm">
           <h3 className="text-lg font-bold text-gray-900 mb-2">Home Collection Rules</h3>

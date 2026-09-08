@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { fetchSettings } from "@/lib/api";
+import { fetchSettings, fetchTests, fetchPackages } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { PageHeader } from "@/components/PageHeader";
 import { AlertCircle, ArrowLeft, CheckCircle2, ChevronRight, Search } from "lucide-react";
@@ -43,6 +43,8 @@ function BookPage() {
   const totalItems = (selectedTests?.length || 0) + (selectedPackages?.length || 0);
 
   const { data: settings } = useQuery({ queryKey: ["settings"], queryFn: fetchSettings });
+  const { data: dbTests } = useQuery({ queryKey: ["tests"], queryFn: fetchTests });
+  const { data: dbPackages } = useQuery({ queryKey: ["packages"], queryFn: fetchPackages });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -200,7 +202,7 @@ function BookPage() {
         const testsToInsert = selectedTests.map(t => ({
           booking_id: bookingId,
           test_id: t.id,
-          price_at_booking: t.price || t.sheet1Price || 0
+          price_at_booking: t.price ?? t.sheet1Price ?? 0
         }));
         const { error: testsError } = await supabase.from('booking_tests').insert(testsToInsert);
         if (testsError) throw testsError;

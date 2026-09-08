@@ -3,7 +3,12 @@ import { useCart } from "@/context/CartContext";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronRight, AlertCircle } from "lucide-react";
 
+import { useQuery } from "@tanstack/react-query";
+import { fetchTests, fetchPackages } from "@/lib/api";
+
 export function BookingBar() {
+  const { data: dbTests } = useQuery({ queryKey: ["tests"], queryFn: fetchTests });
+  const { data: dbPackages } = useQuery({ queryKey: ["packages"], queryFn: fetchPackages });
   const { selectedTests, selectedPackages, totalEstimatedPrice, hasConflict } = useCart();
   const navigate = useNavigate();
 
@@ -26,7 +31,7 @@ export function BookingBar() {
                   <AlertCircle className="size-3" /> Confirmation Required
                 </span>
               ) : (
-                <span className="font-semibold text-foreground">{formatPrice(totalEstimatedPrice)}</span>
+                <span className="font-semibold text-foreground">{formatPrice(liveTotalEstimatedPrice)}</span>
               )}
             </div>
           </div>
@@ -79,7 +84,7 @@ export function BookingBar() {
               {hasConflict ? (
                 <div className="text-xs font-semibold text-amber-600">Price TBA</div>
               ) : (
-                <div className="text-2xl font-display font-extrabold text-foreground">{formatPrice(totalEstimatedPrice)}</div>
+                <div className="text-2xl font-display font-extrabold text-foreground">{formatPrice(liveTotalEstimatedPrice)}</div>
               )}
             </div>
           </div>

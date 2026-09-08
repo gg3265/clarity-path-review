@@ -26,7 +26,12 @@ export function EntryPopup() {
   });
 
   const homeCollection = settings.find(s => s.key === 'home_collection')?.value || { freeRadiusKm: 5, fee: 100 };
-  const promos = settings.find(s => s.key === 'promos')?.value || { bloodSugarPrice: 49, thyroidPrice: 299 };
+  const bloodSugarTest = tests.find(t => t.id === 't139');
+  const thyroidTest = tests.find(t => t.id === 't140');
+  const promos = { 
+    bloodSugarPrice: bloodSugarTest?.price ?? 49, 
+    thyroidPrice: thyroidTest?.price ?? 299 
+  };
 
   useEffect(() => {
     // Check if user has already seen the popup this session

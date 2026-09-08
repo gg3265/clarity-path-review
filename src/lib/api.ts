@@ -43,17 +43,19 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
           return {
             ...t,
             sheet1Price: finalPrice,
-            price: finalPrice, // ensure price is set everywhere
+            price: finalPrice,
             priceStatus: override.price_status || t.priceStatus,
             name: override.name || t.name,
             category: override.category || t.category,
             specimen: override.specimen || t.specimen,
             crlCode: override.crl_code || t.crlCode,
+            is_active: override.is_active !== false // mark it
           };
         }
         return {
           ...t,
-          price: t.sheet1Price // fallback
+          price: t.sheet1Price,
+          is_active: true
         };
       });
 
@@ -73,7 +75,7 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
         }
       });
       
-      return mergedTests.filter(t => t.priceStatus !== "Inactive"); // safety filter
+      return mergedTests.filter(t => t.priceStatus !== "Inactive" && t.is_active !== false); // safety filter
     }
   } catch (err) {
     console.error("Failed to merge Supabase tests", err);
@@ -98,11 +100,12 @@ export async function fetchPackages(): Promise<HealthPackage[]> {
         if (override) {
           return {
             ...p,
-            price: override.price !== null ? Number(override.price) : p.price
+            price: override.price !== null ? Number(override.price) : p.price,
+            is_active: override.is_active !== false
           };
         }
         return p;
-      });
+      }).filter(p => p.is_active !== false);
     }
   } catch (err) {
     console.error("Failed to fetch packages from Supabase, falling back to local data", err);
@@ -127,8 +130,6 @@ export async function fetchSettings(): Promise<AppSettings> {
           if (Array.isArray(row.value.freePincodes)) {
             settings.freePincodes = row.value.freePincodes;
           }
-        } else if (row.key === 'promos') {
-          settings.promos = { ...settings.promos, ...row.value };
         }
       });
       
