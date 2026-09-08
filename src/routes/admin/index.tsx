@@ -377,13 +377,9 @@ function TestsManager() {
   const handlePriceUpdate = async (id: string, newPrice: number) => {
     const test = tests.find(t => t.id === id);
     if (!test) return;
-    const { error } = await supabase.from('tests').upsert({ 
-      id, 
-      name: test.name, 
-      category: test.category || null, 
-      price: newPrice,
-      price_status: test.price_status || 'Confirmed'
-    }, { onConflict: 'id' })
+    const { error } = await supabase.from('tests').update({ 
+      price: newPrice
+    }).eq('id', id);
     if (error) throw error
     setTests(tests.map(t => t.id === id ? { ...t, price: newPrice } : t))
   }
@@ -392,14 +388,9 @@ function TestsManager() {
     try {
       const test = tests.find(t => t.id === id);
       if (!test) return;
-      const { error } = await supabase.from('tests').upsert({ 
-        id, 
-        name: test.name, 
-        category: test.category || null, 
-        price: test.price,
-        price_status: test.price_status || 'Confirmed',
+      const { error } = await supabase.from('tests').update({ 
         is_active: !currentStatus 
-      }, { onConflict: 'id' })
+      }).eq('id', id);
       if (error) throw error;
       setTests(tests.map(t => t.id === id ? { ...t, is_active: !currentStatus } : t))
     } catch(e: any) {
