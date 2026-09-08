@@ -389,7 +389,9 @@ function TestsManager() {
       category: test.category || null,
       price: newPrice,
       price_status: test.price_status || 'Confirmed',
-      is_active: test.is_active !== undefined ? test.is_active : true
+      is_active: test.is_active !== undefined ? test.is_active : true,
+      crl_code: test.crl_code || test.crlCode || null,
+      specimen: test.specimen || null
     }, { onConflict: 'id' }).select();
 
     // 3. Fetch AFTER update directly from DB
