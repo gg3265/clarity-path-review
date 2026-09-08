@@ -382,9 +382,15 @@ function TestsManager() {
     const priceBefore = beforeData?.price;
 
     // 2. Execute UPDATE
-    const { error: updateError, data: updateData } = await supabase.from('tests').update({ 
-      price: newPrice 
-    }).eq('id', testId).select();
+    // Use UPSERT because the test might only exist in the static fallback data and needs to be instantiated in Supabase
+    const { error: updateError, data: updateData } = await supabase.from('tests').upsert({ 
+      id: testId,
+      name: test.name,
+      category: test.category || null,
+      price: newPrice,
+      price_status: test.price_status || 'Confirmed',
+      is_active: test.is_active !== undefined ? test.is_active : true
+    }, { onConflict: 'id' }).select();
 
     // 3. Fetch AFTER update directly from DB
     const { data: afterData } = await supabase.from('tests').select('price').eq('id', testId).single();
@@ -404,7 +410,7 @@ function TestsManager() {
 === CRITICAL DEBUG REPORT ===
 1. Test ID: ${testId}
 2. Price BEFORE update: ${priceBefore}
-3. Query Executed: .update({ price: ${newPrice} }).eq('id', '${testId}')
+3. Query Executed: .upsert({ price: ${newPrice} ... })
 4. Supabase Error: ${updateError ? JSON.stringify(updateError, null, 2) : 'NONE'}
 5. Price AFTER update: ${priceAfter}
 
