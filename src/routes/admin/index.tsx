@@ -375,36 +375,49 @@ function TestsManager() {
   }, [tests, search, category]);
 
   const handlePriceUpdate = async (id: string, newPrice: number) => {
-    const test = tests.find(t => t.id === id);
-    if (!test) return;
+    const testId = id;
     
-    console.log("=== SUPABASE UPDATE DIAGNOSTICS ===");
-    console.log("Test ID:", id);
-    console.log("Old Price:", test.price);
-    console.log("New Price:", newPrice);
-    
-    // Explicitly fetching current user to verify session
-    const { data: userData } = await supabase.auth.getUser();
-    console.log("Auth User Exists:", !!userData?.user);
-    
-    // Verify RPC is_admin
-    const { data: isAdmin } = await supabase.rpc('is_admin');
-    console.log("RPC is_admin() result:", isAdmin);
+    // 1. Fetch BEFORE update directly from DB
+    const { data: beforeData } = await supabase.from('tests').select('price').eq('id', testId).single();
+    const priceBefore = beforeData?.price;
 
-    const { data, error } = await supabase.from('tests').update({ 
-      price: newPrice
-    }).eq('id', id).select();
-    
-    if (error) {
-      console.error("Supabase Error Code:", error.code);
-      console.error("Supabase Error Message:", error.message);
-      console.error("Supabase Error Details:", error.details);
-      console.error("Supabase Hint:", error.hint);
-      throw error;
+    // 2. Execute UPDATE
+    const { error: updateError, data: updateData } = await supabase.from('tests').update({ 
+      price: newPrice 
+    }).eq('id', testId).select();
+
+    // 3. Fetch AFTER update directly from DB
+    const { data: afterData } = await supabase.from('tests').select('price').eq('id', testId).single();
+    const priceAfter = afterData?.price;
+
+    // 4. Determine root cause
+    let conclusion = "";
+    if (priceAfter === priceBefore && updateError) {
+      conclusion = "DATABASE UPDATE FAILED (DB/RLS issue). The DB explicitly rejected the write.";
+    } else if (priceAfter === priceBefore && !updateError) {
+      conclusion = "SILENT FAILURE. Query returned no error, but 0 rows were modified (likely USING clause failed).";
+    } else if (priceAfter === newPrice) {
+      conclusion = "DATABASE UPDATE SUCCEEDED. If UI shows old price on refresh, it's a CACHING/FETCHING issue.";
     }
+
+    const report = `
+=== CRITICAL DEBUG REPORT ===
+1. Test ID: ${testId}
+2. Price BEFORE update: ${priceBefore}
+3. Query Executed: .update({ price: ${newPrice} }).eq('id', '${testId}')
+4. Supabase Error: ${updateError ? JSON.stringify(updateError, null, 2) : 'NONE'}
+5. Price AFTER update: ${priceAfter}
+
+CONCLUSION: ${conclusion}
+===========================`;
+
+    console.log(report);
+    alert(report); // Display directly to the admin
+
+    if (updateError) throw updateError;
     
-    console.log("Data returned:", !!data, data);
-    setTests(tests.map(t => t.id === id ? { ...t, price: newPrice } : t));
+    // Update local state if DB update succeeded
+    setTests(tests.map(t => t.id === testId ? { ...t, price: newPrice } : t));
   }
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
