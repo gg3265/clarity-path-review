@@ -39,9 +39,11 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
       const mergedTests = localTests.map(t => {
         const override = overrides.get(t.id);
         if (override) {
+          const finalPrice = override.price !== null ? Number(override.price) : t.sheet1Price;
           return {
             ...t,
-            sheet1Price: override.price !== null ? Number(override.price) : t.sheet1Price,
+            sheet1Price: finalPrice,
+            price: finalPrice, // ensure price is set everywhere
             priceStatus: override.price_status || t.priceStatus,
             name: override.name || t.name,
             category: override.category || t.category,
@@ -49,10 +51,12 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
             crlCode: override.crl_code || t.crlCode,
           };
         }
-        return t;
+        return {
+          ...t,
+          price: t.sheet1Price // fallback
+        };
       });
 
-      // Add new tests that are only in Supabase
       data.forEach(t => {
         if (!localMap.has(t.id) && t.is_active !== false) {
           mergedTests.push({
@@ -69,7 +73,7 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
         }
       });
       
-      return mergedTests;
+      return mergedTests.filter(t => t.priceStatus !== "Inactive"); // safety filter
     }
   } catch (err) {
     console.error("Failed to merge Supabase tests", err);
@@ -152,15 +156,19 @@ export async function fetchAdminTests() {
     const mergedTests = localTests.map(t => {
       const override = overrides.get(t.id);
       if (override) {
+        const finalPrice = override.price !== null ? Number(override.price) : t.sheet1Price;
         return {
           ...t,
-          price: override.price !== null ? Number(override.price) : t.sheet1Price,
+          price: finalPrice,
+          sheet1Price: finalPrice, // Fix for TestSearch reading fetchAdminTests
           price_status: override.price_status || t.priceStatus,
+          priceStatus: override.price_status || t.priceStatus,
           is_active: override.is_active !== false,
           name: override.name || t.name,
           category: override.category || t.category,
           specimen: override.specimen || t.specimen,
           crl_code: override.crl_code || t.crlCode,
+          crlCode: override.crl_code || t.crlCode,
         };
       }
       return {
