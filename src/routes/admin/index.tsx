@@ -377,11 +377,34 @@ function TestsManager() {
   const handlePriceUpdate = async (id: string, newPrice: number) => {
     const test = tests.find(t => t.id === id);
     if (!test) return;
-    const { error } = await supabase.from('tests').update({ 
+    
+    console.log("=== SUPABASE UPDATE DIAGNOSTICS ===");
+    console.log("Test ID:", id);
+    console.log("Old Price:", test.price);
+    console.log("New Price:", newPrice);
+    
+    // Explicitly fetching current user to verify session
+    const { data: userData } = await supabase.auth.getUser();
+    console.log("Auth User Exists:", !!userData?.user);
+    
+    // Verify RPC is_admin
+    const { data: isAdmin } = await supabase.rpc('is_admin');
+    console.log("RPC is_admin() result:", isAdmin);
+
+    const { data, error } = await supabase.from('tests').update({ 
       price: newPrice
-    }).eq('id', id);
-    if (error) throw error
-    setTests(tests.map(t => t.id === id ? { ...t, price: newPrice } : t))
+    }).eq('id', id).select();
+    
+    if (error) {
+      console.error("Supabase Error Code:", error.code);
+      console.error("Supabase Error Message:", error.message);
+      console.error("Supabase Error Details:", error.details);
+      console.error("Supabase Hint:", error.hint);
+      throw error;
+    }
+    
+    console.log("Data returned:", !!data, data);
+    setTests(tests.map(t => t.id === id ? { ...t, price: newPrice } : t));
   }
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
