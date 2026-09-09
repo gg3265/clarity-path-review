@@ -31,7 +31,7 @@ export function BookingBar() {
                   <AlertCircle className="size-3" /> Confirmation Required
                 </span>
               ) : (
-                <span className="font-semibold text-foreground">{formatPrice(liveTotalEstimatedPrice)}</span>
+                <span className="font-semibold text-foreground">{formatPrice(totalEstimatedPrice)}</span>
               )}
             </div>
           </div>
@@ -84,7 +84,7 @@ export function BookingBar() {
               {hasConflict ? (
                 <div className="text-xs font-semibold text-amber-600">Price TBA</div>
               ) : (
-                <div className="text-2xl font-display font-extrabold text-foreground">{formatPrice(liveTotalEstimatedPrice)}</div>
+                <div className="text-2xl font-display font-extrabold text-foreground">{formatPrice(totalEstimatedPrice)}</div>
               )}
             </div>
           </div>
