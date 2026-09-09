@@ -17,7 +17,7 @@ export const site = {
   }
 };
 
-export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${site.coordinates.lat},${site.coordinates.lng}&travelmode=driving`;
+export const mapsDirectionsUrl = "https://www.google.com/maps/dir/?api=1&destination=18.5144342,73.8504975&travelmode=driving";
 
 export const mapsEmbedUrl = `https://www.google.com/maps?q=${site.coordinates.lat},${site.coordinates.lng}&output=embed`;
 
