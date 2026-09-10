@@ -126,7 +126,8 @@ function BookPage() {
         const { data: validTests, error: validationError } = await supabase
           .from('tests')
           .select('id')
-          .in('id', testIds);
+          .in('id', testIds)
+          .eq('is_active', true);
         
         if (validationError) throw validationError;
         
@@ -146,7 +147,8 @@ function BookPage() {
         const { data: validPkgs, error: validationError } = await supabase
           .from('packages')
           .select('id')
-          .in('id', packageIds);
+          .in('id', packageIds)
+          .eq('is_active', true);
         
         if (validationError) throw validationError;
         

@@ -331,12 +331,212 @@ function AddTestModal({
   );
 }
 
+
+// ==========================================
+// EDIT TEST MODAL
+// ==========================================
+function EditTestModal({ 
+  isOpen, 
+  onClose, 
+  onSuccess, 
+  existingCategories,
+  test
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  onSuccess: () => void;
+  existingCategories: string[];
+  test: any;
+}) {
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    name: test?.name || '',
+    category: test?.category || '',
+    price: test?.price !== null && test?.price !== undefined ? test.price.toString() : '',
+    price_status: test?.price_status || test?.priceStatus || 'Confirmed',
+    is_active: test?.is_active !== undefined ? test.is_active : true
+  });
+
+  useEffect(() => {
+    if (test) {
+      setFormData({
+        name: test.name || '',
+        category: test.category || '',
+        price: test.price !== null && test.price !== undefined ? test.price.toString() : '',
+        price_status: test.price_status || test.priceStatus || 'Confirmed',
+        is_active: test.is_active !== undefined ? test.is_active : true
+      });
+      setError('');
+    }
+  }, [test]);
+
+  if (!isOpen || !test) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    const { name, category, price, price_status, is_active } = formData;
+    
+    // Validation
+    if (!name.trim()) return setError("Test Name is required");
+    if (!category.trim()) return setError("Category is required");
+    
+    const numPrice = Number(price);
+    if (price !== '' && (isNaN(numPrice) || numPrice < 0)) {
+      return setError("Price must be a valid non-negative number");
+    }
+
+    setSaving(true);
+    
+    try {
+      // Duplicate protection: Check if another active test with the same name exists
+      const { data: existing } = await supabase
+        .from('tests')
+        .select('id')
+        .ilike('name', name.trim())
+        .eq('is_active', true)
+        .neq('id', test.id)
+        .limit(1);
+        
+      if (existing && existing.length > 0) {
+        throw new Error("Another active test with this name already exists.");
+      }
+
+      const { error: updateError } = await supabase.from('tests').update({
+        name: name.trim(),
+        category: category.trim(),
+        price: price === '' ? null : numPrice,
+        price_status,
+        is_active
+      }).eq('id', test.id);
+
+      if (updateError) throw updateError;
+
+      onSuccess();
+      onClose();
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Unable to save changes. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 shrink-0">
+          <h2 className="text-xl font-bold text-gray-900">Edit Test</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100">
+            <X className="size-5" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto flex-1 space-y-6 custom-scrollbar">
+          {error && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium flex items-start gap-2 border border-red-100">
+              <AlertCircle className="size-4 shrink-0 mt-0.5" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Test Name *</label>
+              <input 
+                type="text" 
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm font-medium"
+                placeholder="e.g. Complete Blood Count"
+                required
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Category *</label>
+                <input 
+                  type="text" 
+                  value={formData.category}
+                  onChange={e => setFormData({...formData, category: e.target.value})}
+                  list="edit-categories-list"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
+                  placeholder="Select or type..."
+                  required
+                />
+                <datalist id="edit-categories-list">
+                  {existingCategories.map(c => c !== 'All' && <option key={c} value={c} />)}
+                </datalist>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Price (₹)</label>
+                <input 
+                  type="number" 
+                  value={formData.price}
+                  onChange={e => setFormData({...formData, price: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm"
+                  placeholder="Optional"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Price Status</label>
+                <select
+                  value={formData.price_status}
+                  onChange={e => setFormData({...formData, price_status: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-white"
+                >
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Variable">Variable</option>
+                  <option value="Sheet 2 Only">Sheet 2 Only</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Active Status</label>
+                <select
+                  value={formData.is_active ? "true" : "false"}
+                  onChange={e => setFormData({...formData, is_active: e.target.value === "true"})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-white"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+            </div>
+            
+          </div>
+          
+          <div className="pt-6 border-t border-gray-100 flex justify-end gap-3 shrink-0">
+            <button type="button" onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+              Cancel
+            </button>
+            <button type="submit" disabled={saving} className="px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2">
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function TestsManager() {
   const [tests, setTests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
+  const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Inactive'>('All')
   const [showAddModal, setShowAddModal] = useState(false)
+  const [editTest, setEditTest] = useState<any>(null)
 
   const loadTests = async () => {
     setLoading(true)
@@ -354,7 +554,6 @@ function TestsManager() {
   
   const handleAddSuccess = () => {
     loadTests();
-    // Optional toast notification here if you use sonner/react-hot-toast, but we will rely on reload
   }
 
   const categories = useMemo(() => {
@@ -366,21 +565,18 @@ function TestsManager() {
       const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) || 
                            (t.crl_code || '').toLowerCase().includes(search.toLowerCase());
       const matchesCategory = category === 'All' || t.category === category;
-      return matchesSearch && matchesCategory;
+      const matchesStatus = statusFilter === 'All' || 
+                            (statusFilter === 'Active' && t.is_active !== false) || 
+                            (statusFilter === 'Inactive' && t.is_active === false);
+      return matchesSearch && matchesCategory && matchesStatus;
     });
-  }, [tests, search, category]);
+  }, [tests, search, category, statusFilter]);
 
   const handlePriceUpdate = async (id: string, newPrice: number) => {
     const testId = id;
     const test = tests.find(t => t.id === testId);
     if (!test) throw new Error("Test not found in current UI state");
     
-    // 1. Fetch BEFORE update directly from DB
-    const { data: beforeData } = await supabase.from('tests').select('price').eq('id', testId).single();
-    const priceBefore = beforeData?.price;
-
-    // 2. Execute UPDATE
-    // Use UPSERT because the test might only exist in the static fallback data and needs to be instantiated in Supabase
     const payload = { 
       id: testId,
       name: test.name,
@@ -389,56 +585,47 @@ function TestsManager() {
       price_status: test.price_status || test.priceStatus || 'Confirmed',
       is_active: test.is_active !== undefined ? test.is_active : true
     };
-    
-    console.log("TEST SAVE PAYLOAD:", JSON.stringify(payload, null, 2));
 
-    const { error: updateError, data: updateData } = await supabase.from('tests').upsert(payload, { onConflict: 'id' }).select();
-
-    // 3. Fetch AFTER update directly from DB
-    const { data: afterData } = await supabase.from('tests').select('price').eq('id', testId).single();
-    const priceAfter = afterData?.price;
-
-    // 4. Determine root cause
-    let conclusion = "";
-    if (priceAfter === priceBefore && updateError) {
-      conclusion = "DATABASE UPDATE FAILED (DB/RLS issue). The DB explicitly rejected the write.";
-    } else if (priceAfter === priceBefore && !updateError) {
-      conclusion = "SILENT FAILURE. Query returned no error, but 0 rows were modified (likely USING clause failed).";
-    } else if (priceAfter === newPrice) {
-      conclusion = "DATABASE UPDATE SUCCEEDED. If UI shows old price on refresh, it's a CACHING/FETCHING issue.";
-    }
-
-    const report = `
-=== CRITICAL DEBUG REPORT ===
-1. Test ID: ${testId}
-2. Price BEFORE update: ${priceBefore}
-3. Query Executed: .upsert({ price: ${newPrice} ... })
-4. Supabase Error: ${updateError ? JSON.stringify(updateError, null, 2) : 'NONE'}
-5. Price AFTER update: ${priceAfter}
-
-CONCLUSION: ${conclusion}
-===========================`;
-
-    console.log(report);
-    alert(report); // Display directly to the admin
-
+    const { error: updateError } = await supabase.from('tests').upsert(payload, { onConflict: 'id' }).select();
     if (updateError) throw updateError;
     
-    // Update local state if DB update succeeded
     setTests(tests.map(t => t.id === testId ? { ...t, price: newPrice } : t));
   }
 
-  const toggleStatus = async (id: string, currentStatus: boolean) => {
+  const handleDelete = async (id: string) => {
+    if (!confirm("Remove this test from the public website?\n\nExisting bookings containing this test will remain unchanged.")) {
+      return;
+    }
     try {
-      const test = tests.find(t => t.id === id);
-      if (!test) return;
-      const { error } = await supabase.from('tests').update({ 
-        is_active: !currentStatus 
-      }).eq('id', id);
+      const { error } = await supabase.from('tests').update({ is_active: false }).eq('id', id);
       if (error) throw error;
-      setTests(tests.map(t => t.id === id ? { ...t, is_active: !currentStatus } : t))
+      setTests(tests.map(t => t.id === id ? { ...t, is_active: false } : t));
+      alert("Test removed from the public website.");
     } catch(e: any) {
-      alert("Status update failed: " + e.message);
+      alert("Unable to save changes. Please try again. " + e.message);
+    }
+  }
+
+  const handleRestore = async (id: string, name: string) => {
+    try {
+      const { data: existing } = await supabase
+        .from('tests')
+        .select('id')
+        .ilike('name', name.trim())
+        .eq('is_active', true)
+        .limit(1);
+        
+      if (existing && existing.length > 0) {
+        alert("Another active test with this name already exists. Please rename the existing test before restoring this one.");
+        return;
+      }
+
+      const { error } = await supabase.from('tests').update({ is_active: true }).eq('id', id);
+      if (error) throw error;
+      setTests(tests.map(t => t.id === id ? { ...t, is_active: true } : t));
+      alert("Test restored to the public website.");
+    } catch(e: any) {
+      alert("Unable to save changes. Please try again. " + e.message);
     }
   }
 
@@ -446,13 +633,13 @@ CONCLUSION: ${conclusion}
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="flex flex-col xl:flex-row justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Test Directory</h2>
           <p className="text-sm text-gray-500 mt-1">Manage pricing and availability for {tests.length} tests.</p>
         </div>
-        <div className="flex gap-3">
-          <button onClick={() => setShowAddModal(true)} className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors hidden sm:block">
+        <div className="flex flex-wrap gap-3 items-center">
+          <button onClick={() => setShowAddModal(true)} className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
             + Add Test
           </button>
           <div className="relative">
@@ -472,13 +659,16 @@ CONCLUSION: ${conclusion}
           >
             {categories.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
+          <select 
+            value={statusFilter} 
+            onChange={e => setStatusFilter(e.target.value as any)}
+            className="border border-gray-300 rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+          >
+            <option value="All">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
         </div>
-      </div>
-      
-      <div className="sm:hidden mb-4">
-        <button onClick={() => setShowAddModal(true)} className="w-full bg-black text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
-          + Add Test
-        </button>
       </div>
       
       <AddTestModal 
@@ -487,51 +677,84 @@ CONCLUSION: ${conclusion}
         onSuccess={handleAddSuccess}
         existingCategories={categories}
       />
+
+      <EditTestModal
+        isOpen={!!editTest}
+        test={editTest}
+        onClose={() => setEditTest(null)}
+        onSuccess={handleAddSuccess}
+        existingCategories={categories}
+      />
       
       <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Test Details</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
-              <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredTests.length === 0 ? (
-              <tr><td colSpan={4} className="px-6 py-10 text-center text-gray-500">No tests found matching your criteria.</td></tr>
-            ) : filteredTests.map(test => (
-              <tr key={test.id} className="hover:bg-gray-50/50 transition-colors">
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-gray-900">{test.name}</span>
-                    <span className="text-xs text-gray-500 mt-1">{test.crl_code || 'No Code'} • {test.specimen || 'No Specimen'}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
-                  {test.category}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <InlineEdit 
-                    initialValue={test.price} 
-                    onSave={(val) => handlePriceUpdate(test.id, val as number)} 
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center">
-                  <button 
-                    onClick={() => toggleStatus(test.id, test.is_active)}
-                    className={`px-3 py-1.5 inline-flex text-xs font-bold rounded-full transition-colors ${
-                      test.is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'
-                    }`}
-                  >
-                    {test.is_active ? 'Active' : 'Inactive'}
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Test Details</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
+                <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredTests.length === 0 ? (
+                <tr><td colSpan={5} className="px-6 py-10 text-center text-gray-500">No tests found matching your criteria.</td></tr>
+              ) : filteredTests.map(test => (
+                <tr key={test.id} className={`hover:bg-gray-50/50 transition-colors ${test.is_active === false ? 'opacity-60' : ''}`}>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-gray-900">{test.name}</span>
+                      <span className="text-xs text-gray-500 mt-1">{test.crl_code || 'No Code'} • {test.specimen || 'No Specimen'}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
+                    {test.category}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <InlineEdit 
+                      initialValue={test.price} 
+                      onSave={(val) => handlePriceUpdate(test.id, val as number)} 
+                    />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <span className={`px-3 py-1.5 inline-flex text-xs font-bold rounded-full transition-colors ${
+                        test.is_active !== false ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                      {test.is_active !== false ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <div className="flex items-center justify-center gap-2">
+                      <button 
+                        onClick={() => setEditTest(test)} 
+                        className="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors"
+                      >
+                        Edit
+                      </button>
+                      {test.is_active !== false ? (
+                        <button 
+                          onClick={() => handleDelete(test.id)} 
+                          className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors"
+                        >
+                          Remove
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => handleRestore(test.id, test.name)} 
+                          className="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1 rounded transition-colors"
+                        >
+                          Restore
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
