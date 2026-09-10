@@ -3,7 +3,7 @@ import { mapsDirectionsUrl, mapsEmbedUrl, site } from "@/lib/site";
 
 export function WalkInMap() {
   if (import.meta.env.DEV) {
-    console.log("Map Destination Coordinates:", site.coordinates);
+    console.log("Map Destination:", site.mapsDestination);
     console.log("Directions URL:", mapsDirectionsUrl);
   }
 

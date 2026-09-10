@@ -9,17 +9,14 @@ export const site = {
   address:
     "557, Veeren Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
   city: "Pune",
-  mapsQuery:
-    "SECOND OPINION CRL, Veeren Heights, 557, Laxmi Road, Sadashiv Peth, Pune, Maharashtra 411030",
-  coordinates: {
-    latitude: 18.5178675,
-    longitude: 73.8550043,
-  }
+  mapsDestination: "GR7X+G3 Pune, Maharashtra",
 };
 
-export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${site.coordinates.latitude},${site.coordinates.longitude}&travelmode=driving`;
+export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.mapsDestination)}&travelmode=driving`;
 
-export const mapsEmbedUrl = `https://www.google.com/maps?q=${site.coordinates.latitude},${site.coordinates.longitude}&output=embed`;
+export const mapsEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(site.mapsDestination)}&output=embed`;
+
+export const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsDestination)}`;
 
 export const nav = [
   { label: "Home", to: "/" as const },
