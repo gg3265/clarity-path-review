@@ -19,7 +19,7 @@ export function BookingBar() {
   return (
     <>
       {/* Mobile Sticky Bar */}
-      <div className="fixed bottom-[64px] left-0 right-0 z-[60] border-t border-border bg-background/95 p-4 shadow-lift backdrop-blur-xl md:hidden animate-fade-in slide-in-from-bottom-full">
+      <div className="fixed bottom-0 left-0 right-0 z-[60] border-t border-border bg-background/95 p-4 shadow-lift backdrop-blur-xl md:hidden animate-fade-in slide-in-from-bottom-full pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm font-bold text-foreground">

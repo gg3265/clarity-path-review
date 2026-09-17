@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
   ScrollRestoration,
@@ -17,6 +18,7 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
 import { ContactAction } from "@/components/ContactAction";
+import { FloatingContact } from "@/components/FloatingContact";
 import { EntryPopup } from "@/components/EntryPopup";
 
 function NotFoundComponent() {
@@ -135,19 +137,10 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function MobileContactBar() {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-t border-border p-2 md:hidden">
-      <div className="flex gap-2">
-        <ContactAction context="general" type="call" variant="outline" className="flex-1 rounded-xl h-12" />
-        <ContactAction context="general" type="whatsapp" variant="solid" className="flex-1 rounded-xl h-12" />
-      </div>
-    </div>
-  );
-}
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -163,7 +156,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <Footer />
-        <MobileContactBar />
+        {!isAdmin && <FloatingContact />}
         <EntryPopup />
           <Toaster position="top-center" />
       </CartProvider>

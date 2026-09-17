@@ -11,6 +11,7 @@ export const site = {
   city: "Pune",
   mapsDestination: "GR7X+G3 Pune, Maharashtra",
   instagram: "https://www.instagram.com/secondopinioncrl/",
+  whatsapp: "https://wa.me/919359777222",
 };
 
 export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.mapsDestination)}&travelmode=driving`;
