@@ -10,6 +10,7 @@ export const site = {
     "557, Veeren Heights, 3rd Floor, Laxmi Road, Sadashiv Peth, Pune 411030",
   city: "Pune",
   mapsDestination: "GR7X+G3 Pune, Maharashtra",
+  instagram: "https://www.instagram.com/secondopinioncrl/",
 };
 
 export const mapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.mapsDestination)}&travelmode=driving`;

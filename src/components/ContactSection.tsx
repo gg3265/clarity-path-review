@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Mail, MapPin, Search, ArrowRight, UserCircle2, Stethoscope, Beaker } from "lucide-react";
+import { Mail, MapPin, Search, ArrowRight, UserCircle2, Stethoscope, Beaker, Instagram } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { Reveal } from "@/components/Reveal";
 import { ContactAction } from "@/components/ContactAction";
@@ -29,6 +29,17 @@ export function ContactSection() {
             </li>
             <li className="flex items-center gap-3">
               <ContactAction context="general" type="whatsapp" variant="solid" className="h-10 px-4 text-xs" />
+            </li>
+            <li className="flex items-center gap-3">
+              <a 
+                href={site.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow SECOND OPINION CRL on Instagram"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-teal/10 text-teal transition-colors hover:bg-teal hover:text-white"
+              >
+                <Instagram className="size-4" />
+              </a>
             </li>
           </ul>
         </Reveal>

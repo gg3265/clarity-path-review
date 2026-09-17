@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Instagram } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { footerNav, site } from "@/lib/site";
 import { ContactAction } from "@/components/ContactAction";
@@ -68,8 +69,19 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-5 border-t border-white/10 pt-6 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; 2026 SECOND OPINION CRL. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <a 
+              href={site.instagram} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label="Follow SECOND OPINION CRL on Instagram"
+              className="text-primary-foreground/60 transition-colors hover:text-white p-2 -m-2"
+            >
+              <Instagram className="size-5" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
