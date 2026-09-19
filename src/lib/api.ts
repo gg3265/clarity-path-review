@@ -49,6 +49,14 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
             category: override.category || t.category,
             specimen: override.specimen || t.specimen,
             crlCode: override.crl_code || t.crlCode,
+            turnaroundTime: override.turnaround_time || t.turnaroundTime,
+            preparation: override.preparation || t.preparation,
+            description: override.description || t.description,
+            method: override.method || t.method,
+            sample_volume: override.sample_volume || t.sample_volume,
+            container: override.container || t.container,
+            notes: override.notes || t.notes,
+            aliases: override.aliases || t.aliases,
             is_active: override.is_active !== false // mark it
           };
         }
@@ -70,7 +78,14 @@ export async function fetchTests(): Promise<DiagnosticTest[]> {
             sheet1Price: t.price !== null ? Number(t.price) : 0,
             price: t.price !== null ? Number(t.price) : 0,
             priceStatus: (t.price_status as any) || 'Confirmed',
-            notes: t.notes || ''
+            notes: t.notes || '',
+            turnaroundTime: t.turnaround_time,
+            preparation: t.preparation,
+            description: t.description,
+            method: t.method,
+            sample_volume: t.sample_volume,
+            container: t.container,
+            aliases: t.aliases
           });
         }
       });
@@ -170,6 +185,15 @@ export async function fetchAdminTests() {
           specimen: override.specimen || t.specimen,
           crl_code: override.crl_code || t.crlCode,
           crlCode: override.crl_code || t.crlCode,
+          turnaround_time: override.turnaround_time,
+          turnaroundTime: override.turnaround_time || t.turnaroundTime,
+          preparation: override.preparation || t.preparation,
+          description: override.description || t.description,
+          method: override.method || t.method,
+          sample_volume: override.sample_volume || t.sample_volume,
+          container: override.container || t.container,
+          notes: override.notes || t.notes,
+          aliases: override.aliases || t.aliases,
         };
       }
       return {
@@ -195,7 +219,15 @@ export async function fetchAdminTests() {
             priceStatus: t.price_status || 'Confirmed',
             price_status: t.price_status || 'Confirmed',
             is_active: t.is_active !== false,
-            notes: t.notes
+            notes: t.notes,
+            turnaroundTime: t.turnaround_time,
+            turnaround_time: t.turnaround_time,
+            preparation: t.preparation,
+            description: t.description,
+            method: t.method,
+            sample_volume: t.sample_volume,
+            container: t.container,
+            aliases: t.aliases
           } as any);
         }
       });

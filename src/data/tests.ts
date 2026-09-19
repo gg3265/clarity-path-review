@@ -29,6 +29,12 @@ export interface DiagnosticTest {
   priceStatus: "Confirmed" | "Price confirmation required" | "Sheet 2 Only";
   notes?: string;
   aliases?: string[];
+  turnaroundTime?: string;
+  preparation?: string;
+  description?: string;
+  method?: string;
+  sample_volume?: string;
+  container?: string;
 }
 
 export const tests: DiagnosticTest[] = [

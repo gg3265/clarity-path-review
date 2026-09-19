@@ -279,12 +279,49 @@ function TestsPage() {
                           <h4 className="font-semibold text-foreground leading-snug group-hover:text-primary transition-colors">
                             {test.name}
                           </h4>
-                          {test.specimen && (
-                            <p className="text-xs text-muted-foreground mt-2 font-medium flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-primary/40 inline-block"></span>
-                              Sample: {test.specimen}
+                          
+                          {test.crlCode && (
+                            <div className="mt-1 text-xs font-mono text-muted-foreground">
+                              {test.crlCode}
+                            </div>
+                          )}
+
+                          <div className="mt-3 space-y-1.5">
+                            {test.specimen && (
+                              <p className="text-xs text-muted-foreground font-medium flex items-start gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1 shrink-0"></span>
+                                <span><span className="font-semibold">Sample:</span> {test.specimen}</span>
+                              </p>
+                            )}
+                            
+                            {test.turnaroundTime && (
+                              <p className="text-xs text-muted-foreground font-medium flex items-start gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1 shrink-0"></span>
+                                <span><span className="font-semibold">Turnaround Time:</span> {test.turnaroundTime}</span>
+                              </p>
+                            )}
+
+                            {test.preparation && (
+                              <p className="text-xs text-muted-foreground font-medium flex items-start gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1 shrink-0"></span>
+                                <span><span className="font-semibold">Preparation:</span> {test.preparation}</span>
+                              </p>
+                            )}
+                            
+                            {test.method && (
+                              <p className="text-xs text-muted-foreground font-medium flex items-start gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1 shrink-0"></span>
+                                <span><span className="font-semibold">Method:</span> {test.method}</span>
+                              </p>
+                            )}
+                          </div>
+
+                          {test.description && (
+                            <p className="mt-3 text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                              {test.description}
                             </p>
                           )}
+
                           {test.notes && (
                             <div className="mt-3 inline-flex items-start gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1.5 rounded-md border border-amber-200">
                               <AlertCircle className="size-4 shrink-0 mt-0.5" />

@@ -180,11 +180,17 @@ function AddTestModal({
     name: '',
     category: '',
     price: '',
+    price_status: 'Confirmed',
     crl_code: '',
     specimen: '',
     turnaround_time: '',
     description: '',
     preparation: '',
+    method: '',
+    sample_volume: '',
+    container: '',
+    notes: '',
+    aliases: '',
     is_active: true
   });
 
@@ -221,6 +227,8 @@ function AddTestModal({
 
       // Generate a stable ID
       const newId = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(Math.random() * 1000);
+      
+      const aliasesArray = formData.aliases.trim() ? formData.aliases.split(',').map(a => a.trim()).filter(Boolean) : null;
 
       const { error: insertError } = await supabase.from('tests').insert([{
         id: newId,
@@ -228,7 +236,17 @@ function AddTestModal({
         category: category.trim(),
         price: price === '' ? null : numPrice,
         is_active: formData.is_active,
-        price_status: 'Confirmed'
+        price_status: formData.price_status,
+        crl_code: formData.crl_code.trim() || null,
+        specimen: formData.specimen.trim() || null,
+        turnaround_time: formData.turnaround_time.trim() || null,
+        description: formData.description.trim() || null,
+        preparation: formData.preparation.trim() || null,
+        method: formData.method.trim() || null,
+        sample_volume: formData.sample_volume.trim() || null,
+        container: formData.container.trim() || null,
+        notes: formData.notes.trim() || null,
+        aliases: aliasesArray
       }]);
 
       if (insertError) throw insertError;
@@ -237,7 +255,7 @@ function AddTestModal({
       onClose();
       // Reset form
       setFormData({
-        name: '', category: '', price: '', crl_code: '', specimen: '', turnaround_time: '', description: '', preparation: '', is_active: true
+        name: '', category: '', price: '', price_status: 'Confirmed', crl_code: '', specimen: '', turnaround_time: '', description: '', preparation: '', method: '', sample_volume: '', container: '', notes: '', aliases: '', is_active: true
       });
     } catch (err: any) {
       console.error(err);
@@ -304,6 +322,31 @@ function AddTestModal({
               <input type="text" value={formData.preparation} onChange={e => setFormData({...formData, preparation: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. 10-12 hours fasting required" />
             </div>
 
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Method</label>
+              <input type="text" value={formData.method} onChange={e => setFormData({...formData, method: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. CLIA" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Sample Volume</label>
+              <input type="text" value={formData.sample_volume} onChange={e => setFormData({...formData, sample_volume: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. 2 ml" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Container</label>
+              <input type="text" value={formData.container} onChange={e => setFormData({...formData, container: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. SST, EDTA" />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Aliases (comma separated)</label>
+              <input type="text" value={formData.aliases} onChange={e => setFormData({...formData, aliases: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="e.g. CBC, Haemogram" />
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Notes</label>
+              <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" rows={2} placeholder="Internal or extra notes..." />
+            </div>
+
             <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
               <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" rows={3} placeholder="Brief description of the test..." />
@@ -356,6 +399,16 @@ function EditTestModal({
     category: test?.category || '',
     price: test?.price !== null && test?.price !== undefined ? test.price.toString() : '',
     price_status: test?.price_status || test?.priceStatus || 'Confirmed',
+    crl_code: test?.crl_code || test?.crlCode || '',
+    specimen: test?.specimen || '',
+    turnaround_time: test?.turnaround_time || test?.turnaroundTime || '',
+    description: test?.description || '',
+    preparation: test?.preparation || '',
+    method: test?.method || '',
+    sample_volume: test?.sample_volume || '',
+    container: test?.container || '',
+    notes: test?.notes || '',
+    aliases: test?.aliases ? (Array.isArray(test.aliases) ? test.aliases.join(', ') : test.aliases) : '',
     is_active: test?.is_active !== undefined ? test.is_active : true
   });
 
@@ -366,6 +419,16 @@ function EditTestModal({
         category: test.category || '',
         price: test.price !== null && test.price !== undefined ? test.price.toString() : '',
         price_status: test.price_status || test.priceStatus || 'Confirmed',
+        crl_code: test.crl_code || test.crlCode || '',
+        specimen: test.specimen || '',
+        turnaround_time: test.turnaround_time || test.turnaroundTime || '',
+        description: test.description || '',
+        preparation: test.preparation || '',
+        method: test.method || '',
+        sample_volume: test.sample_volume || '',
+        container: test.container || '',
+        notes: test.notes || '',
+        aliases: test.aliases ? (Array.isArray(test.aliases) ? test.aliases.join(', ') : test.aliases) : '',
         is_active: test.is_active !== undefined ? test.is_active : true
       });
       setError('');
@@ -405,12 +468,24 @@ function EditTestModal({
         throw new Error("Another active test with this name already exists.");
       }
 
+      const aliasesArray = formData.aliases.trim() ? formData.aliases.split(',').map(a => a.trim()).filter(Boolean) : null;
+
       const { error: updateError } = await supabase.from('tests').update({
         name: name.trim(),
         category: category.trim(),
         price: price === '' ? null : numPrice,
         price_status,
-        is_active
+        is_active,
+        crl_code: formData.crl_code.trim() || null,
+        specimen: formData.specimen.trim() || null,
+        turnaround_time: formData.turnaround_time.trim() || null,
+        description: formData.description.trim() || null,
+        preparation: formData.preparation.trim() || null,
+        method: formData.method.trim() || null,
+        sample_volume: formData.sample_volume.trim() || null,
+        container: formData.container.trim() || null,
+        notes: formData.notes.trim() || null,
+        aliases: aliasesArray
       }).eq('id', test.id);
 
       if (updateError) throw updateError;
@@ -511,6 +586,59 @@ function EditTestModal({
                   <option value="false">Inactive</option>
                 </select>
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">CRL Code</label>
+                <input type="text" value={formData.crl_code} onChange={e => setFormData({...formData, crl_code: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. CRL-LIV-01" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Sample Type</label>
+                <input type="text" value={formData.specimen} onChange={e => setFormData({...formData, specimen: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. Serum, 2ml" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Turnaround Time</label>
+                <input type="text" value={formData.turnaround_time} onChange={e => setFormData({...formData, turnaround_time: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. 24 Hours" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Method</label>
+                <input type="text" value={formData.method} onChange={e => setFormData({...formData, method: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. CLIA" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Sample Volume</label>
+                <input type="text" value={formData.sample_volume} onChange={e => setFormData({...formData, sample_volume: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. 2 ml" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Container</label>
+                <input type="text" value={formData.container} onChange={e => setFormData({...formData, container: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. SST, EDTA" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Preparation / Fasting</label>
+              <input type="text" value={formData.preparation} onChange={e => setFormData({...formData, preparation: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. 10-12 hours fasting required" />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Aliases (comma separated)</label>
+              <input type="text" value={formData.aliases} onChange={e => setFormData({...formData, aliases: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" placeholder="e.g. CBC, Haemogram" />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Notes</label>
+              <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" rows={2} placeholder="Internal or extra notes..." />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Description</label>
+              <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm" rows={3} placeholder="Brief description of the test..." />
             </div>
             
           </div>
