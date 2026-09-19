@@ -200,6 +200,7 @@ export async function fetchAdminTests() {
         ...t,
         price: t.sheet1Price,
         price_status: t.priceStatus,
+        crl_code: t.crlCode,
         is_active: true
       };
     });

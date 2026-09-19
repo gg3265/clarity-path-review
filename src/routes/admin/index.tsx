@@ -834,7 +834,7 @@ function TestsManager() {
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-gray-900">{test.name}</span>
-                      <span className="text-xs text-gray-500 mt-1">{test.crl_code || 'No Code'} • {test.specimen || 'No Specimen'}</span>
+                      <span className="text-xs text-gray-500 mt-1">{(test.crl_code || test.crlCode) || 'No Code'} • {test.specimen || 'No Specimen'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
