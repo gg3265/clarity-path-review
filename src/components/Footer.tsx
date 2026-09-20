@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { footerNav, site } from "@/lib/site";
 import { ContactAction } from "@/components/ContactAction";
@@ -80,6 +80,15 @@ export function Footer() {
               className="text-primary-foreground/60 transition-colors hover:text-white p-2 -m-2"
             >
               <Instagram className="size-5" />
+            </a>
+            <a 
+              href={site.facebook} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              aria-label="Facebook - SECOND OPINION CRL"
+              className="text-primary-foreground/60 transition-colors hover:text-white p-2 -m-2"
+            >
+              <Facebook className="size-5" />
             </a>
           </div>
         </div>

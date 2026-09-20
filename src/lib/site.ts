@@ -11,6 +11,7 @@ export const site = {
   city: "Pune",
   mapsDestination: "GR7X+G3 Pune, Maharashtra",
   instagram: "https://www.instagram.com/secondopinioncrl/",
+  facebook: "https://www.facebook.com/profile.php?id=61594390031142",
   whatsapp: "https://wa.me/919359777222",
 };
 

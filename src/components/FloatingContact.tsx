@@ -1,4 +1,4 @@
-import { Phone, Instagram } from "lucide-react";
+import { Phone, Instagram, Facebook } from "lucide-react";
 import { site } from "@/lib/site";
 
 export function FloatingContact() {
@@ -49,6 +49,21 @@ export function FloatingContact() {
         <Instagram className="size-5" />
         <span className="absolute right-full mr-4 hidden items-center whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 md:flex">
           Follow SECOND OPINION CRL on Instagram
+          <span className="absolute -right-1 top-1/2 -translate-y-1/2 border-y-4 border-l-4 border-y-transparent border-l-gray-900"></span>
+        </span>
+      </a>
+
+      {/* Facebook */}
+      <a
+        href={site.facebook}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Facebook - SECOND OPINION CRL"
+        className="group relative flex size-12 items-center justify-center rounded-full bg-[#1877F2] text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
+      >
+        <Facebook className="size-5 fill-current" />
+        <span className="absolute right-full mr-4 hidden items-center whitespace-nowrap rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 md:flex">
+          Facebook - SECOND OPINION CRL
           <span className="absolute -right-1 top-1/2 -translate-y-1/2 border-y-4 border-l-4 border-y-transparent border-l-gray-900"></span>
         </span>
       </a>
