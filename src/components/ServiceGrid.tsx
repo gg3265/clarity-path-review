@@ -40,6 +40,7 @@ export function ServiceGrid({ showHeading = true }: { showHeading?: boolean }) {
                 <Reveal
                   key={service.number}
                   delay={((i + 1) % 3) * 70}
+                  className="h-full"
                 >
                   <Link to={`/services/${slug}`} className="block h-full">
                     <ServiceCard

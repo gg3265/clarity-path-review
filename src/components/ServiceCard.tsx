@@ -43,7 +43,7 @@ export function ServiceCard({
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col justify-between overflow-hidden border border-border bg-background p-7 transition-all duration-500 hover:-translate-y-1 hover:shadow-lift",
+        "group relative flex h-full flex-col overflow-hidden border border-border bg-background p-7 transition-all duration-500 hover:-translate-y-1 hover:shadow-lift",
         featured && "bg-navy text-primary-foreground",
         className,
       )}
@@ -70,7 +70,7 @@ export function ServiceCard({
         />
       </div>
 
-      <div className="mt-10">
+      <div className="mt-10 flex flex-1 flex-col">
         <h3
           className={cn(
             "font-display text-lg font-bold",
@@ -89,13 +89,15 @@ export function ServiceCard({
         >
           {description}
         </p>
-        <ArrowUpRight
-          aria-hidden="true"
-          className={cn(
-            "mt-6 size-5 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1",
-            featured ? "text-primary-foreground/60" : "text-foreground/40",
-          )}
-        />
+        <div className="mt-auto pt-6">
+          <ArrowUpRight
+            aria-hidden="true"
+            className={cn(
+              "size-5 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1",
+              featured ? "text-primary-foreground/60" : "text-foreground/40",
+            )}
+          />
+        </div>
       </div>
     </article>
   );
